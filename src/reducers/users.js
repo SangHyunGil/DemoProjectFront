@@ -6,6 +6,7 @@ export const initialState = {
     password : "",
     nickname : "",
     department : "",
+    accessToken : "",
     isLogin : false,
     isChecked : false,
 
@@ -30,6 +31,10 @@ export const initialState = {
 
     tokenDone : false,
     tokenError : "",
+
+    changUserInfoLoading : false,
+    changeUserInfoDone : false,
+    changeUserInfoError : ""
 }
 
 export const REGISTER_REQUEST = "REGISTER_REQUEST";
@@ -64,6 +69,11 @@ export const CHANGEPASSWORD_SUCCESS = "CHANGEPASSWORD_SUCCESS";
 export const CHANGEPASSWORD_FAILURE = "CHANGEPASSWORD_FAILURE";
 
 export const HAS_NO_TOKEN = "HAS_NO_TOKEN";
+
+export const CHANGEUSERINFO_REQEUST = "CHANGEUSERINFO_REQEUST";
+export const CHANGEUSERINFO_SUCCESS = "CHANGEUSERINFO_SUCCESS";
+export const CHANGEUSERINFO_FAILURE = "CHANGEUSERINFO_FAILURE";
+export const CLEAR_CHANGEUSERINFO_STATE = "CLEAR_CHANGEUSERINFO_STATE";
 
 export const registerRequest = (payload) => ({
     type : REGISTER_REQUEST,
@@ -181,6 +191,25 @@ export const hasNoToken = () => ({
     type : HAS_NO_TOKEN,
 })
 
+export const changeUserInfoRequest = (payload) => ({
+    type : CHANGEUSERINFO_REQEUST,
+    payload
+})
+
+export const changeUserInfoSuccess = (payload) => ({
+    type : CHANGEUSERINFO_SUCCESS,
+    payload
+})
+
+export const changeUserInfoFailure = (payload) => ({
+    type : CHANGEUSERINFO_FAILURE,
+    payload
+})
+
+export const clearChangeUserInfoState = () => ({
+    type : CLEAR_CHANGEUSERINFO_STATE
+})
+
 const reducer = (state = initialState, action) => 
     produce(state, (draft) => {
         switch (action.type) {
@@ -229,6 +258,9 @@ const reducer = (state = initialState, action) =>
             case LOGIN_SUCCESS:
                 draft.id = action.payload.id;
                 draft.email = action.payload.email;
+                draft.nickname = action.payload.nickname;
+                draft.department = action.payload.department;
+                draft.accessToken = action.payload.accessToken;
                 draft.loginLoading = false;
                 draft.loginDone = true;
                 draft.isLogin = true;
@@ -255,6 +287,9 @@ const reducer = (state = initialState, action) =>
             case TOKEN_SUCCESS:
                 draft.id = action.payload.id;
                 draft.email = action.payload.email;
+                draft.nickname = action.payload.nickname;
+                draft.department = action.payload.department;
+                draft.accessToken = action.payload.accessToken;
                 draft.tokenDone = true;
                 draft.tokenError = "";
                 draft.isLogin = true;
@@ -274,6 +309,7 @@ const reducer = (state = initialState, action) =>
                 draft.email = action.payload.email;
                 draft.nickname = action.payload.nickname;
                 draft.department = action.payload.department;
+                draft.accessToken = action.payload.accessToken;
                 draft.isLogin = true;
                 draft.isChecked = true;
                 break;
@@ -326,6 +362,31 @@ const reducer = (state = initialState, action) =>
             case HAS_NO_TOKEN:
                 draft.isChecked = true;
                 break;
+            
+            case CHANGEUSERINFO_REQEUST:
+                draft.changUserInfoLoading = true;
+                draft.changeUserInfoDone = false;
+                draft.changeUserInfoError = "";
+                break;
+
+            case CHANGEUSERINFO_SUCCESS:
+                draft.changUserInfoLoading = false;
+                draft.changeUserInfoDone = true;
+                draft.changeUserInfoError = "";
+                draft.nickname = action.payload.nickname;
+                draft.department = action.payload.department;
+                break;
+
+            case CHANGEUSERINFO_FAILURE:
+                draft.changUserInfoLoading = false;
+                draft.changeUserInfoDone = false;
+                draft.changeUserInfoError = action.payload.msg;
+                break;
+
+            case CLEAR_CHANGEUSERINFO_STATE:
+                draft.changUserInfoLoading = false;
+                draft.changeUserInfoDone = false;
+                draft.changeUserInfoError = "";
 
             default:
                 break;

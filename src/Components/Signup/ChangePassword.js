@@ -22,11 +22,6 @@ function EmailAuth() {
     const email = searchParams.get("email");
     const authCode = searchParams.get("authCode");
 
-    function sleep(ms) {
-        const wakeUpTime = Date.now() + ms;
-        while (Date.now() < wakeUpTime) {}
-    }
-
     useEffect(() => {
         if (!changePasswordDone) {
             dispatch(

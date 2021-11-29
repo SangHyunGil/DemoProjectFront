@@ -13,6 +13,7 @@ import SignUpCompletePage from './pages/SignUpComplete';
 import MainPage from './pages/MainPage';
 import FindPasswordPage from './pages/FindPassword';
 import ChangePasswordPage from './pages/ChangePassword';
+import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -23,6 +24,7 @@ const App = () => {
 
   useEffect(() => {
     if (!isChecked) {
+      console.log("refresh Page");
       checkAccessToken(dispatch);
     }
   }, [isLogin, isChecked]);
@@ -37,6 +39,7 @@ const App = () => {
           <Route path="/signup/verify" element={<EmailAuthPage />} />
           <Route path="/signup/password" element={<ChangePasswordPage />} />
           <Route path="/signup/findpassword" element={<FindPasswordPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/temp" element={<Temp />} />
           <Route path="/signup/complete" element={<SignUpCompletePage />} />
         </Routes>

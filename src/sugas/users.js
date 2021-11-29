@@ -5,7 +5,7 @@ import {
     registerSuccess, registerFailure, REGISTER_REQUEST,
     loginSuccess, loginFailure, LOGIN_REQUEST, 
     emailAuthFailure, emailAuthSuccess, EMAILAUTH_REQUEST,     
-    tokenFailure, tokenSuccess, TOKEN_REQUEST, INFO_REQUEST, loadInfoFailure, loadInfoSuccess, FINDPASSWORD_REQUEST, findPasswordFailure, findPasswordSuccess, CHANGEPASSWORD_REQUEST, changePasswordFailure, changePasswordSuccess
+    tokenFailure, tokenSuccess, TOKEN_REQUEST, INFO_REQUEST, loadInfoFailure, loadInfoSuccess, FINDPASSWORD_REQUEST, findPasswordFailure, findPasswordSuccess, CHANGEPASSWORD_REQUEST, changePasswordFailure, changePasswordSuccess, CHANGEUSERINFO_REQEUST, changeUserInfoFailure, changeUserInfoSuccess
     } from "../reducers/users";
 
 async function registerAPI(data) {
@@ -87,7 +87,7 @@ function* info(action) {
     try {
         const result = yield call(infoAPI, action.payload);
         const body = result.data.data;
-        yield put(loadInfoSuccess({...body}))
+        yield put(loadInfoSuccess({...body, accessToken : action.payload.accessToken}))
     } catch(e) {
         yield put(loadInfoFailure())
     }
@@ -99,7 +99,6 @@ function findPasswordAPI(data) {
 
 function* findPassword(action) {
     try {
-        console.log("findpas");
         yield call(findPasswordAPI, action.payload);
         yield put(findPasswordSuccess());
     } catch (e) {
@@ -119,6 +118,28 @@ function* changePassword(action) {
         yield put(changePasswordFailure({msg: e.response.data.msg}));
     }
 }
+
+function changeUserInfoAPI(data) {
+    const {id, accessToken, ...temp} = data
+
+    return axios.put("/users/"+id, temp, {
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    })
+}
+
+function* changeUserInfo(action) {
+    try {
+        const result = yield call(changeUserInfoAPI, action.payload);
+        const body = result.data.data;
+        console.log(body);
+        yield put(changeUserInfoSuccess({...body}))
+    } catch(e) {
+        yield put(changeUserInfoFailure({msg: e.response.data.msg}));
+    }
+}
+
 
 function* watchRegister() {
     yield takeLatest(REGISTER_REQUEST, register);
@@ -141,11 +162,15 @@ function* watchInfoRequest() {
 }
 
 function* watchFindPasswordRequest() {
-    yield takeLatest(FINDPASSWORD_REQUEST, findPassword)
+    yield takeLatest(FINDPASSWORD_REQUEST, findPassword);
 }
 
 function* watchChangePasswordRequest() {
-    yield takeLatest(CHANGEPASSWORD_REQUEST, changePassword)
+    yield takeLatest(CHANGEPASSWORD_REQUEST, changePassword);
+}
+
+function* watchChangeUserInfoRequest() {
+    yield takeLatest(CHANGEUSERINFO_REQEUST, changeUserInfo);
 }
 
 export default function* usersSuga() {
@@ -156,6 +181,7 @@ export default function* usersSuga() {
         fork(watchTokenRequest),
         fork(watchInfoRequest),
         fork(watchFindPasswordRequest),
-        fork(watchChangePasswordRequest)
+        fork(watchChangePasswordRequest),
+        fork(watchChangeUserInfoRequest)
     ]);
 };
