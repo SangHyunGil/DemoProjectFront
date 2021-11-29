@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router';
-import { getCookie } from '../utils/cookie';
-import { loadInfoRequest, tokenRequest } from '../reducers/users';
 
 const Temp = () => {
     const { isLogin, isChecked } = useSelector(
@@ -20,7 +18,7 @@ const Temp = () => {
             goLoginPage();
         }
 
-    }, [isLogin, isLogin]);
+    }, [isLogin, isChecked]);
     
     return (
         <div>

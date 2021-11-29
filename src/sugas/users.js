@@ -5,7 +5,7 @@ import {
     registerSuccess, registerFailure, REGISTER_REQUEST,
     loginSuccess, loginFailure, LOGIN_REQUEST, 
     emailAuthFailure, emailAuthSuccess, EMAILAUTH_REQUEST,     
-    tokenFailure, tokenSuccess, TOKEN_REQUEST, INFO_REQUEST, loadInfoFailure, loadInfoSuccess
+    tokenFailure, tokenSuccess, TOKEN_REQUEST, INFO_REQUEST, loadInfoFailure, loadInfoSuccess, FINDPASSWORD_REQUEST, findPasswordFailure, findPasswordSuccess, CHANGEPASSWORD_REQUEST, changePasswordFailure, changePasswordSuccess, CHANGEUSERINFO_REQEUST, changeUserInfoFailure, changeUserInfoSuccess
     } from "../reducers/users";
 
 async function registerAPI(data) {
@@ -54,16 +54,16 @@ function* login(action) {
     }
 }
 
-function tokenRequestAPI(data) {
+function tokenAPI(data) {
     return axios.post("/sign/reissue", data)
 }
 
-function* tokenRequest(action) {
+function* token(action) {
     try {
         const JWT_EXPIRE_TIME = new Date(Date.now() + 1000 * 60 * 30);
         const RFT_EXPIRE_TIME = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
 
-        const result = yield call(tokenRequestAPI, action.payload)
+        const result = yield call(tokenAPI, action.payload)
         const body = result.data.data;
 
         setCookie("accessToken", body.accessToken, {path: "/", expires: JWT_EXPIRE_TIME});
@@ -74,7 +74,7 @@ function* tokenRequest(action) {
     }
 }
 
-export function infoRequestAPI(data) {
+export function infoAPI(data) {
     return axios.post("/users/info",{},
     {
         headers: {
@@ -83,15 +83,63 @@ export function infoRequestAPI(data) {
     })
 }
 
-function* infoRequest(action) {
+function* info(action) {
     try {
-        const result = yield call(infoRequestAPI, action.payload);
+        const result = yield call(infoAPI, action.payload);
         const body = result.data.data;
-        yield put(loadInfoSuccess({...body}))
+        yield put(loadInfoSuccess({...body, accessToken : action.payload.accessToken}))
     } catch(e) {
-        yield put(loadInfoFailure)
+        yield put(loadInfoFailure())
     }
 }
+
+function findPasswordAPI(data) {
+    return axios.post("/sign/email", {email : data.email, redisKey : "PASSWORD"})
+}
+
+function* findPassword(action) {
+    try {
+        yield call(findPasswordAPI, action.payload);
+        yield put(findPasswordSuccess());
+    } catch (e) {
+        yield put(findPasswordFailure({msg: e.response.data.msg}));
+    }
+}
+
+function changePasswordAPI(data) {
+    return axios.post("/sign/password", {email : data.email, password : data.password});
+}
+
+function* changePassword(action) {
+    try {
+        yield call(changePasswordAPI, action.payload)
+        yield put(changePasswordSuccess());
+    } catch(e) {
+        yield put(changePasswordFailure({msg: e.response.data.msg}));
+    }
+}
+
+function changeUserInfoAPI(data) {
+    const {id, accessToken, ...temp} = data
+
+    return axios.put("/users/"+id, temp, {
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    })
+}
+
+function* changeUserInfo(action) {
+    try {
+        const result = yield call(changeUserInfoAPI, action.payload);
+        const body = result.data.data;
+        console.log(body);
+        yield put(changeUserInfoSuccess({...body}))
+    } catch(e) {
+        yield put(changeUserInfoFailure({msg: e.response.data.msg}));
+    }
+}
+
 
 function* watchRegister() {
     yield takeLatest(REGISTER_REQUEST, register);
@@ -106,11 +154,23 @@ function* watchLogin() {
 }
 
 function* watchTokenRequest() {
-    yield takeLatest(TOKEN_REQUEST, tokenRequest);
+    yield takeLatest(TOKEN_REQUEST, token);
 }
 
 function* watchInfoRequest() {
-    yield takeLatest(INFO_REQUEST, infoRequest);
+    yield takeLatest(INFO_REQUEST, info);
+}
+
+function* watchFindPasswordRequest() {
+    yield takeLatest(FINDPASSWORD_REQUEST, findPassword);
+}
+
+function* watchChangePasswordRequest() {
+    yield takeLatest(CHANGEPASSWORD_REQUEST, changePassword);
+}
+
+function* watchChangeUserInfoRequest() {
+    yield takeLatest(CHANGEUSERINFO_REQEUST, changeUserInfo);
 }
 
 export default function* usersSuga() {
@@ -119,6 +179,9 @@ export default function* usersSuga() {
         fork(watchEmailAuth),
         fork(watchLogin),
         fork(watchTokenRequest),
-        fork(watchInfoRequest)
+        fork(watchInfoRequest),
+        fork(watchFindPasswordRequest),
+        fork(watchChangePasswordRequest),
+        fork(watchChangeUserInfoRequest)
     ]);
 };

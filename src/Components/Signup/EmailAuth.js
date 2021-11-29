@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { Link } from "@material-ui/core";
 import {
-    emailAuthRequest,
-    registerRequest,
+    emailAuthRequest
   } from "../../reducers/users";
-  import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 function EmailAuth() {
@@ -38,8 +37,8 @@ function EmailAuth() {
     if (!emailAuthSuccess) {
         return (
             <div>
-                <p>인증에 실패하였습니다.</p>
-                <button onClick={reSend}>메일 재전송하기</button>
+                <p>{emailAuthError}</p>
+                <button onClick={reSend}>메일 재전송</button>
             </div>
         ) 
     } else {
