@@ -8,6 +8,7 @@ import {
     loginRequest,
     clearLoginState,
   } from "../../reducers/users";
+import {checkAccessToken} from '../../utils/jwt';
 
 function Login() {
     let navigate = useNavigate();
@@ -20,7 +21,7 @@ function Login() {
 
     useEffect(() => {
         if (!loginDone) return;
-        navigate("/", {replace: false});
+        navigate("/", {replace: true});
         dispatch(clearLoginState());
     }, [loginDone]);
 

@@ -33,6 +33,7 @@ export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
 export const CLEAR_LOGIN_STATE = "CLEAR_LOGIN_STATE"
+export const RE_LOGIN_SUCCESS = "RE_LOGIN_SUCCESS";
 
 export const EMAILAUTH_REQUEST = "EMAILAUTH_REQUEST";
 export const EMAILAUTH_SUCCESS = "EMAILAUTH_SUCCESS";
@@ -130,7 +131,11 @@ export const tokenFailure = (payload) => ({
 
 export const hasNoToken = () => ({
     type : HAS_NO_TOKEN,
-})
+});
+
+export const reLoginSuccess = () => ({
+    type: RE_LOGIN_SUCCESS, 
+});
 
 const reducer = (state = initialState, action) => 
     produce(state, (draft) => {
@@ -195,6 +200,10 @@ const reducer = (state = initialState, action) =>
                 draft.loginDone = false;
                 draft.loginError = "";
                 break;
+                
+            case RE_LOGIN_SUCCESS:
+                draft.isLogin = true;
+                break
 
             case TOKEN_REQUEST:
                 draft.tokenDone = false;
@@ -232,10 +241,11 @@ const reducer = (state = initialState, action) =>
 
             case HAS_NO_TOKEN:
                 draft.isChecked = true;
+                draft.isLogin = false;
                 break;
 
             default:
-                break;
+                return state;
         }
     });
 

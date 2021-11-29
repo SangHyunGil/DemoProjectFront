@@ -1,6 +1,6 @@
 import { getCookie } from './cookie';
-import { loadInfoRequest, tokenRequest, hasNoToken } from '../reducers/users';
-
+import { loadInfoRequest, tokenRequest, hasNoToken, reLoginSuccess } from '../reducers/users';
+import { useSelector } from "react-redux";
 /**
  * 1. 쿠키에서 RefreshToken 꺼냄
  * 2. RefreshToken 있는지 확인
@@ -8,7 +8,8 @@ import { loadInfoRequest, tokenRequest, hasNoToken } from '../reducers/users';
  * 4. 존재하지 않는다면 로그인 실패 Dispatch
  * @param {*} dispatch 
  */
-const checkRefreshToken = (dispatch) => {
+
+export const checkRefreshToken = (dispatch) => {
     const refreshToken = getCookie("refreshToken");
 
     if (refreshToken) {
@@ -16,6 +17,7 @@ const checkRefreshToken = (dispatch) => {
         refreshToken : refreshToken
       })) 
     } else {
+      console.log('No Token!');
       dispatch(hasNoToken())
     }
 }

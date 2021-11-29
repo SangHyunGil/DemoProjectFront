@@ -46,7 +46,10 @@ function* login(action) {
         const result = yield call(loginAPI, action.payload);
         const body = result.data.data;
 
-        setCookie('accessToken', body.accessToken, {path: "/", expires: JWT_EXPIRE_TIME});
+        //console.log(body);
+        //console.log(body.accessToken);
+
+        setCookie('accessToken', body.accessToken, {path: "/", expires: JWT_EXPIRE_TIME}); 
         setCookie('refreshToken', body.refreshToken, {path: "/", expires: RFT_EXPIRE_TIME});
         yield put(loginSuccess({...body}));
     } catch(e) {
@@ -65,6 +68,7 @@ function* tokenRequest(action) {
 
         const result = yield call(tokenRequestAPI, action.payload)
         const body = result.data.data;
+        
 
         setCookie("accessToken", body.accessToken, {path: "/", expires: JWT_EXPIRE_TIME});
         setCookie('refreshToken', body.refreshToken, {path: "/", expires: RFT_EXPIRE_TIME});
@@ -75,7 +79,7 @@ function* tokenRequest(action) {
 }
 
 export function infoRequestAPI(data) {
-    return axios.post("/users/info",{},
+    return axios.post("/users/info",{data},
     {
         headers: {
             "X-AUTH-TOKEN": data.accessToken
@@ -87,9 +91,9 @@ function* infoRequest(action) {
     try {
         const result = yield call(infoRequestAPI, action.payload);
         const body = result.data.data;
-        yield put(loadInfoSuccess({...body}))
+        yield put(loadInfoSuccess({...body}));
     } catch(e) {
-        yield put(loadInfoFailure)
+        yield put(loadInfoFailure);
     }
 }
 
