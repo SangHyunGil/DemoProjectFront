@@ -5,6 +5,10 @@ import createSagaMiddleware from "redux-saga";
 import rootReducer from '../reducers/rootReducer'
 import ReduxThunk from 'redux-thunk'
 
+/**
+ * 스토어 저장
+ * @returns 
+ */
 export const configStore = () => {
     const sagaMiddleware = createSagaMiddleware();
     const middlewares = [sagaMiddleware, ReduxThunk];
