@@ -1,12 +1,13 @@
 import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
+import users from "./users";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import users from "./users";
 
 const persistConfig = {
   key: "root",
   storage,
+  whitelist: ["users"]
 };
 
 const rootReducer = (state, action) => {

@@ -8,7 +8,6 @@ import {
     loginRequest,
     clearLoginState,
   } from "../../reducers/users";
-import {checkAccessToken} from '../../utils/jwt';
 
 function Login() {
     let navigate = useNavigate();
@@ -46,9 +45,9 @@ function Login() {
                     ) : (
                     <button type="submit">로그인</button>
                     )}
-                <p>아이디가 없으세요? <Link to="/signUp">회원가입</Link></p>       
-                <p>비밀번호를 잊어버리셨나요? <Link to="/signUp">비밀번호 찾기</Link> </p>
-                <p>비밀번호를 잊어버리셨나요? <Link to="/temp">테스트</Link> </p>
+                <p>아이디가 없으세요? <Link to="/signup">회원가입</Link></p>       
+                <p>비밀번호를 잊어버리셨나요? <Link to="/signup/findpassword">비밀번호 찾기</Link> </p>
+                <p>메인페이지로 돌아가시겠나요? <Link to="/">메인페이지</Link> </p>
             </form>
         </div>
     )   
