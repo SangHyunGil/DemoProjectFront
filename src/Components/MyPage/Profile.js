@@ -54,7 +54,7 @@ const Profile = () => {
             {changeUserInfoError === "" ? null : <p> {changeUserInfoError} </p>}
             <form onSubmit={handleProfile}>
                 <label htmlFor="Email">이메일</label>
-                <input name="Email" defaultValue ={email} onChange={onChangeEm} type="text" required disabled></input>
+                <input name="Email" defaultValue ={`${email}@koreatech.ac.kr`} onChange={onChangeEm} type="text" required disabled></input>
 
                 <label htmlFor="Nickname">닉네임</label>
                 <input name="Nickname" defaultValue ={nickname} onChange={onChangeNi} type="text" required ></input>

@@ -27,11 +27,11 @@ const checkRefreshToken = (dispatch) => {
  * 4. 존재하지 않는다면 RefreshToken 확인 메소드 호출
  * @param {*} dispatch 
  */
-export const checkAccessToken = (dispatch) => {
+export const checkAccessToken = async (dispatch) => {
     const accessToken = getCookie("accessToken");
     
     if (accessToken) {
-      dispatch(loadInfoRequest({
+      await dispatch(loadInfoRequest({
         accessToken : accessToken
       }));
     } else {
