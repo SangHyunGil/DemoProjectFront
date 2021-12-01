@@ -11,6 +11,7 @@ function Logout() {
         dispatch(logOut());
         removeCookie('refreshToken');
         removeCookie('accessToken');
+        localStorage.removeItem('persist:root');
         console.log(isLogin);
     },[]);
 

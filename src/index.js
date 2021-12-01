@@ -6,19 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import { configStore } from './utils/configStore'
-import { persistStore } from 'redux-persist';
-import { PersistGate } from 'redux-persist/integration/react';
 
 axios.defaults.baseURL='http://localhost:8080';
 axios.defaults.withCredentials=true;
-const store = configStore();
-const persistor = persistStore(store);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
+  <Provider store={configStore()}>  
       <App />
-    </PersistGate>    
   </Provider>,
   document.getElementById("root")
 );

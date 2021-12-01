@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router';
 
 const Temp = () => {
-    /*
     const { isLogin, isChecked } = useSelector(
         (state) => state.users
     );
@@ -20,7 +19,7 @@ const Temp = () => {
         }
 
     }, [isLogin, isChecked]);
-    */
+    
     return (
         <div>
             <p>hello</p>

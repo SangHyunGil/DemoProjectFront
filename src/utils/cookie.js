@@ -20,13 +20,10 @@ export const setCookie = (name, value, option) => {
  */
 export const getCookie = (name) => {
     return cookies.get(name);
-}
+};
 
-/*
-쿠키 삭세 메소드 
-*/ 
 export const removeCookie = (name) => {
     return cookies.remove(name);
-}
+};
 
-export default cookies
+export default cookies;

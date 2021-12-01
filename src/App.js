@@ -4,7 +4,7 @@ import {BrowserRouter as Router,
         Routes,
         Route} from 'react-router-dom';
 import Temp from './Components/Temp';
-import { useNavigate } from 'react-router';
+//import { useNavigate } from 'react-router';
 import { checkAccessToken } from './utils/jwt'
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
@@ -42,7 +42,7 @@ const App = () => {
           <Route path="/signup/password" element={<ChangePasswordPage />} />
           <Route path="/signup/findpassword" element={<FindPasswordPage />} />
           <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
-          <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute> } />
+          <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
           <Route path="/signup/complete" element={<SignUpCompletePage />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<div>Not Found</div>} />
