@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router';
 import useInput from '../../hooks/useInput';
-import { CircularProgress } from "@material-ui/core";
 import { changeUserInfoRequest, clearChangeUserInfoState } from '../../reducers/users';
 
 const Profile = () => {
@@ -30,7 +29,6 @@ const Profile = () => {
     }, [isLogin, isChecked]);
     
     useEffect(() => {
-        console.log(changeUserInfoDone);
         if (!changeUserInfoDone) {
             return;
         }
