@@ -4,10 +4,10 @@ export const findAllRooms = async (accessToken) => {
     return await axios.get("/room");
 }
 
-export const createRoom = async (roomName, personName, accessToken) => {
+export const createRoom = async (roomName, memberId, accessToken) => {
     return await axios.post("/room", {
         roomName : roomName,
-        personName : personName
+        memberId : memberId
     }, {
         headers: {
             "X-AUTH-TOKEN": accessToken

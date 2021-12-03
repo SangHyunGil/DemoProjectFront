@@ -19,6 +19,7 @@ import Logout from './Components/Logout/Logout';
 import Categories from './Components/Categories/Categories';
 import RoomPage from './pages/RoomPage'
 import ChattingPage from './pages/ChattingPage'
+import MakeRoomPage from './pages/MakeRoomPage';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -55,6 +56,7 @@ const App = () => {
           <Route path="*" element={<div>Not Found</div>} />
           <Route path="/" element={<MainPage/>} />
           <Route path="/study" element={<RoomPage />} />
+          <Route path="/study/create" element={<MakeRoomPage />} />
           <Route path="/study/:roomId" element={<PrivateRoute><ChattingPage /></PrivateRoute>} />
         </Routes>
       </Router>

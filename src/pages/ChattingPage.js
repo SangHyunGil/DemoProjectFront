@@ -9,15 +9,14 @@ function ChattingPage () {
     const client = useRef({});
     const params = useParams();
     const [contents, setContents] = useState([]);
-    const [username, setUsername] = useState("");
     const [message, setMessage] = useState("");
-    const { isLogin, isChecked, accessToken } = useSelector(
+    const { isLogin, isChecked, id, nickname, accessToken } = useSelector(
         (state) => state.users);
 
     const sendMessage = (username, content) => {
         const newMessage = {
             "roomId" : params.roomId,
-            "username" : username,
+            "memberId" : id,
             "content" : content
         };
         if (!client.current.connected) {
@@ -72,14 +71,14 @@ function ChattingPage () {
 
     useEffect(() => {
         connect();
-    
+        
         return () => disconnect();
     }, [])
 
     return ( 
-        <div> 
-            <ChattingComp contents={contents} username={username} message={message}
-                           sendMessage={sendMessage} setUsername={setUsername} setMessage={setMessage} />
+        <div>
+            <ChattingComp contents={contents} username={nickname} message={message}
+                           sendMessage={sendMessage} setMessage={setMessage} />
         </div> 
     ); } 
         
