@@ -17,6 +17,7 @@ import ProfilePage from './pages/ProfilePage';
 import PrivateRoute from './Components/PrivateRouter/PrivateRoute';
 import Logout from './Components/Logout/Logout';
 import Categories from './Components/Categories/Categories';
+import CallVan from './pages/CallVan';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -46,7 +47,7 @@ const App = () => {
           <Route path="/signup/findpassword" element={<FindPasswordPage />} />
           <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
           <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
-          <Route path="/callvan" element={<PrivateRoute><h1>콜밴</h1></PrivateRoute>} />
+          <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
           <Route path="/signup/complete" element={<SignUpCompletePage />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<div>Not Found</div>} />
