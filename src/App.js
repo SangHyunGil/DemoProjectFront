@@ -14,6 +14,7 @@ import MainPage from './pages/MainPage';
 import FindPasswordPage from './pages/FindPassword';
 import ChangePasswordPage from './pages/ChangePassword';
 import ProfilePage from './pages/ProfilePage';
+import WebSocketPage from "./pages/WebSocketPage"
 
 const App = () => {
   //let navigate = useNavigate();
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/temp" element={<Temp />} />
           <Route path="/signup/complete" element={<SignUpCompletePage />} />
+          <Route path="/websocket" element={<WebSocketPage />} />
         </Routes>
       </Router>
     </div>
