@@ -20,6 +20,7 @@ import Categories from './Components/Categories/Categories';
 import RoomPage from './pages/RoomPage'
 import ChattingPage from './pages/ChattingPage'
 import MakeRoomPage from './pages/MakeRoomPage';
+import CallVan from './pages/CallVan';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -33,8 +34,9 @@ const App = () => {
     if (!isChecked) {
       //console.log("refresh Page");
       checkAccessToken(dispatch);
+      console.log(isLogin);
     }
-    
+
   });
 
   return (
@@ -58,6 +60,10 @@ const App = () => {
           <Route path="/study" element={<RoomPage />} />
           <Route path="/study/create" element={<MakeRoomPage />} />
           <Route path="/study/:roomId" element={<PrivateRoute><ChattingPage /></PrivateRoute>} />
+          <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
+          <Route path="/signup/complete" element={<SignUpCompletePage />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </Router>
     </div>
