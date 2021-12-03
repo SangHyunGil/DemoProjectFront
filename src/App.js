@@ -48,6 +48,7 @@ const App = () => {
           <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
           <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
           <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
+          <Route path="/callvan/:id" element={<PrivateRoute><h1>하위 페이지!</h1></PrivateRoute>} />
           <Route path="/signup/complete" element={<SignUpCompletePage />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<div>Not Found</div>} />

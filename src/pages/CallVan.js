@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from '../Components/Card/Card';
 import styled from 'styled-components';
+import {Link} from 'react-router-dom';
 
 const CardContext = [
     {id:0, img: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80', title: '정문 콜밴 파티원'}, 
@@ -22,14 +23,9 @@ const CardWrapper = styled.div`
 `;
 
 function CallVan() {
-
-    for (let i=0; i<10; i++){
-        CardContext.push({id:i+2, img:CardContext[i%2].img, title:CardContext[i%2].title});
-    }
-
     return (
         <CardWrapper>
-            {CardContext.map(card => (<Card key={card.id} titleImg={card.img}><h3>{card.title}</h3></Card>))}
+            {CardContext.map(card => (<Link to={`${card.id}`}><Card key={card.id} titleImg={card.img}><h3>{card.title}</h3></Card></Link>))}
         </CardWrapper>
     )
 }
