@@ -3,7 +3,28 @@ import { findAllRooms } from "../../Api/Api";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Card from "../Card/Card";
 import "./RoomStyles.css"
+import styled from "styled-components";
+
+const CardWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    grid-template-rows: repeat(2,1fr);
+    grid-auto-rows: 1fr;
+    grid-gap: 10px;
+    margin: 10px 10%;
+    justify-items: center;
+    @media (max-width: 900px) {
+        grid-template-columns: repeat(4,1fr);
+        grid-template-rows: repeat(2,1fr);
+    }
+`;
+
+const CardContext = [
+    {id:0, img: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80', title: '정문 콜밴 파티원'}, 
+    {id:1, img:'https://images.unsplash.com/photo-1624552184280-9e9631bbeee9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',title:'콜밴=콜라 밴'}
+];
 
 const RoomComp = () => {
     const navigate = useNavigate();
@@ -27,12 +48,14 @@ const RoomComp = () => {
     }
 
     return (
-        <div className="rm">
-            <button onClick={onNavigate}>개설</button>
-            {rooms.map((room, idx) => (
-                <Link to = {{pathname:`/study/${room.roomId}`}} key={idx}>제목 {room.roomName} - 방장 {room.memberName} </Link>
-            ))} 
-            <br />
+        <div>
+            <button onClick={onNavigate}>채팅방 개설</button>
+            <CardWrapper>
+            {rooms.map((room, idx) => 
+            (<Link to = {{pathname:`/study/${room.roomId}`}} key={idx}>
+                <Card key={room.roomId} titleImg={CardContext[0].img}><h3>{room.roomName}</h3><h3>{room.memberName}</h3></Card>
+            </Link>))}
+            </CardWrapper>
         </div>
     )
 }
