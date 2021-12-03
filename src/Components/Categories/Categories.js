@@ -19,18 +19,15 @@ const Category = styled(NavLink)`
     cursor: pointer;
     white-space: pre;
     text-decoration: none;
-
     &:hover {
         color: #ffc107;
     }
-
     &.active {
         border-bottom: 2px solid #ffc107;
         &:hover {
             color: #13C6DC;
         }
     }
-
     & + & {
         margin-left: 1rem;
     }

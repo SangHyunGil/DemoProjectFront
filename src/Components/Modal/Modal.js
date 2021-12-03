@@ -26,21 +26,16 @@ const ModalContainer = styled.div`
 `;
 
 function Modal(props) {
-    const navigate = useNavigate();
-
-    const ModalOutsideHandler = (e) => {
-        navigate('/');
-    };
-
     return (
         <React.Fragment>
-            <ModalBackground onClick={ModalOutsideHandler} />
+            <ModalBackground onClick={props.ModalHandler} />
             <ModalContainer>
                 <header>
                     {props.title}
                 </header>
                 <main>
                     {props.message}
+                    {props.children}
                 </main>
             </ModalContainer>
         </React.Fragment>

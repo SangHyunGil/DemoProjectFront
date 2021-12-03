@@ -314,6 +314,7 @@ const reducer = (state = initialState, action) =>
             case TOKEN_FAILURE:
                 draft.tokenDone = false;
                 draft.tokenError = action.payload.msg;
+                draft.isChecked = true;
                 break;
             
             case INFO_REQUEST:
@@ -330,6 +331,7 @@ const reducer = (state = initialState, action) =>
                 break;
 
             case INFO_FAILURE:
+                draft.isChecked = true;
                 break;
 
             case FINDPASSWORD_REQUEST:
