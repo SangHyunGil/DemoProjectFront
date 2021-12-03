@@ -209,15 +209,11 @@ export const changeUserInfoFailure = (payload) => ({
 
 export const clearChangeUserInfoState = () => ({
     type : CLEAR_CHANGEUSERINFO_STATE
-<<<<<<< HEAD
-})
-=======
 });
 
 export const logOut = () => ({
     type : LOGOUT
 });
->>>>>>> 6f5524479c2f04c723a0c22f6f1e197f0282488c
 
 const reducer = (state = initialState, action) => 
     produce(state, (draft) => {
@@ -387,28 +383,6 @@ const reducer = (state = initialState, action) =>
                 draft.changeUserInfoDone = false;
                 draft.changeUserInfoError = "";
                 break;
-<<<<<<< HEAD
-
-            case CHANGEUSERINFO_SUCCESS:
-                draft.changUserInfoLoading = false;
-                draft.changeUserInfoDone = true;
-                draft.changeUserInfoError = "";
-                draft.nickname = action.payload.nickname;
-                draft.department = action.payload.department;
-                break;
-
-            case CHANGEUSERINFO_FAILURE:
-                draft.changUserInfoLoading = false;
-                draft.changeUserInfoDone = false;
-                draft.changeUserInfoError = action.payload.msg;
-                break;
-
-            case CLEAR_CHANGEUSERINFO_STATE:
-                draft.changUserInfoLoading = false;
-                draft.changeUserInfoDone = false;
-                draft.changeUserInfoError = "";
-=======
->>>>>>> 6f5524479c2f04c723a0c22f6f1e197f0282488c
 
             case CHANGEUSERINFO_SUCCESS:
                 draft.changUserInfoLoading = false;
