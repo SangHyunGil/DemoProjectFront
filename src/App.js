@@ -56,7 +56,7 @@ const App = () => {
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<div>Not Found</div>} />
           <Route path="/study" element={<RoomPage />} />
-          <Route path="/study/create" element={<MakeRoomPage />} />
+          <Route path="/study/create" element={<PrivateRoute><MakeRoomPage /></PrivateRoute>} />
           <Route path="/study/:roomId" element={<PrivateRoute><ChattingPage /></PrivateRoute>} />
         </Routes>
       </Router>
