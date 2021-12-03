@@ -1,6 +1,8 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Card from '../Components/Card/Card';
 import styled from 'styled-components';
+import {Link} from 'react-router-dom';
+import Modal from '../Components/Modal/Modal';
 
 const CardContext = [
     {id:0, img: 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80', title: '정문 콜밴 파티원'}, 
@@ -22,15 +24,23 @@ const CardWrapper = styled.div`
 `;
 
 function CallVan() {
+    const [IsModalUp, setIsModalUp] = useState(false);
 
-    for (let i=0; i<10; i++){
-        CardContext.push({id:i+2, img:CardContext[i%2].img, title:CardContext[i%2].title});
+    const ModalUPHandler = () => {
+        setIsModalUp(true);
     }
 
     return (
-        <CardWrapper>
-            {CardContext.map(card => (<Card key={card.id} titleImg={card.img}><h3>{card.title}</h3></Card>))}
-        </CardWrapper>
+        <React.Fragment>
+            {IsModalUp && <Modal title={<p>채팅방 생성</p>} m
+            essage={<p>채팅방을 생성합니다</p>} ModalHandler={()=>{setIsModalUp(false)}}><input></input></Modal>}
+            <button onClick={ModalUPHandler}>생성</button>
+            <CardWrapper>
+                {CardContext.map(card => (<Link to={`${card.id}`}>
+                <Card key={card.id} titleImg={card.img}><h3>{card.title}</h3></Card>
+                </Link>))}
+            </CardWrapper>
+        </React.Fragment>
     )
 }
 

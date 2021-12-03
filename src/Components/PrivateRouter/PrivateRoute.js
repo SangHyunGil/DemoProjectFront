@@ -10,7 +10,7 @@ function PrivateRoute(props) {
     const dispatch = useDispatch();
     const isLogin = useSelector(state => state.users.isLogin);
     const isChecked = useSelector(state => state.users.isChecked);
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log(isLogin);
@@ -22,9 +22,15 @@ function PrivateRoute(props) {
         }
     },[isLogin]);
 
+    const ModalErrorHandler = () => {
+        navigate('/');
+    };
+
     return (
         <>
-            {isChecked && (isLogin? props.children: <Modal title={<p>로그인 필요 서비스</p>} message={<p><Link to="/login">로그인</Link>이 필요한 서비스 입니다.</p>} />) }
+            {isChecked && (isLogin? props.children: 
+            <Modal title={<p>로그인 필요 서비스</p>} ModalHandler={ModalErrorHandler}
+            message={<p><Link to="/login">로그인</Link>이 필요한 서비스 입니다.</p>} />) }
         </>
     )
 }
