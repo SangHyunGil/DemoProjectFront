@@ -45,7 +45,7 @@ function EmailAuth() {
         return (
             <div>
                 <p>인증이 완료되었습니다.</p>
-                <Link href="/">
+                <Link href="/login">
                     <button>로그인하러 가기</button>
                 </Link>
             </div>

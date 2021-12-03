@@ -45,7 +45,8 @@ export const CLEAR_REGISTER_STATE = "CLEAR_REGISTER_STATE";
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
-export const CLEAR_LOGIN_STATE = "CLEAR_LOGIN_STATE"
+export const CLEAR_LOGIN_STATE = "CLEAR_LOGIN_STATE";
+export const LOGOUT = "LOGOUT";
 
 export const EMAILAUTH_REQUEST = "EMAILAUTH_REQUEST";
 export const EMAILAUTH_SUCCESS = "EMAILAUTH_SUCCESS";
@@ -208,7 +209,11 @@ export const changeUserInfoFailure = (payload) => ({
 
 export const clearChangeUserInfoState = () => ({
     type : CLEAR_CHANGEUSERINFO_STATE
-})
+});
+
+export const logOut = () => ({
+    type : LOGOUT
+});
 
 const reducer = (state = initialState, action) => 
     produce(state, (draft) => {
@@ -277,6 +282,16 @@ const reducer = (state = initialState, action) =>
                 draft.loginLoading = false;
                 draft.loginDone = false;
                 draft.loginError = "";
+                break;
+            //전체 초기화
+            case LOGOUT:
+                draft.id = "";
+                draft.email = "";
+                draft.nickname = "";
+                draft.department = "";
+                draft.accessToken = "";
+                draft.isLogin = false;
+                draft.isChecked = false;
                 break;
 
             case TOKEN_REQUEST:
@@ -387,9 +402,10 @@ const reducer = (state = initialState, action) =>
                 draft.changUserInfoLoading = false;
                 draft.changeUserInfoDone = false;
                 draft.changeUserInfoError = "";
+                break;
 
             default:
-                break;
+                return state;
         }
     });
 

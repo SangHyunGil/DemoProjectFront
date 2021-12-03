@@ -4,7 +4,7 @@ import {BrowserRouter as Router,
         Routes,
         Route} from 'react-router-dom';
 import Temp from './Components/Temp';
-import { useNavigate } from 'react-router';
+//import { useNavigate } from 'react-router';
 import { checkAccessToken } from './utils/jwt'
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
@@ -14,6 +14,10 @@ import MainPage from './pages/MainPage';
 import FindPasswordPage from './pages/FindPassword';
 import ChangePasswordPage from './pages/ChangePassword';
 import ProfilePage from './pages/ProfilePage';
+import PrivateRoute from './Components/PrivateRouter/PrivateRoute';
+import Logout from './Components/Logout/Logout';
+import Categories from './Components/Categories/Categories';
+import CallVan from './pages/CallVan';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -24,14 +28,16 @@ const App = () => {
 
   useEffect(() => {
     if (!isChecked) {
-      console.log("refresh Page");
+      //console.log("refresh Page");
       checkAccessToken(dispatch);
+      console.log(isLogin);
     }
-  }, [isLogin, isChecked]);
+  });
 
   return (
     <div>
       <Router>
+        <Categories />
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -39,9 +45,12 @@ const App = () => {
           <Route path="/signup/verify" element={<EmailAuthPage />} />
           <Route path="/signup/password" element={<ChangePasswordPage />} />
           <Route path="/signup/findpassword" element={<FindPasswordPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/temp" element={<Temp />} />
+          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+          <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
+          <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
           <Route path="/signup/complete" element={<SignUpCompletePage />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </Router>
     </div>
