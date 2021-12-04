@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import Card from "../Card/Card";
 import "./RoomStyles.css"
 import styled from "styled-components";
+import Modal from "../Modal/Modal";
 
 const CardWrapper = styled.div`
     display: grid;
@@ -30,6 +31,7 @@ const BoardComp = () => {
     const navigate = useNavigate();
     const [boards, setBoards] = useState([]);
     const { isLogin, isChecked } = useSelector((state) => state.users);
+    const [isModalUp, setIsModalUp] = useState(false);
 
     useEffect(() => {
         findAllBoards()
@@ -44,12 +46,15 @@ const BoardComp = () => {
             navigate("/study/create");
             return;
         }
-        navigate("/login")
+        else {
+            setIsModalUp(true);
+        }
     }
 
     return (
         <div>
             <button onClick={onNavigate}>게시글 개설</button>
+            {isModalUp && <Modal title={<p>로그인 필요!</p>} ModalHandler={() => setIsModalUp(false)}><p><Link to='/login'>로그인</Link>이 필요한 서비스 입니다.</p></Modal>}
             <CardWrapper>
             {boards.map((board, idx) => 
             (<Link to = {{pathname:`/study/${board.boardId}`}} key={idx}>

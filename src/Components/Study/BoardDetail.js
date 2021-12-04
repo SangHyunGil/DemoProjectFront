@@ -19,6 +19,10 @@ function BoardDetail ({ boardId }) {
         .catch(error => console.log(error));
     }, [])
 
+    const BoardDetailHandler = () => {
+
+    };
+
     return ( 
         <div>
             <input name="title" defaultValue ={`${title}`} type="text" disabled></input>
@@ -26,6 +30,7 @@ function BoardDetail ({ boardId }) {
             <input name="headCount" defaultValue ={`${headCount}`} type="text" disabled></input>
             <input name="studyState" defaultValue ={`${studyState}`} type="text" disabled></input>
             <input name="recruitState" defaultValue ={`${recruitState}`} type="text" disabled></input>
+            <button onClick={BoardDetailHandler}>신청하기</button>
         </div> 
     ); 
 } 

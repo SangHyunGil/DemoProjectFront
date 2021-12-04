@@ -57,7 +57,8 @@ const App = () => {
           <Route path="*" element={<div>Not Found</div>} />
           <Route path="/study" element={<BoardPage />} />
           <Route path="/study/create" element={<MakeBoardPage />} />
-          <Route path="/study/:boardId" element={<PrivateRoute><BoardDetailPage /></PrivateRoute>} />
+          <Route path="/study/:boardId" element={<BoardDetailPage />} />
+          <Route path="/study/:boardId/board" element={<MakeBoardPage />} />
         </Routes>
       </Router>
     </div>
