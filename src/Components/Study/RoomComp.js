@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import Card from "../Card/Card";
 import "./RoomStyles.css"
 import styled from "styled-components";
+import Modal from "../Modal/Modal";
+import PrivateRoute from "../PrivateRouter/PrivateRoute";
 
 const CardWrapper = styled.div`
     display: grid;
@@ -30,6 +32,7 @@ const RoomComp = () => {
     const navigate = useNavigate();
     const [rooms, setRooms] = useState([]);
     const { isLogin, isChecked } = useSelector((state) => state.users);
+    const [isModalUp, setIsModalUp] = useState(false);
 
     useEffect(() => {
         findAllRooms()
@@ -39,13 +42,20 @@ const RoomComp = () => {
             .catch(error => console.log(error));
     }, [])
 
+    
     const onNavigate = () => {
+        /*
         if (isChecked && isLogin) {
             navigate("/study/create");
             return;
         }
-        navigate("/login")
+        navigate("/login")*/
+        navigate("/study/create");
     }
+    /*
+    const CreateModalHandler = () => {
+        setIsModalUp(true);
+    };*/
 
     return (
         <div>
@@ -59,5 +69,5 @@ const RoomComp = () => {
         </div>
     )
 }
-
+//{isModalUp && <PrivateRoute><Modal title={<p>채팅방 개설</p>} message={<p>메세지</p>} ModalHandler={()=>{setIsModalUp(false)}} /></PrivateRoute>}
 export default RoomComp

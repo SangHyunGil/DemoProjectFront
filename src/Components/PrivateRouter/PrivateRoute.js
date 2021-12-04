@@ -30,7 +30,7 @@ function PrivateRoute(props) {
         <>
             {isChecked && (isLogin? props.children: 
             <Modal title={<p>로그인 필요 서비스</p>} ModalHandler={ModalErrorHandler}
-            message={<p><Link to="/login">로그인</Link>이 필요한 서비스 입니다.</p>} />) }
+            message={<p><Link to="/login">로그인</Link>이 필요한 서비스 입니다.</p>}  />) }
         </>
     )
 }
