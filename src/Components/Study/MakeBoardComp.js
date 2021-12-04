@@ -9,17 +9,17 @@ const MakeRoomComp = () => {
     const [title, onChangeTitle] = useInput("");
     const [topic, onChangeTopic] = useInput("");
     const [headCount, onChangeHeadCount] = useInput("");
-    const [studyState, setStudyState] = useState('스터디 준비 중');
-    const [recruitState, setRecruitState] = useState('모집 중');
+    const [studyState, setStudyState] = useState('PREPARE');
+    const [recruitState, setRecruitState] = useState('PROCEED');
     const { id, accessToken } = useSelector((state) => state.users);
 
     const study = [
-        {id:0, val: "PREPARE", text: '스터디 준비 중'}, {id:1, val: "PROCEED", text: '스터디 진행 중'}, 
-        {id:2, text: '스터디 종료'}
+        {id:0, val: "PREPARE", text: '스터디 준비 중'}, {id:1, val: "STUDYING", text: '스터디 진행 중'}, 
+        {id:2, val: "FINISH", text: '스터디 종료'}
     ];
 
     const recruit = [
-        {id:0, val: "PROCEED", val: "END", text: '모집 중'}, {id:1, val: "END", text: '모집 마감'}
+        {id:0, val: "PROCEED", text: '모집 중'}, {id:1, val: "END", text: '모집 마감'}
     ];
 
     const handleStudyState = (e) => {

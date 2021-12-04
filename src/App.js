@@ -21,6 +21,8 @@ import CallVan from './pages/CallVan';
 import BoardPage from './pages/BoardPage'
 import MakeBoardPage from './pages/MakeBoardPage'
 import BoardDetailPage from './pages/BoardDetailPage'
+import Profile from './Components/MyPage/Profile';
+import MyStudy from './Components/Study/MyStudy';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -48,7 +50,10 @@ const App = () => {
           <Route path="/signup/verify" element={<EmailAuthPage />} />
           <Route path="/signup/password" element={<ChangePasswordPage />} />
           <Route path="/signup/findpassword" element={<FindPasswordPage />} />
-          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} >
+            <Route path="accountInfo" element={<PrivateRoute><Profile /></PrivateRoute>} />
+            <Route path="mystudy" element={<PrivateRoute><MyStudy /></PrivateRoute>} />
+          </Route>
           <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
           <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
           <Route path="/callvan/:id" element={<PrivateRoute><h1>하위 페이지!</h1></PrivateRoute>} />
