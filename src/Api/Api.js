@@ -12,6 +12,17 @@ export const findAllBoards = async () => {
     return await axios.get("/board");
 }
 
+export const join = async (boardId, memberId, accessToken) => {
+    return await axios.post("/board/join", {
+        boardId: boardId,
+        memberId: memberId
+    }, {
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    })
+}
+
 export const createRoom = async (roomName, memberId, accessToken) => {
     return await axios.post("/room", {
         roomName : roomName,

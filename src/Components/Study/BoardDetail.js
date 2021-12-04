@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from 'react'; 
-import { findBoard } from '../../Api/Api';
+import { findBoard, join } from '../../Api/Api';
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 function BoardDetail ({ boardId }) { 
+    const navigate = useNavigate();
     const [title, setTitle] = useState("");
     const [topic, setTopic] = useState("");
     const [headCount, setHeadCount] = useState("");
     const [studyState, setStudyState] = useState("");
     const [recruitState, setRecruitState] = useState("");
+    const { isChecked, isLogin, id, accessToken } = useSelector((state) => state.users);
 
     useEffect(() => {
         findBoard(boardId)
@@ -20,7 +24,13 @@ function BoardDetail ({ boardId }) {
     }, [])
 
     const BoardDetailHandler = () => {
-
+        if (isChecked && isLogin) {
+            join(boardId, id, accessToken)
+                .then(response => navigate("/study"))
+                .catch(error => console.log(error));
+            return;
+        }
+        navigate("/login")
     };
 
     return ( 
