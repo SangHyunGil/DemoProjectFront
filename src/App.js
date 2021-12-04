@@ -18,9 +18,9 @@ import PrivateRoute from './Components/PrivateRouter/PrivateRoute';
 import Logout from './Components/Logout/Logout';
 import Categories from './Components/Categories/Categories';
 import CallVan from './pages/CallVan';
-import RoomPage from './pages/RoomPage'
-import MakeRoomPage from './pages/MakeRoomPage'
-import ChattingPage from './pages/ChattingPage'
+import BoardPage from './pages/BoardPage'
+import MakeBoardPage from './pages/MakeBoardPage'
+import BoardDetailPage from './pages/BoardDetailPage'
 
 const App = () => {
   //let navigate = useNavigate();
@@ -55,9 +55,9 @@ const App = () => {
           <Route path="/signup/complete" element={<SignUpCompletePage />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<div>Not Found</div>} />
-          <Route path="/study" element={<RoomPage />} />
-          <Route path="/study/create" element={<MakeRoomPage />} />
-          <Route path="/study/:roomId" element={<PrivateRoute><ChattingPage /></PrivateRoute>} />
+          <Route path="/study" element={<BoardPage />} />
+          <Route path="/study/create" element={<MakeBoardPage />} />
+          <Route path="/study/:boardId" element={<PrivateRoute><BoardDetailPage /></PrivateRoute>} />
         </Routes>
       </Router>
     </div>
