@@ -18,9 +18,11 @@ import PrivateRoute from './Components/PrivateRouter/PrivateRoute';
 import Logout from './Components/Logout/Logout';
 import Categories from './Components/Categories/Categories';
 import CallVan from './pages/CallVan';
-import RoomPage from './pages/RoomPage'
-import MakeRoomPage from './pages/MakeRoomPage'
-import ChattingPage from './pages/ChattingPage'
+import BoardPage from './pages/BoardPage'
+import MakeBoardPage from './pages/MakeBoardPage'
+import BoardDetailPage from './pages/BoardDetailPage'
+import Profile from './Components/MyPage/Profile';
+import MyStudy from './Components/Study/MyStudy';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -48,16 +50,20 @@ const App = () => {
           <Route path="/signup/verify" element={<EmailAuthPage />} />
           <Route path="/signup/password" element={<ChangePasswordPage />} />
           <Route path="/signup/findpassword" element={<FindPasswordPage />} />
-          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} >
+            <Route path="accountInfo" element={<PrivateRoute><Profile /></PrivateRoute>} />
+            <Route path="mystudy" element={<PrivateRoute><MyStudy /></PrivateRoute>} />
+          </Route>
           <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
           <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
           <Route path="/callvan/:id" element={<PrivateRoute><h1>하위 페이지!</h1></PrivateRoute>} />
           <Route path="/signup/complete" element={<SignUpCompletePage />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<div>Not Found</div>} />
-          <Route path="/study" element={<RoomPage />} />
-          <Route path="/study/create" element={<PrivateRoute><MakeRoomPage /></PrivateRoute>} />
-          <Route path="/study/:roomId" element={<PrivateRoute><ChattingPage /></PrivateRoute>} />
+          <Route path="/study" element={<BoardPage />} />
+          <Route path="/study/create" element={<MakeBoardPage />} />
+          <Route path="/study/:boardId" element={<BoardDetailPage />} />
+          <Route path="/study/:boardId/board" element={<MakeBoardPage />} />
         </Routes>
       </Router>
     </div>

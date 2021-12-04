@@ -1,13 +1,47 @@
 import axios from "axios";
 
-export const findAllRooms = async (accessToken) => {
+export const findAllRooms = async () => {
     return await axios.get("/room");
+}
+
+export const findBoard = async (boardId) => {
+    return await axios.get("/board/"+boardId);
+}
+
+export const findAllBoards = async () => {
+    return await axios.get("/board");
+}
+
+export const join = async (boardId, memberId, accessToken) => {
+    return await axios.post("/board/join", {
+        boardId: boardId,
+        memberId: memberId
+    }, {
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    })
 }
 
 export const createRoom = async (roomName, memberId, accessToken) => {
     return await axios.post("/room", {
         roomName : roomName,
         memberId : memberId
+    }, {
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    })
+}
+
+export const createBoard = async (title, topic, headCount, studyState, recruitState, id, accessToken) => {
+    return await axios.post("/board", {
+        title : title,
+        topic : topic,
+        headCount : headCount,
+        studyState : studyState,
+        recruitState : recruitState,
+        memberId : id
     }, {
         headers: {
             "X-AUTH-TOKEN": accessToken
