@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {useEffect,useState} from 'react';
 import { useSelector } from "react-redux";
 import {findUserBoard} from '../../Api/Api';
@@ -31,6 +32,16 @@ function MyStudy() {
                 </Link>
             ))}
         </React.Fragment>
+=======
+import React from 'react';
+import BoardDetail from './BoardDetail';
+
+function MyStudy() {
+    return (
+        <BoardDetail boardId={1}>
+
+        </BoardDetail>
+>>>>>>> ac4e7f85578b31ec2cfed51b95df402ea6fea75f
     )
 }
 
