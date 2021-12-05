@@ -1,8 +1,48 @@
-import React from "react";
-import Profile from "../Components/MyPage/Profile"
+import React, {useEffect} from "react";
+import Profile from "../Components/MyPage/Profile";
+import {Outlet, Link,useNavigate, NavLink} from 'react-router-dom';
+import styled from "styled-components";
+
+const ProfilePageWrapper = styled.div`
+    display: flex;
+    border-bottom: 2px solid #e6e6e6;
+`;
+
+const ProfilePageLinks = styled(NavLink)`
+  cursor: pointer;
+  text-decoration: none;
+  white-space: pre;
+    &:hover {
+        color: #ffc107;
+    }
+    &.active {
+        border-bottom: 2px solid #ffc107;
+        &:hover {
+            color: #13C6DC;
+        }
+    }
+  & + & {
+    margin-left: 1rem;
+  }
+`;
 
 const ProfilePage = () => {
-  return <Profile />;
+  //const params = useParams();
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate('/profile/accountInfo');
+  }, [])
+  return (
+    <>
+      <ProfilePageWrapper> 
+        <ProfilePageLinks activeclassname="active" to="/profile/accountInfo">Profile</ProfilePageLinks>
+        <ProfilePageLinks activeclassname="active" to="/profile/mystudy">내스터디</ProfilePageLinks>
+        <ProfilePageLinks activeclassname="active" to="/profile/mycallvan">내콜밴</ProfilePageLinks>
+        <ProfilePageLinks activeclassname="active" to="/profile/mymarket">내장터</ProfilePageLinks>
+      </ProfilePageWrapper>
+      <Outlet />
+    </>
+  );
 };
 
 export default ProfilePage;

@@ -11,8 +11,8 @@ const category = [
 const CategoryWrapper = styled.div`
     display: flex;
     padding: 1rem;
-    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
-    margin-bottom: 1rem;
+    //box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    border-bottom: 2px solid #e6e6e6;
 `;
 
 const Category = styled(NavLink)`

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { findAllRooms } from "../../Api/Api";
+import { findAllBoards } from "../../Api/Api"
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Card from "../Card/Card";
 import "./RoomStyles.css"
 import styled from "styled-components";
+import Modal from "../Modal/Modal";
 
 const CardWrapper = styled.div`
     display: grid;
@@ -26,15 +27,16 @@ const CardContext = [
     {id:1, img:'https://images.unsplash.com/photo-1624552184280-9e9631bbeee9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',title:'콜밴=콜라 밴'}
 ];
 
-const RoomComp = () => {
+const BoardComp = () => {
     const navigate = useNavigate();
-    const [rooms, setRooms] = useState([]);
+    const [boards, setBoards] = useState([]);
     const { isLogin, isChecked } = useSelector((state) => state.users);
+    const [isModalUp, setIsModalUp] = useState(false);
 
     useEffect(() => {
-        findAllRooms()
-            .then(response => response.data.data.map((room) => (
-                setRooms((prev) => [...prev, room]))
+        findAllBoards()
+            .then(response => response.data.data.map((board) => (
+                setBoards((prev) => [...prev, board]))
             ))
             .catch(error => console.log(error));
     }, [])
@@ -44,20 +46,23 @@ const RoomComp = () => {
             navigate("/study/create");
             return;
         }
-        navigate("/login")
+        else {
+            setIsModalUp(true);
+        }
     }
 
     return (
         <div>
-            <button onClick={onNavigate}>채팅방 개설</button>
+            <button onClick={onNavigate}>게시글 개설</button>
+            {isModalUp && <Modal title={<p>로그인 필요!</p>} ModalHandler={() => setIsModalUp(false)}><p><Link to='/login'>로그인</Link>이 필요한 서비스 입니다.</p></Modal>}
             <CardWrapper>
-            {rooms.map((room, idx) => 
-            (<Link to = {{pathname:`/study/${room.roomId}`}} key={idx}>
-                <Card key={room.roomId} titleImg={CardContext[0].img}><h3>{room.roomName}</h3><h3>{room.memberName}</h3></Card>
+            {boards.map((board, idx) => 
+            (<Link to = {{pathname:`/study/${board.boardId}`}} key={idx}>
+                <Card key={board.boardId} titleImg={CardContext[0].img}><h3>{board.title}</h3><h3>{board.topic}</h3></Card>
             </Link>))}
             </CardWrapper>
         </div>
     )
 }
 
-export default RoomComp
+export default BoardComp
