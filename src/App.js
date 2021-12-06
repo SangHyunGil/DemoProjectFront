@@ -23,10 +23,8 @@ import MakeBoardPage from './pages/MakeBoardPage'
 import BoardDetailPage from './pages/BoardDetailPage'
 import Profile from './Components/MyPage/Profile';
 import MyStudy from './Components/Study/MyStudy';
-<<<<<<< HEAD
 import UpdateStudy from './Components/Study/UpdateStudy';
-=======
->>>>>>> ac4e7f85578b31ec2cfed51b95df402ea6fea75f
+import StudyBoard from './Components/Study/StudyBoard';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -57,12 +55,9 @@ const App = () => {
           <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} >
             <Route path="accountInfo" element={<PrivateRoute><Profile /></PrivateRoute>} />
             <Route path="mystudy" element={<PrivateRoute><MyStudy /></PrivateRoute>} />
-<<<<<<< HEAD
             <Route path="mycallvan" element={<PrivateRoute><h1>마이 콜밴 페이지</h1></PrivateRoute>} />
             <Route path="mymarket" element={<PrivateRoute><h1>마이 마켓 페이지</h1></PrivateRoute>} />
             <Route path="updateStudyInfo/:id" element={<PrivateRoute><UpdateStudy /></PrivateRoute>} />
-=======
->>>>>>> ac4e7f85578b31ec2cfed51b95df402ea6fea75f
           </Route>
           <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
           <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
@@ -74,6 +69,10 @@ const App = () => {
           <Route path="/study/create" element={<MakeBoardPage />} />
           <Route path="/study/:boardId" element={<BoardDetailPage />} />
           <Route path="/study/:boardId/board" element={<MakeBoardPage />} />
+          <Route path="/study/:boardId/articles" element={<StudyBoard />} >
+            <Route path="notice" element={<h1>공지사항</h1>} />
+            <Route path="free" element={<h1>자유게시판</h1>} />
+          </Route>
         </Routes>
       </Router>
     </div>
