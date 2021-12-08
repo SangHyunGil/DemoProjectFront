@@ -5,11 +5,11 @@ export const findAllRooms = async () => {
 };
 
 export const findBoard = async (boardId) => {
-    return await axios.get("/board/"+boardId);
+    return await axios.get("/study/"+boardId);
 };
 
 export const findAllBoards = async () => {
-    return await axios.get("/board");
+    return await axios.get("/study");
 };
 
 export const findUserBoard = async (userId, accessToken) => {
@@ -21,8 +21,8 @@ export const findUserBoard = async (userId, accessToken) => {
 }
 
 export const join = async (boardId, memberId, accessToken) => {
-    return await axios.post("/board/join", {
-        boardId: boardId,
+    return await axios.post("/study/join", {
+        studyId: boardId,
         memberId: memberId
     }, {
         headers: {
@@ -42,8 +42,9 @@ export const createRoom = async (roomName, memberId, accessToken) => {
     })
 };
 
-export const createBoard = async (title, topic, headCount, studyState, recruitState, id, accessToken) => {
-    return await axios.post("/board", {
+export const createBoard = async (content,title, topic, headCount, studyState, recruitState, id, accessToken) => {
+    return await axios.post("/study", {
+        content : content,
         title : title,
         topic : topic,
         headCount : headCount,
@@ -64,3 +65,7 @@ export const findAllChats = async (roomId, accessToken) => {
         }
     });
 };
+
+export const getBoardCategory = async (studyId) => {
+    return await axios.get(`/study/${studyId}/board`);
+}

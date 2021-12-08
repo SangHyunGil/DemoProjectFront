@@ -30,13 +30,13 @@ const CardContext = [
 const BoardComp = () => {
     const navigate = useNavigate();
     const [boards, setBoards] = useState([]);
-    const { isLogin, isChecked } = useSelector((state) => state.users);
+    const { isLogin, isChecked,studyIds } = useSelector((state) => state.users);
     const [isModalUp, setIsModalUp] = useState(false);
 
     useEffect(() => {
         findAllBoards()
             .then(response => response.data.data.map((board) => (
-                setBoards((prev) => [...prev, board]))
+                setBoards((prev) => [...prev, board]))   
             ))
             .catch(error => console.log(error));
     }, [])
@@ -57,8 +57,8 @@ const BoardComp = () => {
             {isModalUp && <Modal title={<p>로그인 필요!</p>} ModalHandler={() => setIsModalUp(false)}><p><Link to='/login'>로그인</Link>이 필요한 서비스 입니다.</p></Modal>}
             <CardWrapper>
             {boards.map((board, idx) => 
-            (<Link to = {{pathname:`/study/${board.boardId}`}} key={idx}>
-                <Card key={board.boardId} titleImg={CardContext[0].img}><h3>{board.title}</h3><h3>{board.topic}</h3></Card>
+            (<Link to = {{pathname:`/study/${board.studyId}`}} key={idx}>
+                <Card key={board.studyId} titleImg={CardContext[0].img}><h3>{board.title}</h3><h3>{board.topic}</h3></Card>
             </Link>))}
             </CardWrapper>
         </div>

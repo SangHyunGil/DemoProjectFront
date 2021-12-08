@@ -1,11 +1,17 @@
-import React, {useState} from 'react';
-import {Link, Outlet} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Outlet, useParams, Link} from 'react-router-dom';
 import Modal from '../../Components/Modal/Modal';
 import useInput from '../../hooks/useInput';
+import { useSelector, useDispatch } from "react-redux";
+import {getBoardCategory} from '../../Api/Api';
 
 function StudyBoard() {
     const [IsModalUp, setIsModalUp] = useState(false);
     const [NewBoardName, setNewBoardName] = useInput('');
+    const [BoardCategory, setBoardCategory] = useState([]);
+    const dispatch = useDispatch();
+    const isLogin = useSelector(state => state.users.isLogin);
+    const {studyId} = useParams();
 
     const ModalUpHandler = () => {
         //모달 핸들러
@@ -18,6 +24,14 @@ function StudyBoard() {
         setIsModalUp(false);
     };
 
+    useEffect(() => {
+        // 카테고리 불러오기
+        getBoardCategory(studyId).then(res => {
+            const {data:{data}} = res;
+            setBoardCategory(()=>[...data]);
+        });
+    },[studyId]);
+
     return (
         <>
             {IsModalUp && 
@@ -27,8 +41,7 @@ function StudyBoard() {
                     <button type="submit">생성</button>
                 </form>
             </Modal>}
-            <Link to="notice">공지사항</Link>
-            <Link to="free">자유게시판</Link>
+            {BoardCategory.map((cat) => (<Link to={`/study/${studyId}/board/${cat.studyBoardId}/articles`} key={cat.studyBoardId}>{cat.title}</Link>))}
             <Outlet />
             <button onClick={ModalUpHandler} >게시판 추가</button>
         </>

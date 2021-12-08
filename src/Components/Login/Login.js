@@ -20,7 +20,6 @@ function Login() {
 
     useEffect(() => {
         if (!loginDone) return;
-        localStorage.setItem('logout',false); 
         navigate("/", {replace: false});
         dispatch(clearLoginState());
     }, [loginDone]);

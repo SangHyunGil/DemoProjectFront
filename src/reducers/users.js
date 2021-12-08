@@ -9,6 +9,7 @@ export const initialState = {
     accessToken : "",
     isLogin : false,
     isChecked : false,
+    studyIds : [],
 
     registerLoading : false,
     registerDone : false,
@@ -75,6 +76,8 @@ export const CHANGEUSERINFO_REQEUST = "CHANGEUSERINFO_REQEUST";
 export const CHANGEUSERINFO_SUCCESS = "CHANGEUSERINFO_SUCCESS";
 export const CHANGEUSERINFO_FAILURE = "CHANGEUSERINFO_FAILURE";
 export const CLEAR_CHANGEUSERINFO_STATE = "CLEAR_CHANGEUSERINFO_STATE";
+
+export const UPDATE_STUDY_IDS = "UPDATE_STUDY_IDS";
 
 export const registerRequest = (payload) => ({
     type : REGISTER_REQUEST,
@@ -215,6 +218,11 @@ export const logOut = () => ({
     type : LOGOUT
 });
 
+export const updateStudyIds = (payload) => ({
+    type : UPDATE_STUDY_IDS,
+    payload    
+});
+
 const reducer = (state = initialState, action) => 
     produce(state, (draft) => {
         switch (action.type) {
@@ -266,6 +274,7 @@ const reducer = (state = initialState, action) =>
                 draft.nickname = action.payload.nickname;
                 draft.department = action.payload.department;
                 draft.accessToken = action.payload.accessToken;
+                draft.studyIds = action.payload.studyIds;
                 draft.loginLoading = false;
                 draft.loginDone = true;
                 draft.isLogin = true;
@@ -305,6 +314,10 @@ const reducer = (state = initialState, action) =>
                 draft.nickname = action.payload.nickname;
                 draft.department = action.payload.department;
                 draft.accessToken = action.payload.accessToken;
+                //study list
+                console.log(action.payload.studyIds); 
+                draft.studyIds = action.payload.studyIds;
+                console.log(draft.studyIds);
                 draft.tokenDone = true;
                 draft.tokenError = "";
                 draft.isLogin = true;
@@ -326,6 +339,8 @@ const reducer = (state = initialState, action) =>
                 draft.nickname = action.payload.nickname;
                 draft.department = action.payload.department;
                 draft.accessToken = action.payload.accessToken;
+                //study list
+                draft.studyIds = action.payload.studyIds;
                 draft.isLogin = true;
                 draft.isChecked = true;
                 break;
@@ -404,6 +419,11 @@ const reducer = (state = initialState, action) =>
                 draft.changUserInfoLoading = false;
                 draft.changeUserInfoDone = false;
                 draft.changeUserInfoError = "";
+                break;
+            
+            case UPDATE_STUDY_IDS:
+                //console.log(action.payload);
+                draft.studyIds = [...draft.studyIds, action.payload];
                 break;
 
             default:

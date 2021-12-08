@@ -8,7 +8,10 @@ const MyCard = styled.div`
     display: flex;
     flex-direction: column;
     width: 80%;
-    height: 300px;
+    height: 100%;
+    &:hover {
+        background-color: #f5f5f5;
+    }
     h3 {
         text-align: center;
     }
@@ -29,7 +32,7 @@ function Card(props) {
     return (
         <MyCard>
             <CardImgWrapper>
-                <img src= {props.titleImg} alt="title img" />
+                {props.titleImg && <img src= {props.titleImg} alt="title img" />}
             </CardImgWrapper>
             {props.children}
         </MyCard>

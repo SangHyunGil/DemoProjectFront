@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import {BrowserRouter as Router,
         Routes,
@@ -18,8 +18,8 @@ import PrivateRoute from './Components/PrivateRouter/PrivateRoute';
 import Logout from './Components/Logout/Logout';
 import Categories from './Components/Categories/Categories';
 import CallVan from './pages/CallVan';
-import BoardPage from './pages/BoardPage'
-import MakeBoardPage from './pages/MakeBoardPage'
+import BoardPage from './pages/BoardPage';
+import MakeBoardPage from './pages/MakeBoardPage';
 import BoardDetailPage from './pages/BoardDetailPage'
 import Profile from './Components/MyPage/Profile';
 import MyStudy from './Components/Study/MyStudy';
@@ -68,10 +68,8 @@ const App = () => {
           <Route path="/study" element={<BoardPage />} />
           <Route path="/study/create" element={<MakeBoardPage />} />
           <Route path="/study/:boardId" element={<BoardDetailPage />} />
-          <Route path="/study/:boardId/board" element={<MakeBoardPage />} />
-          <Route path="/study/:boardId/articles" element={<StudyBoard />} >
-            <Route path="notice" element={<h1>공지사항</h1>} />
-            <Route path="free" element={<h1>자유게시판</h1>} />
+          <Route path="/study/:studyId/board" element={<StudyBoard />} >
+            <Route path=":boardId/articles" element={<h1>temp</h1>} />
           </Route>
         </Routes>
       </Router>

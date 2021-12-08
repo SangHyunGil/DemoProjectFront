@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { createBoard } from "../../Api/Api";
 import useInput from "../../hooks/useInput";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import { updateStudyIds } from '../../reducers/users';
 
 const MakeRoomComp = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [title, onChangeTitle] = useInput("");
     const [topic, onChangeTopic] = useInput("");
     const [headCount, onChangeHeadCount] = useInput("");
+    const [content, onChangeContent] = useInput("");
     const [studyState, setStudyState] = useState('PREPARE');
     const [recruitState, setRecruitState] = useState('PROCEED');
     const { id, accessToken } = useSelector((state) => state.users);
@@ -32,8 +35,13 @@ const MakeRoomComp = () => {
 
     const onCreateBoard = (e) => {
         e.preventDefault();
-        createBoard(title, topic, headCount, studyState, recruitState, id, accessToken)
-            .then(response => {navigate("/study")})
+        createBoard(content, title, topic, headCount, studyState, recruitState, id, accessToken)
+            .then(response => {
+                const {data: {studyId}} = response.data;
+                console.log(studyId);
+                dispatch(updateStudyIds(studyId));
+                navigate('/study');
+            })
             .catch(error => console.log(error));
     }
 
@@ -46,6 +54,8 @@ const MakeRoomComp = () => {
                 <input id="topic" value={topic} onChange={onChangeTopic}></input> <b />
                 <label htmlFor="headCount">인원수</label>
                 <input id="headCount" value={headCount} onChange={onChangeHeadCount}></input> <b />
+                <label htmlFor="content">스터디 내용</label>
+                <input id="content" value={content} onChange={onChangeContent} />
                 <label htmlFor="studyState">스터디 상태</label>
                 <div>
                     {study.map((x) =>

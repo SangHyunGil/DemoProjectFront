@@ -10,14 +10,13 @@ function Logout() {
     const dispatch = useDispatch();
     useEffect(()=>{
         dispatch(logOut());
-        removeCookie('refreshToken');
-        removeCookie('accessToken');
-        localStorage.setItem('logout',true);
-        navigate('/login');
+        removeCookie('refreshToken',{path:'/'});
+        removeCookie('accessToken',{path:'/'});
+        console.log('logout 성공');
     },[]);
 
     return (
-        <Navigate to="/login"/>
+        <Navigate to="/"/>
     )
 }
 
