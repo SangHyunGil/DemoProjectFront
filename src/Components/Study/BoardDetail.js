@@ -54,7 +54,7 @@ function BoardDetail ({ boardId }) {
             getBoard();
             
             }
-    },[isChecked,isClosed]);
+    },[isChecked,isClosed,isLogin,boardId,studyIds,IsAlreadyJoined]);
 
     const BoardDetailHandler = (e) => {
         if (isChecked && isLogin) {
