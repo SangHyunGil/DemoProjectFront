@@ -18,7 +18,7 @@ function BoardDetail ({ boardId }) {
     const [Members, setMembers] = useState([]);
     const [studyId, setstudyId] = useState("");
     const [StudyBoardCategories, setStudyBoardCategories] = useState([]);
-    const { isChecked, isLogin, id, accessToken, studyIds, nickname } = useSelector((state) => state.users);
+    const { isChecked, isLogin, id, accessToken,studyInfos, nickname } = useSelector((state) => state.users);
     const [IsAlreadyJoined, setIsAlreadyJoined] = useState(false);
     const [isClosed, setisClosed] = useState(false);
 
@@ -37,11 +37,15 @@ function BoardDetail ({ boardId }) {
                 setMembers([...studyMembers]);
                 setjoinCount(joinCount);
                 setHeadCount(headCount);
-                console.log(studyIds,headCount);
-                if (studyIds.includes(studyId)) {
-                    console.log("참여중");
-                    setIsAlreadyJoined(true);
-                }
+                //console.log(studyIds,headCount);
+                console.log(studyInfos);
+                studyInfos.map(studyInfo => {
+                    console.log(studyInfo);
+                    if(studyInfo.studyId === studyId){
+                        setIsAlreadyJoined(true);
+                    }
+                });
+                console.log(IsAlreadyJoined);
                 if (Number(headCount) === Number(joinCount) && !IsAlreadyJoined) {
                     setisClosed(true);
                 } else {
@@ -55,14 +59,16 @@ function BoardDetail ({ boardId }) {
             getBoard();
             
             }
-    },[isChecked,isClosed,isLogin,boardId,studyIds,IsAlreadyJoined]);
+    },[isChecked,isClosed,isLogin,boardId,IsAlreadyJoined,studyInfos]);
 
     const BoardDetailHandler = (e) => {
         if (isChecked && isLogin) {
             if (e.target.name === "Join") {
                 join(boardId, id, accessToken)
                     .then(response => {
-                        dispatch(updateStudyIds(studyId))
+                        console.log(response.data);
+                        const {data: {studyInfos}} = response.data;
+                        dispatch(updateStudyIds(studyInfos))
                         navigate("/study")} )
                     .catch(error => console.log(error));
                 return;

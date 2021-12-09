@@ -9,7 +9,7 @@ export const initialState = {
     accessToken : "",
     isLogin : false,
     isChecked : false,
-    studyIds : [],
+    studyInfos : [],
 
     registerLoading : false,
     registerDone : false,
@@ -340,7 +340,7 @@ const reducer = (state = initialState, action) =>
                 draft.department = action.payload.department;
                 draft.accessToken = action.payload.accessToken;
                 //study list
-                draft.studyIds = action.payload.studyIds;
+                draft.studyInfos = action.payload.studyInfos;
                 draft.isLogin = true;
                 draft.isChecked = true;
                 break;
@@ -423,7 +423,7 @@ const reducer = (state = initialState, action) =>
             
             case UPDATE_STUDY_IDS:
                 //console.log(action.payload);
-                draft.studyIds = [...draft.studyIds, action.payload];
+                draft.studyInfos = [...draft.studyInfos, action.payload];
                 break;
 
             default:

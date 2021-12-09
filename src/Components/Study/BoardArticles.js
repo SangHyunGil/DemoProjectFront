@@ -30,7 +30,20 @@ function BoardArticles() {
             data.length > 0 ? setHasArticle(true) : setHasArticle(false);
         })
         .catch(err=>console.log(err));
-    },[studyId,boardId,HasArticle,IsModalUp]);
+    },[studyId,boardId,HasArticle]);
+    
+    useEffect(() => {
+        if (!IsModalUp){
+            findAllBoardArticles(studyId,boardId)
+            .then(res => {
+                const {data:{data}} = res;
+                setBoardArticles((prev)=>[...prev,...data]);
+                data.length > 0 ? setHasArticle(true) : setHasArticle(false);
+            })
+            .catch(err=>console.log(err));
+            console.log(boardArticles);
+        }
+    },[IsModalUp]);
 
     const createArticleModalHandler = () => {
         setIsModalUp(true);
@@ -38,14 +51,16 @@ function BoardArticles() {
 
     const createArticleHandler = (e) => {
         e.preventDefault();
-       
-        setArticle({
+        console.log(articleTitle,articleContent);
+        setArticle(()=> ({
             title: articleTitle,
             content: articleContent,
             memberId: id
-        });
+        }));
         console.log(studyId,boardId,Article);
+        console.log(boardArticles);
         createBoardArticle(studyId,boardId,Article,accessToken);
+        navigate(`/study/${studyId}/board/${boardId}/articles`);
         setIsModalUp(false);
     }
 
