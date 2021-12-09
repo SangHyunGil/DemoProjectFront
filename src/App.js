@@ -25,6 +25,7 @@ import Profile from './Components/MyPage/Profile';
 import MyStudy from './Components/Study/MyStudy';
 import UpdateStudy from './Components/Study/UpdateStudy';
 import StudyBoard from './Components/Study/StudyBoard';
+import BoardArticles from './Components/Study/BoardArticles';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -69,7 +70,7 @@ const App = () => {
           <Route path="/study/create" element={<MakeBoardPage />} />
           <Route path="/study/:boardId" element={<BoardDetailPage />} />
           <Route path="/study/:studyId/board" element={<StudyBoard />} >
-            <Route path=":boardId/articles" element={<h1>temp</h1>} />
+            <Route path=":boardId/articles" element={<BoardArticles />} />
           </Route>
         </Routes>
       </Router>

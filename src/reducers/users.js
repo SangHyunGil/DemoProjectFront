@@ -334,7 +334,7 @@ const reducer = (state = initialState, action) =>
                 break;
 
             case INFO_SUCCESS:
-                draft.id = action.payload.id;
+                draft.id = action.payload.memberId;
                 draft.email = action.payload.email;
                 draft.nickname = action.payload.nickname;
                 draft.department = action.payload.department;

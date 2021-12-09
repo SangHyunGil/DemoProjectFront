@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { findBoard, join, findUserBoard } from '../../Api/Api';
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import {updateStudyIds} from '../../reducers/users';
 import {Link} from 'react-router-dom';
 
 function BoardDetail ({ boardId }) { 
@@ -60,7 +61,9 @@ function BoardDetail ({ boardId }) {
         if (isChecked && isLogin) {
             if (e.target.name === "Join") {
                 join(boardId, id, accessToken)
-                    .then(response => navigate("/study"))
+                    .then(response => {
+                        dispatch(updateStudyIds(studyId))
+                        navigate("/study")} )
                     .catch(error => console.log(error));
                 return;
             }

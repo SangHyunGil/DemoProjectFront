@@ -10,8 +10,8 @@ function StudyBoard() {
     const [NewBoardName, setNewBoardName] = useInput('');
     const [BoardCategory, setBoardCategory] = useState([]);
     const dispatch = useDispatch();
-    const isLogin = useSelector(state => state.users.isLogin);
-    const {studyId} = useParams();
+    const {id} = useSelector(state => state.users);
+    const {studyId,boardId} = useParams();
 
     const ModalUpHandler = () => {
         //모달 핸들러
@@ -21,6 +21,11 @@ function StudyBoard() {
     const BoardSubmitHandler = (e) => {
         // submit시 
         e.preventDefault();
+        const newData = {
+            studyBoardId: BoardCategory.length + 1,
+            title: NewBoardName,
+        };
+        setBoardCategory([...BoardCategory, newData]);
         setIsModalUp(false);
     };
 
