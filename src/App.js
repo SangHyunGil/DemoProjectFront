@@ -24,7 +24,7 @@ import BoardDetailPage from './pages/BoardDetailPage'
 import Profile from './Components/MyPage/Profile';
 import MyStudy from './Components/Study/MyStudy';
 import UpdateStudy from './Components/Study/UpdateStudy';
-
+import StudyBoard from './Components/Study/StudyBoard';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -67,8 +67,12 @@ const App = () => {
           <Route path="*" element={<div>Not Found</div>} />
           <Route path="/study" element={<BoardPage />} />
           <Route path="/study/create" element={<MakeBoardPage />} />
-          <Route path="/study/:boardId" element={<BoardDetailPage />} />
-          <Route path="/study/:boardId/board" element={<MakeBoardPage />} />
+          <Route path="/study/:studyId" element={<BoardDetailPage />} />
+          <Route path="/study/:studyId/board" element={<MakeBoardPage />} />
+          <Route path="/study/:studyId/articles" element={<StudyBoard />} >
+            <Route path="notice" element={<h1>공지사항</h1>} />
+            <Route path="free" element={<h1>자유게시판</h1>} />
+          </Route>
         </Routes>
       </Router>
     </div>

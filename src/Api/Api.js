@@ -4,12 +4,12 @@ export const findAllRooms = async () => {
     return await axios.get("/room");
 };
 
-export const findBoard = async (boardId) => {
-    return await axios.get("/board/"+boardId);
+export const findBoard = async (studyId) => {
+    return await axios.get("/study/"+studyId);
 };
 
 export const findAllBoards = async () => {
-    return await axios.get("/board");
+    return await axios.get("/study");
 };
 
 export const findUserBoard = async (userId, accessToken) => {
@@ -20,9 +20,9 @@ export const findUserBoard = async (userId, accessToken) => {
     });
 }
 
-export const join = async (boardId, memberId, accessToken) => {
-    return await axios.post("/board/join", {
-        boardId: boardId,
+export const join = async (studyId, memberId, accessToken) => {
+    return await axios.post("/study/join", {
+        studyId: studyId,
         memberId: memberId
     }, {
         headers: {
@@ -43,7 +43,7 @@ export const createRoom = async (roomName, memberId, accessToken) => {
 };
 
 export const createBoard = async (title, topic, headCount, studyState, recruitState, id, accessToken) => {
-    return await axios.post("/board", {
+    return await axios.post("/study", {
         title : title,
         topic : topic,
         headCount : headCount,
@@ -55,7 +55,7 @@ export const createBoard = async (title, topic, headCount, studyState, recruitSt
             "X-AUTH-TOKEN": accessToken
         }
     })
-}
+};
 
 export const findAllChats = async (roomId, accessToken) => {
     return await axios.get("/room/"+roomId, {

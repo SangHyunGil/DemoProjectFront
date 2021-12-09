@@ -3,7 +3,7 @@ import { findBoard, join } from '../../Api/Api';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
-function BoardDetail ({ boardId }) { 
+function BoardDetail ({ studyId }) { 
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
     const [topic, setTopic] = useState("");
@@ -13,7 +13,7 @@ function BoardDetail ({ boardId }) {
     const { isChecked, isLogin, id, accessToken } = useSelector((state) => state.users);
 
     useEffect(() => {
-        findBoard(boardId)
+        findBoard(studyId)
         .then(response => {setTitle(response.data.data.title);
                            setTopic(response.data.data.topic);
                            setHeadCount(response.data.data.headCount);
@@ -25,7 +25,7 @@ function BoardDetail ({ boardId }) {
 
     const BoardDetailHandler = () => {
         if (isChecked && isLogin) {
-            join(boardId, id, accessToken)
+            join(studyId, id, accessToken)
                 .then(response => navigate("/study"))
                 .catch(error => console.log(error));
             return;

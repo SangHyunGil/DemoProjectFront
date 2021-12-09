@@ -7,7 +7,7 @@ const BoardDetailPage = () => {
 
     return (
         <div>
-            <BoardDetail boardId = {params.boardId}/>
+            <BoardDetail studyId = {params.studyId}/>
         </div>
     )
 }
