@@ -68,7 +68,7 @@ function BoardDetail ({ boardId }) {
                     .then(response => {
                         console.log(response.data);
                         const {data: {studyInfos}} = response.data;
-                        dispatch(updateStudyIds(studyInfos))
+                        dispatch(updateStudyIds(...studyInfos))
                         navigate("/study")} )
                     .catch(error => console.log(error));
                 return;
@@ -82,7 +82,7 @@ function BoardDetail ({ boardId }) {
     };
 
     return ( 
-        <div>
+        <form>
             <input name="title" defaultValue ={`${title}`} type="text" disabled></input>
             <input name="topic" defaultValue ={`${topic}`} type="text" disabled></input>
             <input name="headCount" defaultValue ={`${headCount}`} type="text" disabled></input>
@@ -92,7 +92,7 @@ function BoardDetail ({ boardId }) {
             {Members.map((m) => (<p key={m}>{m}</p>))}
             {isClosed? (<h3>마감되었습니다!</h3>) : (IsAlreadyJoined? <button name='Direct' onClick={BoardDetailHandler}>바로가기</button>: 
             <button onClick={BoardDetailHandler} name='Join' >신청하기</button>) }
-        </div> 
+        </form> 
     ); 
 } 
         

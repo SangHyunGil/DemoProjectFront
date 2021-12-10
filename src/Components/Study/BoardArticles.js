@@ -12,54 +12,43 @@ function BoardArticles() {
     const [boardArticles,setBoardArticles] = useState([]);
     const [IsModalUp, setIsModalUp] = useState(false);
     const {id,accessToken} = useSelector(state => state.users);
-    const [Article, setArticle] = useState({
-        title: '',
-        content: '',
-        memberId: id
-    });
     const [articleTitle, setArticleTitle] = useInput('');
     const [articleContent, setArticleContent] = useInput('');
     const [HasArticle, setHasArticle] = useState(false);
-    
 
     useEffect(() => {
-        findAllBoardArticles(studyId,boardId)
-        .then(res => {
-            const {data:{data}} = res;
-            setBoardArticles([...data]);
-            data.length > 0 ? setHasArticle(true) : setHasArticle(false);
-        })
-        .catch(err=>console.log(err));
-    },[studyId,boardId,HasArticle]);
-    
-    useEffect(() => {
-        if (!IsModalUp){
-            findAllBoardArticles(studyId,boardId)
-            .then(res => {
+        const BoardfindArticles = async () => {
+            await findAllBoardArticles(studyId,boardId).then(res=>{
                 const {data:{data}} = res;
-                setBoardArticles((prev)=>[...prev,...data]);
-                data.length > 0 ? setHasArticle(true) : setHasArticle(false);
-            })
-            .catch(err=>console.log(err));
-            console.log(boardArticles);
+                setBoardArticles(()=>[...data]);
+            }).catch(err=>{
+                console.log(err);
+            });
         }
-    },[IsModalUp]);
+        BoardfindArticles();
+    },[studyId,boardId]);
+
+    useEffect(() => {
+        if (boardArticles.length === 0) {
+            setHasArticle(false);
+        } else {
+            setHasArticle(true);
+        }
+    },[boardArticles,HasArticle]);
 
     const createArticleModalHandler = () => {
         setIsModalUp(true);
     };
 
-    const createArticleHandler = (e) => {
+    const createArticleHandler = async (e) => {
         e.preventDefault();
-        console.log(articleTitle,articleContent);
-        setArticle(()=> ({
-            title: articleTitle,
-            content: articleContent,
-            memberId: id
-        }));
-        console.log(studyId,boardId,Article);
-        console.log(boardArticles);
-        createBoardArticle(studyId,boardId,Article,accessToken);
+        await createBoardArticle(studyId,boardId,{title:articleTitle,content:articleContent,memberId:id},accessToken);
+        await findAllBoardArticles(studyId,boardId).then(res=> {
+            const {data:{data}} = res;
+            setBoardArticles([...data]);
+        }).catch(
+            err=>console.log(err)
+        );
         navigate(`/study/${studyId}/board/${boardId}/articles`);
         setIsModalUp(false);
     }

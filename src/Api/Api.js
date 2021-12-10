@@ -12,8 +12,8 @@ export const findAllBoards = async () => {
     return await axios.get("/study");
 };
 
-export const findUserBoard = async (userId, accessToken) => {
-    return await axios.get(`users/${userId}`,{
+export const findUserBoard = async (accessToken) => {
+    return await axios.post(`/users/info`,{},{
         headers: {
             "X-AUTH-TOKEN": accessToken
         }
@@ -68,9 +68,14 @@ export const findAllChats = async (roomId, accessToken) => {
 
 export const getBoardCategory = async (studyId) => {
     return await axios.get(`/study/${studyId}/board`);
+};
+
+export const getStudyInfo = async (studyId) => {
+    return await axios.get(`/study/${studyId}`);
 }
 
-export const createBoardArticle = async (studyId, boardId,ContentObj,accessToken) => {
+export const createBoardArticle = async (studyId,boardId,ContentObj,accessToken) => {
+    console.log(ContentObj);
     return await axios.post(`/study/${studyId}/board/${boardId}/article`, {
         title: ContentObj.title,
         content: ContentObj.content,
