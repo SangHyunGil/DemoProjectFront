@@ -13,7 +13,7 @@ const ModalBackground = styled.div`
     background-color: rgba(0, 0, 0, 0.7);
 `;
 
-const ModalContainer = styled.div`
+export const ModalContainer = styled.div`
     position: fixed;
     z-index: 100;
     background-color: white;
@@ -23,6 +23,7 @@ const ModalContainer = styled.div`
     transform: translate(-50%);
     border-radius: 10px;
     overflow: hidden;
+    padding: 2rem;
 `;
 
 function Modal(props) {
@@ -34,7 +35,6 @@ function Modal(props) {
                     {props.title}
                 </header>
                 <main>
-                    {props.message}
                     {props.children}
                 </main>
             </ModalContainer>

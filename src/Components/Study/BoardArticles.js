@@ -15,8 +15,8 @@ function BoardArticles() {
     //const [boardArticles,setBoardArticles] = useState([]);
     const [IsModalUp, setIsModalUp] = useState(false);
     const {id,accessToken,nickname} = useSelector(state => state.users);
-    const [articleTitle, setArticleTitle] = useInput('');
-    const [articleContent, setArticleContent] = useInput('');
+    const [articleTitle,onChangeArticleTitle ,setArticleTitle] = useInput('');
+    const [articleContent,onChangeArticleContent ,setArticleContent] = useInput('');
     const [HasArticle, setHasArticle] = useState(false);
     const {isLoading,error,data:BoardArticle} = useQuery(['boardArticles',boardId],()=>findAllBoardArticles(studyId,boardId,getCookie('accessToken')),{
         select: article => article.data.data,
@@ -72,6 +72,8 @@ function BoardArticles() {
         //await createBoardArticle(studyId,boardId,{title:articleTitle,content:articleContent,memberId:id},accessToken);
         mutation.mutate({title:articleTitle,content:articleContent,memberId:id});
         navigate(`/study/${studyId}/board/${boardId}/articles`);
+        setArticleTitle('');
+        setArticleContent('');
         setIsModalUp(false);
     }
 
@@ -106,8 +108,8 @@ function BoardArticles() {
             )))) : <div>데이터가 없습니다.</div>}
             {IsModalUp && <Modal title="게시글 생성" ModalHandler={()=>{setIsModalUp(false)}}>
                     <form onSubmit={createArticleHandler}>
-                        <input type="text" placeholder="제목" onChange={setArticleTitle} value={articleTitle} />
-                        <textarea placeholder="내용" onChange={setArticleContent} value={articleContent} />
+                        <input type="text" placeholder="제목" onChange={onChangeArticleTitle} value={articleTitle} />
+                        <textarea placeholder="내용" onChange={onChangeArticleContent} value={articleContent} />
                         <button type="submit">만들기</button>
                     </form>
             </Modal>}

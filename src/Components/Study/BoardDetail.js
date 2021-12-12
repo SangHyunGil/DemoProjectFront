@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react'; 
-import { findBoard, join, findUserBoard } from '../../Api/Api';
+import { findBoard, join, findUserBoard,getBoardCategory } from '../../Api/Api';
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import {updateStudyIds} from '../../reducers/users';
-import {Link} from 'react-router-dom';
+import {useQuery} from 'react-query';
+import {useParams} from 'react-router-dom';
 
 function BoardDetail ({ boardId }) { 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const params = useParams();
     const [title, setTitle] = useState("");
     const [topic, setTopic] = useState("");
     const [headCount, setHeadCount] = useState('');
@@ -17,10 +19,12 @@ function BoardDetail ({ boardId }) {
     const [content, setContent] = useState("");
     const [Members, setMembers] = useState([]);
     const [studyId, setstudyId] = useState("");
-    const [StudyBoardCategories, setStudyBoardCategories] = useState([]);
     const { isChecked, isLogin, id, accessToken,studyInfos, nickname } = useSelector((state) => state.users);
     const [IsAlreadyJoined, setIsAlreadyJoined] = useState(false);
     const [isClosed, setisClosed] = useState(false);
+    const {data:board} = useQuery(['board', params.boardId], ()=>getBoardCategory(params.boardId,accessToken), {
+        select: (x) => x.data.data,
+    });
 
     useEffect(() => {
         const getBoard = async () => {
@@ -29,23 +33,23 @@ function BoardDetail ({ boardId }) {
                             setTopic(response.data.data.topic);
                             setStudyState(response.data.data.studyState);
                             setRecruitState(response.data.data.recruitState);
-                const {data: {studyId,content,studyBoards,studyMembers,joinCount,headCount}} = response.data;
-                console.log(response.data);
+                const {data: {studyId,content,studyMembers,joinCount,headCount}} = response.data;
+                //console.log(response.data);
                 setstudyId(studyId);
                 setContent(content);
-                setStudyBoardCategories([...studyBoards]);
+                //setStudyBoardCategories([...studyBoards]);
                 setMembers([...studyMembers]);
                 setjoinCount(joinCount);
                 setHeadCount(headCount);
                 //console.log(studyIds,headCount);
-                console.log(studyInfos);
+                //console.log(studyInfos);
                 studyInfos.map(studyInfo => {
-                    console.log(studyInfo);
+                    //console.log(studyInfo);
                     if(studyInfo.studyId === studyId){
                         setIsAlreadyJoined(true);
                     }
                 });
-                console.log(IsAlreadyJoined);
+                //console.log(IsAlreadyJoined);
                 if (Number(headCount) === Number(joinCount) && !IsAlreadyJoined) {
                     setisClosed(true);
                 } else {
@@ -74,7 +78,7 @@ function BoardDetail ({ boardId }) {
                 return;
             }
             else if (e.target.name === "Direct") {
-                navigate(`/study/${studyId}/board/${StudyBoardCategories[0]}/articles`);
+                navigate(`/study/${studyId}/board/${board[0].studyBoardId}/articles`);
                 return;
             }
         }
