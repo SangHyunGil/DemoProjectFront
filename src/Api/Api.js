@@ -66,8 +66,22 @@ export const findAllChats = async (roomId, accessToken) => {
     });
 };
 
-export const getBoardCategory = async (studyId) => {
-    return await axios.get(`/study/${studyId}/board`);
+export const getBoardCategory = async (studyId,accessToken) => {
+    return await axios.get(`/study/${studyId}/board`,{
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    });
+};
+
+export const createBoardCategory = async (studyId,title,accessToken) => {
+    return await axios.post(`/study/${studyId}/board`,
+    { title : title},{
+            headers: {
+                "X-AUTH-TOKEN": accessToken
+            }
+        }
+    );
 };
 
 export const getStudyInfo = async (studyId) => {
@@ -87,6 +101,29 @@ export const createBoardArticle = async (studyId,boardId,ContentObj,accessToken)
     });
 };
 
-export const findAllBoardArticles = async (studyId, boardId) => {
-    return await axios.get(`/study/${studyId}/board/${boardId}/article`);
+export const findAllBoardArticles = async (studyId, boardId, accessToken) => {
+    return await axios.get(`/study/${studyId}/board/${boardId}/article`,{
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    });
 };
+
+export const deleteBoardArticle = async (studyId, boardId, articleId, accessToken) => {
+    return await axios.delete(`/study/${studyId}/board/${boardId}/article/${articleId}`,{
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    });
+};
+
+export const updateBoardArticle = async (studyId, boardId, articleId, content,title, accessToken) => {
+    return await axios.put(`/study/${studyId}/board/${boardId}/article/${articleId}`, {
+        content: content,
+        title: title
+    },{
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    });
+}

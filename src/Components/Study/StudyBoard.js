@@ -2,16 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {Outlet, useParams, Link} from 'react-router-dom';
 import Modal from '../../Components/Modal/Modal';
 import useInput from '../../hooks/useInput';
-import { useSelector, useDispatch } from "react-redux";
-import {getBoardCategory} from '../../Api/Api';
+import { useSelector} from "react-redux";
+import {getBoardCategory,createBoardCategory} from '../../Api/Api';
 
 function StudyBoard() {
     const [IsModalUp, setIsModalUp] = useState(false);
     const [NewBoardName, setNewBoardName] = useInput('');
     const [BoardCategory, setBoardCategory] = useState([]);
-    const dispatch = useDispatch();
-    const {id} = useSelector(state => state.users);
-    const {studyId,boardId} = useParams();
+    const {accessToken,studyInfos} = useSelector(state => state.users);
+    const {studyId} = useParams();
+    
+   
 
     const ModalUpHandler = () => {
         //모달 핸들러
@@ -21,21 +22,21 @@ function StudyBoard() {
     const BoardSubmitHandler = (e) => {
         // submit시 
         e.preventDefault();
-        const newData = {
-            studyBoardId: BoardCategory.length + 1,
-            title: NewBoardName,
-        };
-        setBoardCategory([...BoardCategory, newData]);
+        createBoardCategory(studyId, NewBoardName,accessToken)
+        .then(res => {
+            const {data: {data}} = res;
+            setBoardCategory([...BoardCategory, {studyBoardId: data.studyBoardId, title: data.title}]);
+        }).catch(err => {console.log(err)});
         setIsModalUp(false);
     };
 
     useEffect(() => {
         // 카테고리 불러오기
-        getBoardCategory(studyId).then(res => {
+        getBoardCategory(studyId,accessToken).then(res => {
             const {data:{data}} = res;
             setBoardCategory(()=>[...data]);
         });
-    },[studyId]);
+    },[studyId,accessToken]);
 
     return (
         <>

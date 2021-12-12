@@ -14,10 +14,13 @@ function Logout() {
         dispatch(logOut());
         cookies.remove('refreshToken', { path: '/' });
         cookies.remove('accessToken', { path: '/' });
+        window.location.reload();
+        window.location.replace('/');
     },[]);
 
     return (
-        <Navigate to="/"/>
+        <>
+        </>
     )
 }
 

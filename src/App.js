@@ -26,6 +26,7 @@ import MyStudy from './Components/Study/MyStudy';
 import UpdateStudy from './Components/Study/UpdateStudy';
 import StudyBoard from './Components/Study/StudyBoard';
 import BoardArticles from './Components/Study/BoardArticles';
+import BoardArticlesPost from './Components/Study/BoardArticlesPost';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -72,6 +73,7 @@ const App = () => {
           <Route path="/study/:studyId/board" element={<StudyBoard />} >
             <Route path=":boardId/articles" element={<BoardArticles />} />
           </Route>
+          <Route path="/study/:studyId/board/:boardId/article/:articleId" element={<BoardArticlesPost />} />
         </Routes>
       </Router>
     </div>

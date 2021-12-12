@@ -20,7 +20,7 @@ function Login() {
 
     useEffect(() => {
         if (!loginDone) return;
-        navigate("/", {replace: false});
+        window.location.replace('/');
         dispatch(clearLoginState());
     }, [loginDone]);
 
