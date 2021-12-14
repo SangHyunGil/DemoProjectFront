@@ -1,12 +1,15 @@
 import React,{useState} from 'react';
 import styled from 'styled-components';
-import Modal,{ModalContainer} from '../Modal/Modal';
+import Modal from '../Modal/Modal';
 import {useQuery,useMutation,useQueryClient} from 'react-query';
 import {useParams} from 'react-router-dom'
 import {getBoardCategory,createBoardCategory} from '../../Api/Api';
-import { useSelector } from "react-redux";
+//import { useSelector } from "react-redux";
 import useInput from '../../hooks/useInput';
 import {getCookie} from '../../utils/cookie';
+import { useForm } from 'react-hook-form';
+import Button from "@mui/material/Button";
+import CloseIcon from '@mui/icons-material/Close';
 
 const StudyManageContainer = styled.section`
     width: 100%;
@@ -32,12 +35,19 @@ const StudyModal = styled.section`
     padding: 1rem;
 `;
 
+const ErrorMessage = styled.p`
+    color: red;
+`;
+
 function StudyManage() {
     const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
-    const [AddBoardValue,AddBoardOnChange,setAddBoardValue] = useInput('');
     const {studyId} = useParams();
-    const {accessToken} = useSelector(state => state.users);
     const queryClient = useQueryClient();
+    const {register, handleSubmit, reset, formState: { errors }} = useForm({
+        defaultValues: {
+          BoardTitle: '',
+        }
+      });
     
     const {data:board} = useQuery(['boardManage', studyId], ()=>getBoardCategory(studyId,getCookie('accessToken')), {
         select: (x) => x.data.data,
@@ -56,10 +66,10 @@ function StudyManage() {
         setIsBoardModalUp(true);
     };
 
-    const BoardAddHandler = (e) => {
-        e.preventDefault();
-        AddBoardMutation.mutate(AddBoardValue);
-        setAddBoardValue('');
+    const BoardAddHandler = (data) => {
+        let {BoardTitle} = data;
+        AddBoardMutation.mutate(BoardTitle);
+        reset({BoardTitle:''});
         setIsBoardModalUp(false);
     }
 
@@ -75,19 +85,23 @@ function StudyManage() {
                 </div>
             </StudyMemberManageContainer>
             {IsBoardModalUp && <StudyModal>
-                <Modal title="게시판 추가" ModalHandler={()=>setIsBoardModalUp(false)}>
-                    <form onSubmit={BoardAddHandler}>
-                        <input type="text" placeholder="제목" onChange={AddBoardOnChange} value={AddBoardValue} />
-                        <button type="submit">게시판 추가</button>
-                    </form>
-                    <button onClick={()=>setIsBoardModalUp(false)}>닫기</button>
+                <Modal title={<h2 style={{margin:'0'}}>게시판 추가</h2>} 
+                closeButton={<CloseIcon onClick={()=>setIsBoardModalUp(false)}>닫기</CloseIcon>} 
+                ModalHandler={()=>setIsBoardModalUp(false)}>
+                    <div>
+                        <form onSubmit={handleSubmit(BoardAddHandler)}>
+                            <input type="text" placeholder="제목" {...register("BoardTitle",{required:'입력해 주세요!',minLength:{value:2, message:'2자리 이상으로 입력해 주세요!'}})} />
+                            <ErrorMessage>{errors?.BoardTitle?.message}</ErrorMessage>
+                            <Button variant="contained" type="submit">게시판 추가</Button>
+                        </form>
+                    </div>
                 </Modal></StudyModal>}
             <StudyBoardManageContainer>
                 <h2>게시판 관리</h2>
                 <ul>
                     {board?.map((b)=> (<li key={b.studyBoardId}>{b.title}</li>))}
                 </ul>
-                <button onClick={ModalUpHandler} >게시판 추가</button>
+                <Button variant="contained" onClick={ModalUpHandler} >게시판 추가</Button>
             </StudyBoardManageContainer>
         </StudyManageContainer>
     )

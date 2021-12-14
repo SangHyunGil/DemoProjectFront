@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import {updateStudyIds} from '../../reducers/users';
 import {useQuery} from 'react-query';
 import {useParams} from 'react-router-dom';
+import {getCookie} from '../../utils/cookie';
 
 function BoardDetail ({ boardId }) { 
     const navigate = useNavigate();
@@ -22,8 +23,9 @@ function BoardDetail ({ boardId }) {
     const { isChecked, isLogin, id, accessToken,studyInfos, nickname } = useSelector((state) => state.users);
     const [IsAlreadyJoined, setIsAlreadyJoined] = useState(false);
     const [isClosed, setisClosed] = useState(false);
-    const {data:board} = useQuery(['board', params.boardId], ()=>getBoardCategory(params.boardId,accessToken), {
+    const {data:board} = useQuery(['board', params.boardId], ()=>getBoardCategory(params.boardId,getCookie('accessToken')), {
         select: (x) => x.data.data,
+        onError: (err) => console.log(err),
     });
 
     useEffect(() => {
@@ -61,8 +63,7 @@ function BoardDetail ({ boardId }) {
         }
         if(isChecked) {
             getBoard();
-            
-            }
+        }
     },[isChecked,isClosed,isLogin,boardId,IsAlreadyJoined,studyInfos]);
 
     const BoardDetailHandler = (e) => {
@@ -86,17 +87,17 @@ function BoardDetail ({ boardId }) {
     };
 
     return ( 
-        <form>
-            <input name="title" defaultValue ={`${title}`} type="text" disabled></input>
-            <input name="topic" defaultValue ={`${topic}`} type="text" disabled></input>
-            <input name="headCount" defaultValue ={`${headCount}`} type="text" disabled></input>
-            <input name="studyState" defaultValue ={`${studyState}`} type="text" disabled></input>
-            <input name="recruitState" defaultValue ={`${recruitState}`} type="text" disabled></input>
-            <input name="content" defaultValue ={`${content}`} type="text" disabled></input>
+        <>
+            <h2>{title}</h2>
+            <h3>{topic}</h3>
+            <h4>{joinCount}/{headCount}</h4>
+            <h4>{studyState}</h4>
+            <h4>{recruitState}</h4>
+            <h4>{content}</h4>
             {Members.map((m) => (<p key={m}>{m}</p>))}
             {isClosed? (<h3>마감되었습니다!</h3>) : (IsAlreadyJoined? <button name='Direct' onClick={BoardDetailHandler}>바로가기</button>: 
             <button onClick={BoardDetailHandler} name='Join' >신청하기</button>) }
-        </form> 
+        </> 
     ); 
 } 
         

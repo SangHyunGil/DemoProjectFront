@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Outlet, useParams, Link} from 'react-router-dom';
+import {Outlet, useParams, Link, NavLink} from 'react-router-dom';
 import Modal from '../../Components/Modal/Modal';
 import useInput from '../../hooks/useInput';
 import { useSelector} from "react-redux";
 import {getBoardCategory,createBoardCategory} from '../../Api/Api';
 import {useQuery} from 'react-query';
 import {getCookie} from '../../utils/cookie';
+import {CategoryWrapper,Category} from '../Categories/Categories';
 
 function StudyBoard() {
     const [IsModalUp, setIsModalUp] = useState(false);
@@ -37,7 +38,7 @@ function StudyBoard() {
     const BoardSubmitHandler = (e) => {
         // submit시 
         e.preventDefault();
-        createBoardCategory(studyId, NewBoardName,accessToken)
+        createBoardCategory(studyId, NewBoardName,getCookie('accessToken'))
         .then(res => {
             const {data: {data}} = res;
             setBoardCategory([...BoardCategory, {studyBoardId: data.studyBoardId, title: data.title}]);
@@ -69,8 +70,10 @@ function StudyBoard() {
                     <button type="submit">생성</button>
                 </form>
             </Modal>}
-            {category?.map((cat) => (<Link to={`/study/${studyId}/board/${cat.studyBoardId}/articles`} key={cat.studyBoardId}>{cat.title}</Link>))}
-            {IsGranted && <Link to={`/study/${studyId}/board/manage`}>게시판 관리</Link>}
+            <CategoryWrapper>
+                {category?.map((cat) => (<Category activeclassname="active" to={`/study/${studyId}/board/${cat.studyBoardId}/articles`} key={cat.studyBoardId}>{cat.title}</Category>))}
+                {IsGranted && <Category to={`/study/${studyId}/board/manage`}>게시판 관리</Category>}
+            </CategoryWrapper>
             <Outlet />
             <button onClick={ModalUpHandler} >게시판 추가</button>
         </>

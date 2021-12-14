@@ -24,6 +24,11 @@ export const ModalContainer = styled.div`
     border-radius: 10px;
     overflow: hidden;
     padding: 2rem;
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 `;
 
 function Modal(props) {
@@ -33,6 +38,7 @@ function Modal(props) {
             <ModalContainer>
                 <header>
                     {props.title}
+                    {props.closeButton}
                 </header>
                 <main>
                     {props.children}
