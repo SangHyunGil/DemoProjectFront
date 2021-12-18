@@ -13,7 +13,7 @@ const ModalBackground = styled.div`
     background-color: rgba(0, 0, 0, 0.7);
 `;
 
-const ModalContainer = styled.div`
+export const ModalContainer = styled.div`
     position: fixed;
     z-index: 100;
     background-color: white;
@@ -23,25 +23,25 @@ const ModalContainer = styled.div`
     transform: translate(-50%);
     border-radius: 10px;
     overflow: hidden;
+    padding: 2rem;
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 `;
 
 function Modal(props) {
-    const navigate = useNavigate();
-    
-    const ModalOutsideHandler = (e) => {
-        navigate('/');
-    };
-
     return (
         <React.Fragment>
-            <ModalBackground onClick={ModalOutsideHandler} />
+            <ModalBackground onClick={props.ModalHandler} />
             <ModalContainer>
                 <header>
                     {props.title}
+                    {props.closeButton}
                 </header>
                 <main>
-                    {props.message}
-                    <button>로그인 하러 가기</button>
+                    {props.children}
                 </main>
             </ModalContainer>
         </React.Fragment>

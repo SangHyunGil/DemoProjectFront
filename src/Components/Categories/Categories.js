@@ -8,29 +8,26 @@ const category = [
     {name: 'study', title: '스터디'}, {name: 'market', title: '장터'},
 ];
 
-const CategoryWrapper = styled.div`
+export const CategoryWrapper = styled.div`
     display: flex;
     padding: 1rem;
-    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
-    margin-bottom: 1rem;
+    //box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    border-bottom: 2px solid #e6e6e6;
 `;
 
-const Category = styled(NavLink)`
+export const Category = styled(NavLink)`
     cursor: pointer;
     white-space: pre;
     text-decoration: none;
-
     &:hover {
         color: #ffc107;
     }
-
     &.active {
         border-bottom: 2px solid #ffc107;
         &:hover {
             color: #13C6DC;
         }
     }
-
     & + & {
         margin-left: 1rem;
     }
