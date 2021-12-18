@@ -27,7 +27,7 @@ function BoardArticles() {
             //setBoardArticles(BoardArticle);
         },
     });
-
+    /* 
     const deleteMutation = useMutation((articleId)=>deleteBoardArticle(studyId,boardId,articleId,accessToken),{
         onSuccess: ()=>{
             queryClient.invalidateQueries(['boardArticles',boardId]);
@@ -39,7 +39,7 @@ function BoardArticles() {
         onSuccess: ()=>{
             queryClient.invalidateQueries(['boardArticles',boardId]);
         }
-    });
+    });*/
     
 
     /*
@@ -76,13 +76,13 @@ function BoardArticles() {
         setArticleContent('');
         setIsModalUp(false);
     }
-
+    /*
     const deleteArticleHandler = (e) => {
         e.preventDefault();
         //console.log(e.target.name);
         deleteMutation.mutate(e.target.name);
         navigate(`/study/${studyId}/board/${boardId}/articles`);
-    };
+    };*/
     /*
     const updateArticleHandler = (e) => {
         e.preventDefault();
@@ -102,8 +102,7 @@ function BoardArticles() {
                             <p>{article.content}</p>
                             <p>{article.memberName}</p>
                         </Card>
-                    </Link>
-                    {nickname === article.memberName && <button type="button" name={article.articleId} onClick={deleteArticleHandler}>게시글 삭제</button>}                
+                    </Link>               
                 </React.Fragment>
             )))) : <div>데이터가 없습니다.</div>}
             {IsModalUp && <Modal title="게시글 생성" ModalHandler={()=>{setIsModalUp(false)}}>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import {getCookie} from '../utils/cookie';
 
 export const findAllRooms = async () => {
     return await axios.get("/room");
@@ -13,6 +14,9 @@ export const findAllBoards = async () => {
 };
 
 export const findUserBoard = async (accessToken) => {
+    if (!accessToken) {
+        accessToken = getCookie('accessToken');
+    }
     return await axios.post(`/users/info`,{},{
         headers: {
             "X-AUTH-TOKEN": accessToken
@@ -126,4 +130,29 @@ export const updateBoardArticle = async (studyId, boardId, articleId, content,ti
             "X-AUTH-TOKEN": accessToken
         }
     });
-}
+};
+
+export const getArticlePost = async (studyId, boardId, articleId, accessToken) => { 
+    if (!accessToken) {
+        accessToken = getCookie('accessToken');
+    }
+    return await axios.get(`/study/${studyId}/board/${boardId}/article/${articleId}`,{
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    });
+};
+
+export const updateArticlePost = async (studyId, boardId, articleId,data, accessToken) => {
+    if (!accessToken) {
+        accessToken = getCookie('accessToken');
+    }
+    return await axios.put(`/study/${studyId}/board/${boardId}/article/${articleId}`, {
+        content: data.content,
+        title: data.name
+    },{
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    });  
+};

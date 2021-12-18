@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Categories from '../Categories/Categories';
+
 const Temp = () => {
     
     return (
