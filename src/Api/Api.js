@@ -156,3 +156,11 @@ export const updateArticlePost = async (studyId, boardId, articleId,data, access
         }
     });  
 };
+
+export const getStudyMembers = async (studyId, accessToken) => {
+    return await axios.get(`/study/${studyId}/member`,{
+        headers: {
+            "X-AUTH-TOKEN": accessToken
+        }
+    });
+};

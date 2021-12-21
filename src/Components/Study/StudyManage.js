@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import Modal from '../Modal/Modal';
 import {useQuery,useMutation,useQueryClient} from 'react-query';
 import {useParams} from 'react-router-dom'
-import {getBoardCategory,createBoardCategory} from '../../Api/Api';
+import {getBoardCategory,createBoardCategory,getStudyMembers} from '../../Api/Api';
 //import { useSelector } from "react-redux";
-import useInput from '../../hooks/useInput';
 import {getCookie} from '../../utils/cookie';
 import { useForm } from 'react-hook-form';
 import Button from "@mui/material/Button";
@@ -49,6 +48,11 @@ function StudyManage() {
         }
       });
     
+      const {data:Members} = useQuery(['studyMembers',studyId],()=>getStudyMembers(studyId,getCookie('accessToken')),{
+          select: x=> x.data.data,
+
+      });
+    
     const {data:board} = useQuery(['boardManage', studyId], ()=>getBoardCategory(studyId,getCookie('accessToken')), {
         select: (x) => x.data.data,
         retry: false,
@@ -79,6 +83,14 @@ function StudyManage() {
                 <h2>스터디원 관리</h2>
                 <div>
                     <p>스터디원들</p>
+                    {Members?.map(Member =>(
+                        <React.Fragment  key={Member.id}>
+                            <div>
+                                <span>{Member.name}</span>
+                                <span>{Member.studyRole}</span>
+                            </div>
+                        </React.Fragment>
+                    ))}
                 </div>
                 <div>
                     <p>지원자</p>
