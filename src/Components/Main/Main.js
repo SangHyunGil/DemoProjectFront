@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion ,useViewportScroll, useTransform } from 'framer-motion';
 
 const Header = styled(motion.section)`
     height: 20vh;
@@ -14,6 +14,10 @@ const HeaderMainText = styled(motion.h1)`
 `;
 
 const Main = styled(motion.section)`
+    
+`;
+
+const CardWrapper = styled(motion.div)`
     display: grid;
     grid-template-columns: repeat(4, minmax(300px, 1fr));
     gap: 3%;
@@ -72,26 +76,36 @@ const cardVariants = {
 
 
 const Temp = () => {
-    
+    const { scrollYProgress } = useViewportScroll();
+    const scale = useTransform(scrollYProgress, [0, 1], [0.2, 2]);
     return (
         <React.Fragment>
             <Header transition={{duration:2,delayChildren:0.5}} initial={{opacity:0,background:'rgba(0,0,0,1)'}} animate={{opacity:1,background:"rgba(140, 122, 230,1.0)"}}>
                 <HeaderMainText variants={TextVariants} initial="start" animate="end" >XX에 오신것을 환영합니다!</HeaderMainText>
             </Header>
-            <Main variants={container} initial="hidden" animate="visible">
-                <MainCards variants={cardVariants} >
-                    <p>test</p>
-                </MainCards>
-                <MainCards variants={cardVariants} >
-                    <p>test</p>
-                </MainCards>
-                <MainCards variants={cardVariants} >
-                    <p>test</p>
-                </MainCards>
-                <MainCards variants={cardVariants} >
-                    <p>test</p>
-                </MainCards>
+            <Main>
+               <CardWrapper variants={container} initial="hidden" animate="visible">
+                    <MainCards variants={cardVariants} >
+                        <p>test</p>
+                    </MainCards>
+                    <MainCards variants={cardVariants} >
+                        <p>test</p>
+                    </MainCards>
+                    <MainCards variants={cardVariants} >
+                        <p>test</p>
+                    </MainCards>
+                    <MainCards variants={cardVariants} >
+                        <p>test</p>
+                    </MainCards>
+                </CardWrapper>
+                <div style={{height:'10vh'}}>
+                </div>
+                <motion.div style={{height:'100vh'}}>
+                    <motion.img style={{scale}} src='social.png' alt='main-img' />
+                </motion.div>
+                
             </Main>
+            
         </React.Fragment>
     )
 }
