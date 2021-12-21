@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from "react-redux";
+import { motion } from 'framer-motion';
 
 const category = [
     {name: 'all', title: '메인'}, {name:'callvan', title: '콜밴'},
@@ -19,11 +20,12 @@ export const Category = styled(NavLink)`
     cursor: pointer;
     white-space: pre;
     text-decoration: none;
+    position: relative;
     &:hover {
         color: #ffc107;
     }
     &.active {
-        border-bottom: 2px solid #ffc107;
+        /*border-bottom: 2px solid #ffc107;*/
         &:hover {
             color: #13C6DC;
         }
@@ -31,18 +33,39 @@ export const Category = styled(NavLink)`
     & + & {
         margin-left: 1rem;
     }
-    
 `;
+
+export const UnderLine = styled(motion.div)`
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #ffc107;
+`;
+
+const LineVariants = {
+    start: {
+        opacity: 0,
+        x: -100
+    },
+    onGoing: {
+        opacity: 1,
+        x: 0
+    },
+};
 
 function Categories() {
     const isLogin = useSelector(state => state.users.isLogin);
+    const [IsSelected, setIsSelected] = useState('all');
     return (
         <> 
             <CategoryWrapper>
                 {category.map(c => (
                     <Category key={c.name} 
                     activeclassname="active"
-                    to = {c.name === 'all'? '/':`/${c.name}`}>{c.title}</Category>
+                    onClick={() => setIsSelected(c.name)}
+                    to = {c.name === 'all'? '/':`/${c.name}`}>{c.title}{IsSelected === c.name ? (<UnderLine variants={LineVariants} initial="start" animate="onGoing" layoutId='underline'/>) : null}</Category>
                 ))}
                 {isLogin?  <>
                             <Category to="/logout">로그아웃</Category>
