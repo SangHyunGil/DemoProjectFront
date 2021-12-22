@@ -26,6 +26,7 @@ function BoardDetail ({ boardId }) {
     const {data:board} = useQuery(['board', params.boardId], ()=>getBoardCategory(params.boardId,getCookie('accessToken')), {
         select: (x) => x.data.data,
         onError: (err) => console.log(err),
+        enabled: isLogin,
     });
 
     useEffect(() => {
@@ -95,8 +96,8 @@ function BoardDetail ({ boardId }) {
             <h4>{recruitState}</h4>
             <h4>{content}</h4>
             {Members.map((m) => (<p key={m}>{m}</p>))}
-            {isClosed? (<h3>마감되었습니다!</h3>) : (IsAlreadyJoined? <button name='Direct' onClick={BoardDetailHandler}>바로가기</button>: 
-            <button onClick={BoardDetailHandler} name='Join' >신청하기</button>) }
+            {isLogin ? (isClosed? (<h3>마감되었습니다!</h3>) : (IsAlreadyJoined? <button name='Direct' onClick={BoardDetailHandler}>바로가기</button>: 
+            <button onClick={BoardDetailHandler} name='Join' >신청하기</button>)) : <h3>로그인 해주세요!</h3> }
         </> 
     ); 
 } 
