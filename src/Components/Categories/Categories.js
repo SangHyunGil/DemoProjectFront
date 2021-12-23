@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { motion } from 'framer-motion';
 
@@ -18,6 +18,7 @@ export const CategoryWrapper = styled.div`
 
 export const Category = styled(NavLink)`
     cursor: pointer;
+    color: black;
     white-space: pre;
     text-decoration: none;
     position: relative;
@@ -40,6 +41,7 @@ export const UnderLine = styled(motion.div)`
     bottom: -2px;
     left: 0;
     right: 0;
+
     height: 2px;
     background: #ffc107;
 `;
@@ -57,7 +59,11 @@ const LineVariants = {
 
 function Categories() {
     const isLogin = useSelector(state => state.users.isLogin);
-    const [IsSelected, setIsSelected] = useState('all');
+    const location = useLocation();
+    const [IsSelected, setIsSelected] = useState(location.pathname !== '/' ? location.pathname.split('/')[1] : 'all');
+    useEffect(() => {
+       setIsSelected(location.pathname !== '/' ? location.pathname.split('/')[1] : 'all');
+    }, [location])
     return (
         <> 
             <CategoryWrapper>

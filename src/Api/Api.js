@@ -71,6 +71,10 @@ export const findAllChats = async (roomId, accessToken) => {
 };
 
 export const getBoardCategory = async (studyId,accessToken) => {
+    accessToken = accessToken ? accessToken : getCookie('accessToken');
+    if(!accessToken) {
+        return;
+    }
     return await axios.get(`/study/${studyId}/board`,{
         headers: {
             "X-AUTH-TOKEN": accessToken

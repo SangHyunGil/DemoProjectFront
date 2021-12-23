@@ -6,7 +6,20 @@ import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import { configStore } from './utils/configStore'
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { QueryClient, QueryClientProvider} from 'react-query';
+import { createGlobalStyle } from "styled-components";
+import { normalize } from "styled-normalize";
+
+
+const GlobalStyle = createGlobalStyle`
+  ${normalize}
+  body,html {
+    padding:0;
+    margin:0;
+    height: 100%;
+    width: 100%;
+  }
+`;
 
 const queryClient = new QueryClient();
 
@@ -16,6 +29,7 @@ axios.defaults.withCredentials=true;
 ReactDOM.render(
   <Provider store={configStore()}>  
     <QueryClientProvider client={queryClient}>
+      <GlobalStyle />
       <App />
     </QueryClientProvider>
   </Provider>,
