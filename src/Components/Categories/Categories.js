@@ -32,6 +32,7 @@ export const Category = styled(NavLink)`
   }
   &.active {
     /*border-bottom: 2px solid #ffc107;*/
+    color: #ffc107;
     padding-bottom: 5px;
     &:hover {
       color: #13c6dc;

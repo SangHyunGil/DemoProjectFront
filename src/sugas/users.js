@@ -9,7 +9,11 @@ import {
     } from "../reducers/users";
 
 async function registerAPI(data) {
-    return await axios.post("/sign/register", data) && await axios.post("/sign/email", {email : data.email, redisKey : "VERIFY"});
+    console.log(data);
+    for(let v in data) {
+        console.log(v[0], v[1]);
+    }
+    return await axios.post("/sign/register", data, {"Content-Type": "multipart/form-data"}) && await axios.post("/sign/email", {email : data.get('email'), redisKey : "VERIFY"});
 }
 
 function* register(action) {
