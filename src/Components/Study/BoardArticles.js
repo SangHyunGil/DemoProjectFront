@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from 'react';
 import {useParams,Link, useNavigate} from 'react-router-dom';
-import {findAllBoardArticles,createBoardArticle,deleteBoardArticle,updateBoardArticle} from '../../Api/Api';
+import {findAllBoardArticles,createBoardArticle} from '../../Api/Api';
 import useInput from '../../hooks/useInput';
 import Card from '../Card/Card';
 import Modal from '../Modal/Modal';
@@ -27,33 +27,6 @@ function BoardArticles() {
             //setBoardArticles(BoardArticle);
         },
     });
-    /* 
-    const deleteMutation = useMutation((articleId)=>deleteBoardArticle(studyId,boardId,articleId,accessToken),{
-        onSuccess: ()=>{
-            queryClient.invalidateQueries(['boardArticles',boardId]);
-            //setBoardArticles(BoardArticle);
-        },
-    });
-   
-    const updateMutation = useMutation((articleId,content,title)=>updateBoardArticle(studyId, boardId, articleId,content,title, accessToken),{
-        onSuccess: ()=>{
-            queryClient.invalidateQueries(['boardArticles',boardId]);
-        }
-    });*/
-    
-
-    /*
-    useEffect(() => {
-        const BoardfindArticles = async () => {
-            await findAllBoardArticles(studyId,boardId,accessToken).then(res=>{
-                const {data:{data}} = res;
-                setBoardArticles(()=>[...data]);
-            }).catch(err=>{
-                console.log(err);
-            });
-        }
-        BoardfindArticles();
-    },[studyId,boardId]);*/
 
     useEffect(() => {
         if (BoardArticle?.length === 0) {
@@ -76,20 +49,6 @@ function BoardArticles() {
         setArticleContent('');
         setIsModalUp(false);
     }
-    /*
-    const deleteArticleHandler = (e) => {
-        e.preventDefault();
-        //console.log(e.target.name);
-        deleteMutation.mutate(e.target.name);
-        navigate(`/study/${studyId}/board/${boardId}/articles`);
-    };*/
-    /*
-    const updateArticleHandler = (e) => {
-        e.preventDefault();
-        updateMutation.mutate(e.target.name,articleContent,articleTitle);
-    }
-    {nickname === article.memberName && <button type="button" name={article.articleId} onClick={updateArticleHandler}>게시글 수정</button>}
-    */
 
     return (
         <div>

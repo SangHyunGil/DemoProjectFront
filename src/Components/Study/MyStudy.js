@@ -12,13 +12,13 @@ function MyStudy() {
     useEffect(() => {
         console.log(studyInfos.length,BoardInfo.length);
         if (studyInfos.length !== BoardInfo.length && studyInfos.length !== 0) {
-            studyInfos.map((studyInfo) => {
+            studyInfos.map((studyInfo) => (
                 getStudyInfo(studyInfo.studyId).then((res) => {
                     const {data:{data}} = res;
                     setBoardInfo((prev)=> [...prev, data]);
                     setHasBoard(true);
                 })
-            })
+            ))
         }
     },[]);
 
