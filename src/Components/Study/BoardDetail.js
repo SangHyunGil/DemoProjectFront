@@ -60,7 +60,7 @@ function BoardDetail ({ boardId }) {
             <h4>{BoardContent?.recruitState}</h4>
             <h4>{BoardContent?.content}</h4>
             <p></p>
-            {BoardContent?.studyMembers?.map((m) => (<p key={m}>{m}</p>))}
+            {BoardContent?.studyMembers?.map((m) => (<p key={m.nickname}>{m.nickname}<img src={m.profileImgUrl} alt='profile'></img></p>))}
             {isLogin ? (isClosed? (<h3>마감되었습니다!</h3>) : (IsAlreadyJoined? <button name='Direct' onClick={BoardDetailHandler}>바로가기</button>: 
             <button onClick={BoardDetailHandler} name='Join' >신청하기</button>)) : <h3>로그인 해주세요!</h3> }
         </> 

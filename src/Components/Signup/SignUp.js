@@ -53,6 +53,7 @@ function SignUp() {
   const [Department, setDepartment] = useState("컴퓨터공학부");
   const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
   const [thumbnail, setThumbnail] = useState(`D:/project-GSH폴더/profile/defaultImg.png`);
+  const [previewImg, setPreviewImg] = useState('');
 
   const { id, email, registerDone, registerError, registerLoading } =
     useSelector((state) => state.users);
@@ -66,7 +67,12 @@ function SignUp() {
 
   const handleUpload = (e) => {
     const { files } = e.target;
+    const reader = new FileReader();
     setThumbnail(files[0]);
+    reader.onload = () => {
+      setPreviewImg(reader.result);
+    }
+    reader.readAsDataURL(files[0]);
   }
 
   const handleSignUp = (e) => {
@@ -96,7 +102,7 @@ function SignUp() {
   };
 
   return (
-    <div style={{margin:'10%'}}>
+    <div style={{margin:'5% 10%'}}>
       {registerError === "" ? null : <p> {registerError} </p>}
       <SignUpformStyle
         encType="multipart/form-data"
@@ -163,9 +169,10 @@ function SignUp() {
             ))}
           </RadioGroup>
         </FormControl>
+        {previewImg === '' ? null : <img src={previewImg} alt="preview" style={{width:'100px',height:'100px'}}/>}
         <label htmlFor="contained-button-file">
             <SignUpThumbnailInput accept="image/*" id="contained-button-file" name="thumbNailImg" type="file" onChange={handleUpload}/>
-            <Button variant="contained" component="span">
+            <Button variant="contained" component="span" sx={{m:2}}>
                 썸네일 이미지 선택
             </Button>
         </label>
