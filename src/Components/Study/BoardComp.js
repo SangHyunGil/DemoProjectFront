@@ -3,7 +3,9 @@ import { findAllBoards } from "../../Api/Api";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Card from "../Card/Card";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
 import "./RoomStyles.css";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
@@ -22,27 +24,10 @@ const CardWrapper = styled.div`
   }
 `;
 
-const StudyCard = styled.div`
-  border-radius: 10px;
-  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+const StudyCard = styled(Card)`
+  text-decoration: none;
 `;
 
-const StudyCardImg = styled.figure`
-  max-width: 300px;
-  max-height: 100px;
-  margin: 0;
-  overflow: hidden;
-  img {
-    width: 100%;
-    border-radius: 10px 10px 0 0;
-  }
-`;
-
-const StudyTextWrapper = styled.div`
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-`;
 
 const CardContext = [
   {
@@ -95,19 +80,23 @@ const BoardComp = () => {
       )}
       <CardWrapper>
         {boards.map((board, idx) => (
-          <Link to={{ pathname: `/study/${board.studyId}` }} key={idx}>
+          <Link style={{textDecoration: 'none'}} to={{ pathname: `/study/${board.studyId}` }} key={idx}>
             <StudyCard>
-              <StudyCardImg>
-                <img src={CardContext[0].img} alt="thumnail" />
-              </StudyCardImg>
-              <StudyTextWrapper>
-                  <h2>{board.title}</h2>
-                  <h3>{board.topic}</h3>
-                  <p>{`recruit: ${board?.recruitState}`}</p>
-                  <p>{`study: ${board?.studyState}`}</p>
-                  <p>{board?.joinCount}/{board?.headCount}</p>
-              </StudyTextWrapper>
-              
+              <CardMedia
+                component="img"
+                height="140"
+                image={CardContext[0].img}
+                alt="study Thumbnail"
+              />
+              <CardContent>
+                <h2>{board.title}</h2>
+                <h3>{board.topic}</h3>
+                <p>{`recruit: ${board?.recruitState}`}</p>
+                <p>{`study: ${board?.studyState}`}</p>
+                <p>
+                  {board?.joinCount}/{board?.headCount}
+                </p>
+              </CardContent>
             </StudyCard>
           </Link>
         ))}

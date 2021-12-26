@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import useInput from "../../hooks/useInput";
 import { CircularProgress } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerRequest, clearRegisterState } from "../../reducers/users";
+import { useForm } from 'react-hook-form';
 import styled from "styled-components";
 import InputAdornment from "@mui/material/InputAdornment";
 import { FormControl } from "@mui/material";
@@ -28,6 +28,15 @@ const SignUpformStyle = styled.form`
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     padding: 20px 0;
+    @media (max-width: 1100px) {
+      box-shadow: none;
+    }
+`;
+
+const SignUpInputWrapper = styled(FormControl)`
+    @media (max-width: 460px) {
+      width: 75vw !important;
+    }
 `;
 
 const SignUpButton = styled(motion.button)`
@@ -47,13 +56,11 @@ function SignUp() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [Email, onChangeEm] = useInput("");
-  const [Password, onChangePw] = useInput("");
-  const [Nickname, onChangeNi] = useInput("");
   const [Department, setDepartment] = useState("컴퓨터공학부");
   const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [thumbnail, setThumbnail] = useState(`D:/project-GSH폴더/profile/defaultImg.png`);
+  const [thumbnail, setThumbnail] = useState(`/defaultImg.png`);
   const [previewImg, setPreviewImg] = useState('');
+  const { register, handleSubmit, formState: {errors}, getValues, setValue } = useForm();
 
   const { id, email, registerDone, registerError, registerLoading } =
     useSelector((state) => state.users);
@@ -75,13 +82,14 @@ function SignUp() {
     reader.readAsDataURL(files[0]);
   }
 
-  const handleSignUp = (e) => {
+  const handleSignUp = (data,e) => {
+    console.log(data);
     e.preventDefault();
     const formData = new FormData();
     
-    formData.append("email", Email);
-    formData.append("password", Password);
-    formData.append("nickname", Nickname);
+    formData.append("email", getValues('email'));
+    formData.append("password", getValues('password'));
+    formData.append("nickname", getValues('nickname'));
     formData.append("department", Department);
     formData.append("profileImg", thumbnail);
     dispatch(registerRequest(formData));
@@ -106,28 +114,28 @@ function SignUp() {
       {registerError === "" ? null : <p> {registerError} </p>}
       <SignUpformStyle
         encType="multipart/form-data"
-        onSubmit={handleSignUp}
+        onSubmit={handleSubmit(handleSignUp)}
       >
-        <FormControl variant="outlined" sx={{ m: 1, width: "50ch" }}>
+        <SignUpInputWrapper variant="outlined" sx={{ m: 1, width: '50ch'}}>
           <InputLabel htmlFor="outlined-adornment-email">이메일</InputLabel>
           <OutlinedInput
+            {...register("email",{required:'이메일을 입력해주세요'})}
             label="이메일"
             id="outlined-adornment-email"
-            value={Email}
-            onChange={onChangeEm}
             endAdornment={
               <InputAdornment position="end">@koreatech.ac.kr</InputAdornment>
             }
           />
-        </FormControl>
-        <FormControl sx={{ width: "50ch" }}>
+          <p style={{color:'red',alignSelf: 'flex-start'}}>{errors?.email?.message}</p>
+        </SignUpInputWrapper>
+        <SignUpInputWrapper sx={{width: '50ch'}}>
           <InputLabel htmlFor="outlined-adornment-password">
             패스워드
           </InputLabel>
           <OutlinedInput
+            {...register("password",{required:'패스워드를 입력해주세요'})}
             id="outlined-adornment-password"
             type={IsPasswordVisible ? "text" : "password"}
-            onChange={onChangePw}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -146,17 +154,18 @@ function SignUp() {
             }
             label="Password"
           />
-        </FormControl>
-        <FormControl sx={{ m: 1, width: "50ch" }}>
+          <p style={{color:'red',alignSelf: 'flex-start'}}>{errors?.password?.message}</p>
+        </SignUpInputWrapper>
+        <SignUpInputWrapper sx={{ m: 1, width: '50ch'}}>
           <InputLabel htmlFor="outlined-adornment-nickname">닉네임</InputLabel>
           <OutlinedInput
+            {...register("nickname",{required:'닉네임을 입력해주세요'})}
             id="outlined-adornment-nickname"
-            value={Nickname}
-            onChange={onChangeNi}
             label="닉네임"
           />
-        </FormControl>
-        <FormControl component="fieldset" sx={{m:1,width:'50ch'}}>
+          <p style={{color:'red',alignSelf: 'flex-start'}}>{errors?.nickname?.message}</p>
+        </SignUpInputWrapper>
+        <SignUpInputWrapper component="fieldset" sx={{m:1, width: '50ch'}}>
           <FormLabel component="legend">학부</FormLabel>
           <RadioGroup
             row
@@ -168,7 +177,7 @@ function SignUp() {
                 <FormControlLabel key={x.id} value={x.val} onChange={handleDepartMent} control={<Radio />} label={x.val} />
             ))}
           </RadioGroup>
-        </FormControl>
+        </SignUpInputWrapper>
         {previewImg === '' ? null : <img src={previewImg} alt="preview" style={{width:'100px',height:'100px'}}/>}
         <label htmlFor="contained-button-file">
             <SignUpThumbnailInput accept="image/*" id="contained-button-file" name="thumbNailImg" type="file" onChange={handleUpload}/>
