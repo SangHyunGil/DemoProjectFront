@@ -29,6 +29,7 @@ import BoardArticles from './Components/Study/BoardArticles';
 import BoardArticlesPost from './Components/Study/BoardArticlesPost';
 import StudyManage from './Components/Study/StudyManage';
 import BoardArticlePostEdit from './pages/BoardArticlePostEdit';
+import { getCookie } from './utils/cookie';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -39,8 +40,10 @@ const App = () => {
 
   useEffect(() => {
     if (!isChecked) {
+      if(getCookie('accessToken')){
+        checkAccessToken(dispatch);
+      }
       //console.log("refresh Page");
-      checkAccessToken(dispatch);
       console.log(isLogin);
     }
   });
