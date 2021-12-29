@@ -58,7 +58,7 @@ function SignUp() {
 
   const [Department, setDepartment] = useState("컴퓨터공학부");
   const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [thumbnail, setThumbnail] = useState(`/defaultImg.png`);
+  const [thumbnail, setThumbnail] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
   const { register, handleSubmit, formState: {errors}, getValues, setValue } = useForm();
 
@@ -83,10 +83,9 @@ function SignUp() {
   }
 
   const handleSignUp = (data,e) => {
-    console.log(data);
+    console.log(data,thumbnail);
     e.preventDefault();
     const formData = new FormData();
-    
     formData.append("email", getValues('email'));
     formData.append("password", getValues('password'));
     formData.append("nickname", getValues('nickname'));
@@ -188,7 +187,7 @@ function SignUp() {
         {registerLoading ? (
           <CircularProgress />
         ) : (
-          <SignUpButton whileHover={{scale:1.1}} type="submit">회원가입</SignUpButton>
+          <SignUpButton whileHover={{scale:1.1,cursor:'pointer'}} type="submit">회원가입</SignUpButton>
         )}
       </SignUpformStyle>
     </div>

@@ -25,7 +25,7 @@ export const findUserBoard = async (accessToken) => {
 }
 
 export const join = async (boardId, memberId, accessToken) => {
-    return await axios.post("/study/join", {
+    return await axios.post(`/study/${boardId}/join`, {
         studyId: boardId,
         memberId: memberId
     }, {
