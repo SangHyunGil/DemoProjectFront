@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import "./RoomStyles.css";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
@@ -22,6 +23,13 @@ const CardWrapper = styled.div`
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
   }
+`;
+
+const AddCircleButton = styled(AddCircleIcon)`
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
 `;
 
 const StudyCard = styled(Card)`
@@ -67,7 +75,7 @@ const BoardComp = () => {
 
   return (
     <div>
-      <button onClick={onNavigate}>게시글 개설</button>
+      <AddCircleButton color="primary" sx={{fontSize: 70}} onClick={onNavigate}></AddCircleButton>
       {isModalUp && (
         <Modal
           title={<p>로그인 필요!</p>}
@@ -93,9 +101,6 @@ const BoardComp = () => {
                 <h3>{board.topic}</h3>
                 <p>{`recruit: ${board?.recruitState}`}</p>
                 <p>{`study: ${board?.studyState}`}</p>
-                <p>
-                  {board?.joinCount}/{board?.headCount}
-                </p>
               </CardContent>
             </StudyCard>
           </Link>

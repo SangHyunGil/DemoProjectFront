@@ -4,9 +4,9 @@ import BoardComp from "../Components/Study/BoardComp";
 const BoardPage = () => {
 
     return (
-        <div>
+        <>
             <BoardComp />
-        </div>
+        </>
     )
 }
 

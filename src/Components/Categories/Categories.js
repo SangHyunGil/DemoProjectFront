@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 const category = [
   { name: "all", title: "메인" },
@@ -11,12 +13,23 @@ const category = [
   { name: "market", title: "장터" },
 ];
 
-export const CategoryWrapper = styled.div`
+export const CategoryWrapper = styled.nav`
   display: flex;
   justify-content: space-between;
   padding: 20px 30px 18px 30px;
   //box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
   border-bottom: 2px solid #e6e6e6;
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+const CategoryMiddleWrapper = styled.div`
+  @media (max-width: 480px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const Category = styled(NavLink)`
@@ -41,6 +54,32 @@ export const Category = styled(NavLink)`
   & + & {
     margin-left: 1rem;
   }
+  @media (max-width: 480px) {
+    display: ${(props) => (props.ismenuopen === 'true' ? "inline-block" : "none")};
+    & + & {
+      margin-left: 0;
+    }
+  }
+`;
+
+const MenuButton = styled(MenuIcon)`
+  cursor: pointer;
+  @media (min-width: 481px) {
+    display: none !important;
+  }
+  @media (max-width: 480px) {
+    display: block;
+  }
+`;
+
+const MenuCloseButton = styled(CloseIcon)`
+  cursor: pointer;
+  @media (min-width: 481px) {
+    display: none !important;
+  }
+  @media (max-width: 480px) {
+    display: block;
+  }
 `;
 
 export const UnderLine = styled(motion.div)`
@@ -48,9 +87,11 @@ export const UnderLine = styled(motion.div)`
   bottom: -2px;
   left: 0;
   right: 0;
-
   height: 2px;
   background: #ffc107;
+  @media (max-width: 480px) {
+    display: none;
+  }
 `;
 
 const LineVariants = {
@@ -67,6 +108,7 @@ const LineVariants = {
 function Categories() {
   const isLogin = useSelector((state) => state.users.isLogin);
   const location = useLocation();
+  const [isMenuOpen, setisMenuOpen] = useState(false);
   const [IsSelected, setIsSelected] = useState(
     location.pathname !== "/" ? location.pathname.split("/")[1] : "all"
   );
@@ -74,17 +116,23 @@ function Categories() {
     setIsSelected(
       location.pathname !== "/" ? location.pathname.split("/")[1] : "all"
     );
-  }, [location]);
+  }, [location, isMenuOpen]);
+
+  const MenuClickHandler = () => {
+    setisMenuOpen((prev) => !prev);
+  };
+
   return (
     <>
       <CategoryWrapper>
-        <div>
+        <CategoryMiddleWrapper>
           {category.map((c) => (
             <Category
               key={c.name}
               activeclassname="active"
               onClick={() => setIsSelected(c.name)}
               to={c.name === "all" ? "/" : `/${c.name}`}
+              ismenuopen={isMenuOpen+''}
             >
               {c.title}
               {IsSelected === c.name ? (
@@ -97,12 +145,14 @@ function Categories() {
               ) : null}
             </Category>
           ))}
-        </div>
-        <div>
+        </CategoryMiddleWrapper>
+        <CategoryMiddleWrapper>
           {isLogin ? (
             <>
-              <Category to="/logout">로그아웃</Category>
-              <Category to="/profile">
+              <Category to="/logout" ismenuopen={isMenuOpen+''}>
+                로그아웃
+              </Category>
+              <Category to="/profile" ismenuopen={isMenuOpen+''}>
                 마이페이지
                 {IsSelected === "profile" ? (
                   <UnderLine
@@ -116,11 +166,24 @@ function Categories() {
             </>
           ) : (
             <>
-              <Category to="/login">로그인</Category>
-              <Category to="/signup">회원가입</Category>
+              <Category ismenuopen={isMenuOpen+''} to="/login">
+                로그인
+              </Category>
+              <Category ismenuopen={isMenuOpen+''} to="/signup">
+                회원가입
+              </Category>
             </>
           )}
-        </div>
+          {isMenuOpen ? (
+            <motion.div initial={{opacity:0}} animate={{opacity:1}}>
+              <MenuCloseButton onClick={MenuClickHandler} />
+            </motion.div>
+          ) : (
+            <motion.div initial={{opacity:0}} animate={{opacity:1}}>
+              <MenuButton onClick={MenuClickHandler} />
+            </motion.div>
+          )}
+        </CategoryMiddleWrapper>
       </CategoryWrapper>
     </>
   );
