@@ -60,7 +60,7 @@ function SignUp() {
   const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
-  const { register, handleSubmit, formState: {errors}, getValues, setValue } = useForm();
+  const { register, handleSubmit, formState: {errors}, setValue } = useForm();
 
   const { id, email, registerDone, registerError, registerLoading } =
     useSelector((state) => state.users);
@@ -83,15 +83,20 @@ function SignUp() {
   }
 
   const handleSignUp = (data,e) => {
-    console.log(data,thumbnail);
     e.preventDefault();
+    
     const formData = new FormData();
-    formData.append("email", getValues('email'));
-    formData.append("password", getValues('password'));
-    formData.append("nickname", getValues('nickname'));
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("nickname", data.nickname);
     formData.append("department", Department);
-    formData.append("profileImg", thumbnail);
+    if (thumbnail) {
+      formData.append("thumbnail", thumbnail);
+    }
     dispatch(registerRequest(formData));
+    setValue('email', '');
+    setValue('password', '');
+    setValue('nickname', '');
   };
 
   const Depart = [
@@ -132,7 +137,7 @@ function SignUp() {
             패스워드
           </InputLabel>
           <OutlinedInput
-            {...register("password",{required:'패스워드를 입력해주세요'})}
+            {...register("password",{required:'패스워드를 입력해주세요',pattern: {value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, message: '비밀번호는 최소 8자리이면서 1개 이상의 알파벳, 숫자, 특수문자를 포함해야합니다.'} })}
             id="outlined-adornment-password"
             type={IsPasswordVisible ? "text" : "password"}
             endAdornment={
