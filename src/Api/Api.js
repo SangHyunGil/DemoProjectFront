@@ -244,11 +244,7 @@ export const getStudyMembers = async (studyId, accessToken) => {
 
 export const grantStudyMember = async (studyId, memberId, accessToken) => {
   return await axios.put(
-    `/study/${studyId}/join`,
-    {
-      memberId,
-      studyId,
-    },
+    `/study/${studyId}/join/${memberId}`,
     {
       headers: {
         "X-AUTH-TOKEN": accessToken,
@@ -259,11 +255,7 @@ export const grantStudyMember = async (studyId, memberId, accessToken) => {
 
 export const rejectStudyMember = async (studyId, memberId, accessToken) => {
     return await axios.delete(
-        `/study/${studyId}/join`,
-        {
-        memberId,
-        studyId,
-        },
+        `/study/${studyId}/join/${memberId}`,
         {
         headers: {
             "X-AUTH-TOKEN": accessToken,
