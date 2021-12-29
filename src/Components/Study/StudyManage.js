@@ -67,6 +67,7 @@ function StudyManage() {
       onSuccess: () => {
         console.log(Members);
       },
+      retry: false,
     }
   );
 
@@ -148,8 +149,12 @@ function StudyManage() {
                   <div>
                     <span>{Member.name}</span>
                     <span>{Member.studyRole}</span>
-                    <button onClick={()=>{grantUserMutation.mutate(Member.id)}}>승인</button>
-                    <button onClick={()=>{rejectUserMutation.mutate(Member.id)}}>거절</button>
+                    <button onClick={()=>{
+                      window.confirm("승인하시겠습니까?") && grantUserMutation.mutate(Member.id)
+                      }}>승인</button>
+                    <button onClick={()=>{
+                      window.confirm('거절하시겠습니까?') && rejectUserMutation.mutate(Member.id);
+                      }}>거절</button>
                   </div>
                 </React.Fragment>
               );
