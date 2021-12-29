@@ -7,6 +7,8 @@ import {
   getBoardCategory,
   createBoardCategory,
   getStudyMembers,
+  grantStudyMember,
+  rejectStudyMember
 } from "../../Api/Api";
 //import { useSelector } from "react-redux";
 import { getCookie } from "../../utils/cookie";
@@ -65,6 +67,22 @@ function StudyManage() {
       onSuccess: () => {
         console.log(Members);
       },
+    }
+  );
+
+  const grantUserMutation = useMutation(
+    (memberId) => grantStudyMember(studyId,memberId, getCookie("accessToken")),{
+      onSuccess: () => {
+        queryClient.invalidateQueries(["studyMembers", studyId]);
+      }
+    }
+  );
+
+  const rejectUserMutation = useMutation(
+    (memberId) => rejectStudyMember(studyId,memberId, getCookie("accessToken")),{
+      onSuccess: () => {
+        queryClient.invalidateQueries(["studyMembers", studyId]);
+      }
     }
   );
 
@@ -130,6 +148,8 @@ function StudyManage() {
                   <div>
                     <span>{Member.name}</span>
                     <span>{Member.studyRole}</span>
+                    <button onClick={()=>{grantUserMutation.mutate(Member.id)}}>승인</button>
+                    <button onClick={()=>{rejectUserMutation.mutate(Member.id)}}>거절</button>
                   </div>
                 </React.Fragment>
               );

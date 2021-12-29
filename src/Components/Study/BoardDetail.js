@@ -8,7 +8,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { updateStudyIds } from "../../reducers/users";
-import { useQuery} from "react-query";
+import { useQuery , useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { getCookie } from "../../utils/cookie";
 import Avatar from "@mui/material/Avatar";
@@ -107,6 +107,7 @@ function BoardDetail({ boardId }) {
   const [isClosed, setisClosed] = useState(false);
   const [isApply, setIsApply] = useState(false);
   const [JoinCnt, setJoinCnt] = useState(0);
+  const queryClient = useQueryClient();
   const { data: board } = useQuery(
     ["board", params.boardId],
     () => getBoardCategory(params.boardId, getCookie("accessToken")),
@@ -114,6 +115,17 @@ function BoardDetail({ boardId }) {
       select: (x) => x.data.data,
       onError: (err) => console.log(err),
       enabled: isLogin,
+    }
+  );
+  
+  const applyMutation = useMutation(
+    ["apply", params.boardId],
+    ()=> join(params.boardId,id, getCookie("accessToken")),
+    {
+      onSuccess: () => {
+        setIsApply(true);
+        queryClient.invalidateQueries(["board", params.boardId]);
+      }
     }
   );
 
@@ -146,7 +158,7 @@ function BoardDetail({ boardId }) {
           a -= 1;
         }
       });
-      Number(BoardContent?.headCount) === Number(BoardContent?.joinCount) &&
+      Number(BoardContent?.headCount) === a &&
       !IsAlreadyJoined
         ? setisClosed(true)
         : setisClosed(false);
@@ -156,19 +168,7 @@ function BoardDetail({ boardId }) {
 
   const BoardDetailHandler = (e) => {
     if (isChecked && isLogin) {
-      if (e.target.name === "Join") {
-        join(boardId, id, accessToken)
-          .then((response) => {
-            console.log(response.data);
-            const {
-              data: { studyInfos },
-            } = response.data;
-            dispatch(updateStudyIds(...studyInfos));
-            navigate("/study");
-          })
-          .catch((error) => console.log(error));
-        return;
-      } else if (e.target.name === "Direct") {
+      if (e.target.name === "Direct") {
         navigate(
           `/study/${params.boardId}/board/${board[0].studyBoardId}/articles`
         );
@@ -285,7 +285,7 @@ function BoardDetail({ boardId }) {
           ) : isApply ? (
             <h3>스터디 신청중입니다!</h3>
           ) : (
-            <button onClick={BoardDetailHandler} name="Join">
+            <button onClick={()=>{applyMutation.mutate()}} name="Join">
               신청하기
             </button>
           )
