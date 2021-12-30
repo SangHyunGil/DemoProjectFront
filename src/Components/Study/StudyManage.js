@@ -8,13 +8,15 @@ import {
   createBoardCategory,
   getStudyMembers,
   grantStudyMember,
-  rejectStudyMember
+  rejectStudyMember,
 } from "../../Api/Api";
 //import { useSelector } from "react-redux";
 import { getCookie } from "../../utils/cookie";
 import { useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
+import { Box } from "@mui/system";
+import { StyledModal, Backdrop, Boxstyle } from "./BoardDetail";
 
 const StudyManageContainer = styled.section`
   width: 100%;
@@ -44,10 +46,22 @@ const ErrorMessage = styled.p`
   color: red;
 `;
 
+const ApplicantStyle = styled.span`
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 function StudyManage() {
   const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
   const { studyId } = useParams();
   const queryClient = useQueryClient();
+  const [isApplyModalUp, setisApplyModalUp] = useState(false);
+  const [ApplyInfo, setApplyInfo] = useState({
+    memberId: "",
+    applyContent: "",
+  })
   const {
     register,
     handleSubmit,
@@ -72,18 +86,21 @@ function StudyManage() {
   );
 
   const grantUserMutation = useMutation(
-    (memberId) => grantStudyMember(studyId,memberId, getCookie("accessToken")),{
+    (memberId) => grantStudyMember(studyId, memberId, getCookie("accessToken")),
+    {
       onSuccess: () => {
         queryClient.invalidateQueries(["studyMembers", studyId]);
-      }
+      },
     }
   );
 
   const rejectUserMutation = useMutation(
-    (memberId) => rejectStudyMember(studyId,memberId, getCookie("accessToken")),{
+    (memberId) =>
+      rejectStudyMember(studyId, memberId, getCookie("accessToken")),
+    {
       onSuccess: () => {
         queryClient.invalidateQueries(["studyMembers", studyId]);
-      }
+      },
     }
   );
 
@@ -119,95 +136,135 @@ function StudyManage() {
   };
 
   return (
-    <StudyManageContainer>
-      <StudyMemberManageContainer>
-        <h2>스터디원 관리</h2>
-        <div>
-          <p>스터디원들</p>
-          {Members?.map((Member) => {
-            const { studyRole } = Member;
-            if (studyRole !== "APPLY") {
-              return (
-                <React.Fragment key={Member.id}>
-                  <div>
-                    <span>{Member.name}</span>
-                    <span>{Member.studyRole}</span>
-                  </div>
-                </React.Fragment>
-              );
-            }
-            return null;
-          })}
-        </div>
-        <div>
-          <p>지원자</p>
-          {Members?.map((Member) => {
-            const { studyRole } = Member;
-            if (studyRole === "APPLY") {
-              return (
-                <React.Fragment key={Member.id}>
-                  <div>
-                    <span>{Member.name}</span>
-                    <span>{Member.studyRole}</span>
-                    <button onClick={()=>{
-                      window.confirm("승인하시겠습니까?") && grantUserMutation.mutate(Member.id)
-                      }}>승인</button>
-                    <button onClick={()=>{
-                      window.confirm('거절하시겠습니까?') && rejectUserMutation.mutate(Member.id);
-                      }}>거절</button>
-                  </div>
-                </React.Fragment>
-              );
-            }
-            return null;
-          })}
-        </div>
-      </StudyMemberManageContainer>
-      {IsBoardModalUp && (
-        <StudyModal>
-          <Modal
-            title={<h2 style={{ margin: "0" }}>게시판 추가</h2>}
-            closeButton={
-              <CloseIcon onClick={() => setIsBoardModalUp(false)}>
-                닫기
-              </CloseIcon>
-            }
-            ModalHandler={() => setIsBoardModalUp(false)}
+    <>
+      <StudyManageContainer>
+        <StudyMemberManageContainer>
+          <h2>스터디원 관리</h2>
+          <div>
+            <p>스터디원들</p>
+            {Members?.map((Member) => {
+              const { studyRole } = Member;
+              if (studyRole !== "APPLY") {
+                return (
+                  <React.Fragment key={Member.id}>
+                    <div>
+                      <span>{Member.name}</span>
+                      <span>{Member.studyRole}</span>
+                    </div>
+                  </React.Fragment>
+                );
+              }
+              return null;
+            })}
+          </div>
+          <div>
+            <p>지원자</p>
+            {Members?.map((Member) => {
+              const { studyRole } = Member;
+              if (studyRole === "APPLY") {
+                return (
+                  <React.Fragment key={Member.id}>
+                    <div>
+                      <ApplicantStyle
+                        onClick={() => {
+                          setisApplyModalUp(true);
+                          setApplyInfo({
+                            memberId: Member.id,
+                            applyContent: Member.applyContent,
+                          });
+                        }}
+                      >
+                        {Member.name}
+                      </ApplicantStyle>
+                      <span>{Member.studyRole}</span>
+                    </div>
+                  </React.Fragment>
+                );
+              }
+              return null;
+            })}
+          </div>
+        </StudyMemberManageContainer>
+        {IsBoardModalUp && (
+          <StudyModal>
+            <Modal
+              title={<h2 style={{ margin: "0" }}>게시판 추가</h2>}
+              closeButton={
+                <CloseIcon onClick={() => setIsBoardModalUp(false)}>
+                  닫기
+                </CloseIcon>
+              }
+              ModalHandler={() => setIsBoardModalUp(false)}
+            >
+              <div>
+                <form onSubmit={handleSubmit(BoardAddHandler)}>
+                  <input
+                    type="text"
+                    placeholder="제목"
+                    {...register("BoardTitle", {
+                      required: "입력해 주세요!",
+                      minLength: {
+                        value: 2,
+                        message: "2자리 이상으로 입력해 주세요!",
+                      },
+                    })}
+                  />
+                  <ErrorMessage>{errors?.BoardTitle?.message}</ErrorMessage>
+                  <Button variant="contained" type="submit">
+                    게시판 추가
+                  </Button>
+                </form>
+              </div>
+            </Modal>
+          </StudyModal>
+        )}
+        <StudyBoardManageContainer>
+          <h2>게시판 관리</h2>
+          <ul>
+            {board?.map((b) => (
+              <li key={b.studyBoardId}>{b.title}</li>
+            ))}
+          </ul>
+          <Button variant="contained" onClick={ModalUpHandler}>
+            게시판 추가
+          </Button>
+        </StudyBoardManageContainer>
+      </StudyManageContainer>
+      <StyledModal
+        aria-labelledby="styled-modal-title"
+        aria-describedby="styled-modal-description"
+        open={isApplyModalUp}
+        onClose={() => {
+          setisApplyModalUp(false);
+        }}
+        BackdropComponent={Backdrop}
+      >
+        <Box sx={Boxstyle}>
+          <h2 id="styled-modal-title">지원서</h2>
+          <p id="styled-modal-description">작성한 지원서</p>
+          <hr />
+          <p>
+            {ApplyInfo?.applyContent === '' ? '지원서 내용을 작성해주시지 않았어요 ㅠㅠ.' : ApplyInfo?.applyContent}
+          </p>
+          <button
+            onClick={() => {
+              window.confirm("승인하시겠습니까?") &&
+                grantUserMutation.mutate(ApplyInfo?.memberId);
+            }}
           >
-            <div>
-              <form onSubmit={handleSubmit(BoardAddHandler)}>
-                <input
-                  type="text"
-                  placeholder="제목"
-                  {...register("BoardTitle", {
-                    required: "입력해 주세요!",
-                    minLength: {
-                      value: 2,
-                      message: "2자리 이상으로 입력해 주세요!",
-                    },
-                  })}
-                />
-                <ErrorMessage>{errors?.BoardTitle?.message}</ErrorMessage>
-                <Button variant="contained" type="submit">
-                  게시판 추가
-                </Button>
-              </form>
-            </div>
-          </Modal>
-        </StudyModal>
-      )}
-      <StudyBoardManageContainer>
-        <h2>게시판 관리</h2>
-        <ul>
-          {board?.map((b) => (
-            <li key={b.studyBoardId}>{b.title}</li>
-          ))}
-        </ul>
-        <Button variant="contained" onClick={ModalUpHandler}>
-          게시판 추가
-        </Button>
-      </StudyBoardManageContainer>
-    </StudyManageContainer>
+            승인
+          </button>
+          <button
+            onClick={() => {
+              window.confirm("거절하시겠습니까?") &&
+                rejectUserMutation.mutate(ApplyInfo?.memberId);
+            }}
+          >
+            거절
+          </button>
+        </Box>
+      </StyledModal>
+    </>
   );
 }
 

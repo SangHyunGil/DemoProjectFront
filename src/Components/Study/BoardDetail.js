@@ -14,7 +14,11 @@ import { getCookie } from "../../utils/cookie";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import ModalUnstyled from '@mui/base/ModalUnstyled';
+import { Box } from '@mui/system';
+import { TextareaAutosize } from '@mui/base';
 import styled from "styled-components";
+import {useForm} from "react-hook-form";
 
 const MainHeaderWrapper = styled.header`
   display: flex;
@@ -97,6 +101,42 @@ const ButtonWrapper = styled.div`
   align-items: center;
 `;
 
+export const StyledModal = styled(ModalUnstyled)`
+  position: fixed;
+  z-index: 1300;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const Backdrop = styled.div`
+  z-index: -1;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+export const Boxstyle = {
+  width: 400,
+  bgcolor: 'white',
+  p: 2,
+  px: 4,
+  pb: 3,
+  borderRadius: '10px',
+};
+
+const StyledTextarea = styled(TextareaAutosize)`
+  outline-color: blue;
+`;
+
+
 function BoardDetail({ boardId }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -107,7 +147,9 @@ function BoardDetail({ boardId }) {
   const [isClosed, setisClosed] = useState(false);
   const [isApply, setIsApply] = useState(false);
   const [JoinCnt, setJoinCnt] = useState(0);
+  const [isApplyModalUp, setisApplyModalUp] = useState(false);
   const queryClient = useQueryClient();
+  const { register, handleSubmit } = useForm();
   const { data: board } = useQuery(
     ["board", params.boardId],
     () => getBoardCategory(params.boardId, getCookie("accessToken")),
@@ -120,7 +162,7 @@ function BoardDetail({ boardId }) {
   
   const applyMutation = useMutation(
     ["apply", params.boardId],
-    ()=> join(params.boardId,id, getCookie("accessToken")),
+    (applyContent)=> join(params.boardId, id, applyContent, getCookie("accessToken")),
     {
       onSuccess: () => {
         setIsApply(true);
@@ -177,6 +219,11 @@ function BoardDetail({ boardId }) {
     }
     navigate("/login");
   };
+
+  const onApplySubmit = (data) => {
+    applyMutation.mutate(data.applyContent);
+    setisApplyModalUp(false);
+  }
 
   const StudyStatus = {
     study: {
@@ -285,7 +332,7 @@ function BoardDetail({ boardId }) {
           ) : isApply ? (
             <h3>스터디 신청중입니다!</h3>
           ) : (
-            <button onClick={()=>{applyMutation.mutate()}} name="Join">
+            <button onClick={()=>{setisApplyModalUp(true)}} name="Join">
               신청하기
             </button>
           )
@@ -293,6 +340,27 @@ function BoardDetail({ boardId }) {
           <h3>로그인 해주세요!</h3>
         )}
       </ButtonWrapper>
+      <StyledModal
+      aria-labelledby="styled-modal-title"
+      aria-describedby="styled-modal-description"
+      open={isApplyModalUp}
+      onClose={()=>{setisApplyModalUp(false)}}
+      BackdropComponent={Backdrop}
+      >
+        <Box sx={Boxstyle}>
+          <h2 id="styled-modal-title">지원서 작성하기</h2>
+          <p id="styled-modal-description">스터디에 입장하기 위해 지원서를 쓰고 대기해 주세요!</p> 
+          <form onSubmit={handleSubmit(onApplySubmit)}>
+            <StyledTextarea {...register("applyContent")}
+              aria-label="minimum height"
+              minRows={10}
+              placeholder="지원서 작성하기"
+              style={{ width: '80%' }}
+            />
+            <button type="submit">지원하기</button>
+          </form>
+        </Box>
+      </StyledModal>
     </>
   );
 }
