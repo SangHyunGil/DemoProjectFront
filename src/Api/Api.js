@@ -28,9 +28,11 @@ export const findUserBoard = async (accessToken) => {
   );
 };
 
-export const join = async (boardId, memberId, accessToken) => {
+export const join = async (boardId, memberId, applyContent, accessToken) => {
   return await axios.post(
-    `/study/${boardId}/join/${memberId}`,
+    `/study/${boardId}/join/${memberId}`,{
+        applyContent
+    },
     {
       headers: {
         "X-AUTH-TOKEN": accessToken,
@@ -240,7 +242,9 @@ export const getStudyMembers = async (studyId, accessToken) => {
 
 export const grantStudyMember = async (studyId, memberId, accessToken) => {
   return await axios.put(
-    `/study/${studyId}/join/${memberId}`,
+    `/study/${studyId}/join/${memberId}`,{
+
+    },
     {
       headers: {
         "X-AUTH-TOKEN": accessToken,
