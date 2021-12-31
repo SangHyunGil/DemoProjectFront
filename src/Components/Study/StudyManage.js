@@ -34,6 +34,11 @@ const StudyMemberManageContainer = styled.section`
     border-bottom: 1px solid #e6e6e6;
   }
 `;
+
+const StudyControlContainer = styled(StudyMemberManageContainer)`
+  margin-top: 1rem;
+`;
+
 const StudyBoardManageContainer = styled(StudyMemberManageContainer)`
   margin-top: 1rem;
 `;
@@ -229,6 +234,12 @@ function StudyManage() {
             게시판 추가
           </Button>
         </StudyBoardManageContainer>
+        <StudyControlContainer>
+          <h2>스터디 관리</h2>
+          <Button variant="contained" color="error" onClick={ModalUpHandler}>
+            스터디 삭제
+          </Button>
+        </StudyControlContainer>
       </StudyManageContainer>
       <StyledModal
         aria-labelledby="styled-modal-title"
@@ -250,6 +261,7 @@ function StudyManage() {
             onClick={() => {
               window.confirm("승인하시겠습니까?") &&
                 grantUserMutation.mutate(ApplyInfo?.memberId);
+              setisApplyModalUp(false);
             }}
           >
             승인
@@ -258,6 +270,7 @@ function StudyManage() {
             onClick={() => {
               window.confirm("거절하시겠습니까?") &&
                 rejectUserMutation.mutate(ApplyInfo?.memberId);
+              setisApplyModalUp(false);
             }}
           >
             거절
