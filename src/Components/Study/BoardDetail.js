@@ -173,7 +173,7 @@ function BoardDetail({ boardId }) {
 
   const { data: BoardContent } = useQuery(
     ["boardContent", params.boardId],
-    () => findBoard(params.boardId, getCookie("accessToken")),
+    () => findBoard(params.boardId),
     {
       select: (x) => x.data.data,
       retry: false,

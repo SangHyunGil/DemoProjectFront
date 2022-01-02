@@ -4,12 +4,15 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Card from "@mui/material/Card";
+import CardHeader from '@mui/material/CardHeader';
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Avatar from '@mui/material/Avatar';
 import "./RoomStyles.css";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
+import { useQuery } from "react-query";
 
 const CardWrapper = styled.div`
   display: grid;
@@ -36,6 +39,12 @@ const StudyCard = styled(Card)`
   text-decoration: none;
 `;
 
+const TagWrapper = styled.span`
+  background-color: #fd79a8;
+  border-radius: 5px;
+  padding: 0 5px;
+  color: white;
+`;
 
 const CardContext = [
   {
@@ -52,17 +61,15 @@ const CardContext = [
 
 const BoardComp = () => {
   const navigate = useNavigate();
-  const [boards, setBoards] = useState([]);
   const { isLogin, isChecked, studyIds } = useSelector((state) => state.users);
   const [isModalUp, setIsModalUp] = useState(false);
 
-  useEffect(() => {
-    findAllBoards()
-      .then((response) =>
-        response.data.data.map((board) => setBoards((prev) => [...prev, board]))
-      )
-      .catch((error) => console.log(error));
-  }, []);
+  const { data:boards } = useQuery("allBoards", findAllBoards,{
+    select: (x) => x.data.data,
+    onSuccess: () => {
+      console.log(boards);
+    }
+  });
 
   const onNavigate = () => {
     if (isChecked && isLogin) {
@@ -74,7 +81,7 @@ const BoardComp = () => {
   };
 
   return (
-    <div>
+    <>
       <AddCircleButton color="primary" sx={{fontSize: 70}} onClick={onNavigate}></AddCircleButton>
       {isModalUp && (
         <Modal
@@ -87,9 +94,15 @@ const BoardComp = () => {
         </Modal>
       )}
       <CardWrapper>
-        {boards.map((board, idx) => (
+        {boards?.map((board, idx) => (
           <Link style={{textDecoration: 'none'}} to={{ pathname: `/study/${board.studyId}` }} key={idx}>
             <StudyCard>
+              <CardHeader
+                avatar={
+                  <Avatar src={board.creator?.profileImgUrl} />
+                }
+                title={board.creator?.nickname}
+              />
               <CardMedia
                 component="img"
                 height="140"
@@ -98,7 +111,9 @@ const BoardComp = () => {
               />
               <CardContent>
                 <h2>{board.title}</h2>
-                <h3>{board.topic}</h3>
+                {board.tags?.map((tag)=>(
+                  <TagWrapper key={Math.random()}>{tag}</TagWrapper>
+                ))}
                 <p>{`recruit: ${board?.recruitState}`}</p>
                 <p>{`study: ${board?.studyState}`}</p>
               </CardContent>
@@ -106,7 +121,7 @@ const BoardComp = () => {
           </Link>
         ))}
       </CardWrapper>
-    </div>
+    </>
   );
 };
 

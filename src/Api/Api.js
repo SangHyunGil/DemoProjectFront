@@ -57,29 +57,15 @@ export const createRoom = async (roomName, memberId, accessToken) => {
 };
 
 export const createBoard = async (
-  content,
-  title,
-  topic,
-  headCount,
-  studyState,
-  recruitState,
-  id,
-  accessToken
+  data,accessToken
 ) => {
   return await axios.post(
     "/study",
-    {
-      content: content,
-      title: title,
-      topic: topic,
-      headCount: headCount,
-      studyState: studyState,
-      recruitState: recruitState,
-      memberId: id,
-    },
+    data,
     {
       headers: {
         "X-AUTH-TOKEN": accessToken,
+        "Content-Type": "multipart/form-data",
       },
     }
   );
