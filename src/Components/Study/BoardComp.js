@@ -16,7 +16,7 @@ import { useQuery } from "react-query";
 
 const CardWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(200px,1fr));
   grid-template-rows: repeat(2, 1fr);
   grid-auto-rows: 1fr;
   grid-gap: 10px;
@@ -44,6 +44,7 @@ const TagWrapper = styled.span`
   border-radius: 5px;
   padding: 0 5px;
   color: white;
+  font-size: 12px;
 `;
 
 const CardContext = [
@@ -66,9 +67,6 @@ const BoardComp = () => {
 
   const { data:boards } = useQuery("allBoards", findAllBoards,{
     select: (x) => x.data.data,
-    onSuccess: () => {
-      console.log(boards);
-    }
   });
 
   const onNavigate = () => {
@@ -94,19 +92,23 @@ const BoardComp = () => {
         </Modal>
       )}
       <CardWrapper>
-        {boards?.map((board, idx) => (
+        {boards?.map((board, idx) => { 
+          const {profileUrlImg, creator: {profileImgUrl}} = board;
+          const imgSplitedurl = profileUrlImg.split("/").reverse()[0];
+          const profileSplitedUrl = profileImgUrl.split("/").reverse()[0];
+          return (
           <Link style={{textDecoration: 'none'}} to={{ pathname: `/study/${board.studyId}` }} key={idx}>
             <StudyCard>
               <CardHeader
                 avatar={
-                  <Avatar src={board.creator?.profileImgUrl} />
+                  <Avatar src={profileSplitedUrl.startsWith('/') ? profileSplitedUrl : `/profile/${profileSplitedUrl}`} />
                 }
                 title={board.creator?.nickname}
               />
               <CardMedia
                 component="img"
                 height="140"
-                image={CardContext[0].img}
+                image={imgSplitedurl.startsWith('/') ? imgSplitedurl : `/profile/${imgSplitedurl}`}
                 alt="study Thumbnail"
               />
               <CardContent>
@@ -119,7 +121,7 @@ const BoardComp = () => {
               </CardContent>
             </StudyCard>
           </Link>
-        ))}
+        )})}
       </CardWrapper>
     </>
   );
