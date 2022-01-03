@@ -29,6 +29,9 @@ const MainHeaderWrapper = styled.header`
   font-size: 2rem;
   padding-top: 20px;
   background: white;
+  background-image: url(${props => props.backgroundImg});
+  background-size: cover;
+  background-position: center;
   ul {
     list-style: none;
     padding: 0;
@@ -148,6 +151,7 @@ function BoardDetail({ boardId }) {
   const [isApply, setIsApply] = useState(false);
   const [JoinCnt, setJoinCnt] = useState(0);
   const [isApplyModalUp, setisApplyModalUp] = useState(false);
+  const [backGroundImg, setbackGroundImg] = useState('');
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
   const { data: board } = useQuery(
@@ -176,6 +180,11 @@ function BoardDetail({ boardId }) {
     () => findBoard(params.boardId),
     {
       select: (x) => x.data.data,
+      onSuccess: (data) => {
+        const {profileUrlImg} = data;
+        const SpiltedprofileImgUrl = profileUrlImg.split("/").reverse();
+        SpiltedprofileImgUrl[0].startsWith("/") ? setbackGroundImg(SpiltedprofileImgUrl[0]) : setbackGroundImg(`/profile/${SpiltedprofileImgUrl[0]}`);
+      },
       retry: false,
     }
   );
@@ -244,7 +253,7 @@ function BoardDetail({ boardId }) {
 
   return (
     <>
-      <MainHeaderWrapper>
+      <MainHeaderWrapper backgroundImg={backGroundImg}>
         <h2>{BoardContent?.title}</h2>
         <ul>
           <li>
@@ -262,7 +271,7 @@ function BoardDetail({ boardId }) {
         <DetailCard sx={{ width: "50ch" }}>
           <CardContent>
             <h3>주제</h3>
-            <p>{BoardContent?.topic}</p>
+            <p>{BoardContent?.tags}</p>
           </CardContent>
         </DetailCard>
         <DetailCard sx={{ width: "50ch" }}>

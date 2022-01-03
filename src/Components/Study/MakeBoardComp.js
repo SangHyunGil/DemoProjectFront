@@ -47,7 +47,6 @@ const TagsStyle = styled.span`
 
 const MakeRoomComp = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [recruitState, setRecruitState] = useState('PROCEED');
     const [Tags, setTags] = useState([])
     const [previewImg, setPreviewImg] = useState('');
@@ -76,7 +75,9 @@ const MakeRoomComp = () => {
         formData.append('content', data.content);
         formData.append('headCount', data.headCount);
         formData.append('memberId',id);
-        formData.append("profileImg", thumbnail);
+        if (thumbnail) {
+            formData.append("profileImg", thumbnail);
+        }
         formData.append('recruitState',data.recruitState);
         formData.append('schedule',data.schedule);
         formData.append('studyMethod',data.method);
@@ -85,15 +86,6 @@ const MakeRoomComp = () => {
         formData.append('title',data.title);
 
         createBoardMutation.mutate(formData);
-        /*
-        createBoard(content, title, topic, headCount, studyState, recruitState, id, accessToken)
-            .then(response => {
-                const {data: {studyId}} = response.data;
-                console.log(studyId);
-                dispatch(updateStudyIds(studyId));
-                navigate('/study');
-            })
-            .catch(error => console.log(error));*/
     };
 
     const handleTags = (e) => {
@@ -112,12 +104,14 @@ const MakeRoomComp = () => {
 
     const handleUpload = (e) => {
         const { files } = e.target;
-        const reader = new FileReader();
-        setThumbnail(files[0]);
-        reader.onload = () => {
-          setPreviewImg(reader.result);
+        if (files && files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setPreviewImg(e.target.result);
+            };
+            reader.readAsDataURL(files[0]);
+            setThumbnail(files[0]);
         }
-        reader.readAsDataURL(files[0]);
     };
 
     const TagsClickHandler = (id) => {
@@ -141,13 +135,14 @@ const MakeRoomComp = () => {
                     <FormHelperText sx={{color:'red'}}>{errors?.title?.message}</FormHelperText>
                 </FormControl>
                 <FormControl sx={{ width: "50ch", m: 1 }}>
-                    <InputLabel htmlFor="outlined-study-topic">스터디 주제</InputLabel>
-                    <OutlinedInput
-                        id="outlined-study-topic"
+                    <InputLabel htmlFor="outlined-study-tags">스터디 주제</InputLabel>
+                    <OutlinedInput 
+                        id="outlined-study-tags"
                         label="스터디 주제"
-                        {...register('topic',{required:'스터디 주제를 입력해 주세요'})}
+                        onKeyDown={(e)=>handleTags(e)}
+                        {...register('tags')}
                     />
-                    <FormHelperText sx={{color:'red'}}>{errors?.topic?.message}</FormHelperText>
+                    <FormHelperText sx={{color:'blue'}}>{Tags?.map(tag=><TagsStyle onClick={()=>TagsClickHandler(tag.id)} key={tag.id}>{tag.val}</TagsStyle>)}</FormHelperText>
                 </FormControl>
                 <FormControl sx={{ width: "50ch", m: 1 }}>
                     <InputLabel htmlFor="outlined-study-headCount">스터디 인원</InputLabel>
@@ -180,16 +175,7 @@ const MakeRoomComp = () => {
                     <FormHelperText sx={{color:'red'}}>{errors?.schedule?.message}</FormHelperText>
                     
                 </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }}>
-                    <InputLabel htmlFor="outlined-study-tags">스터디 태그</InputLabel>
-                    <OutlinedInput 
-                        id="outlined-study-tags"
-                        label="스터디 태그"
-                        onKeyDown={(e)=>handleTags(e)}
-                        {...register('tags')}
-                    />
-                    <FormHelperText sx={{color:'blue'}}>{Tags?.map(tag=><TagsStyle onClick={()=>TagsClickHandler(tag.id)} key={tag.id}>#{tag.val}</TagsStyle>)}</FormHelperText>
-                </FormControl>
+                
                 <FormControl sx={{ width: "50ch", m: 1 }}>
                     <select {...register('method')}>
                         <option value="FACE">대면</option>

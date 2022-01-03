@@ -28,6 +28,17 @@ export const findUserBoard = async (accessToken) => {
   );
 };
 
+export const getUserProfileInfo = async (memeberId, accessToken) => {
+  if (!accessToken) {
+    accessToken = getCookie("accessToken");
+  }
+  return await axios.get(`/users/${memeberId}`, {
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    },
+  });
+};
+
 export const join = async (boardId, memberId, applyContent, accessToken) => {
   return await axios.post(
     `/study/${boardId}/join/${memberId}`,{
@@ -248,4 +259,18 @@ export const rejectStudyMember = async (studyId, memberId, accessToken) => {
         },
         }
     );
+};
+
+export const updateProfileInfo = async (data,memberId,accessToken) => {
+  return await axios.put(
+    `/users/${memberId}`,
+    data,
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
 };
