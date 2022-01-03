@@ -10,9 +10,11 @@ import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { useMutation } from "react-query";
 
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { getCookie } from "../../utils/cookie";
 
 const MakeBoardHeader = styled.header`
     display: flex;
@@ -36,6 +38,11 @@ const TagsStyle = styled.span`
     &:first-child {
         margin-left: 0;
     }
+    &:hover {
+        cursor: pointer;
+        background-color: skyblue;
+        padding: 5px 10px;
+    }
 `;
 
 const MakeRoomComp = () => {
@@ -46,7 +53,14 @@ const MakeRoomComp = () => {
     const [previewImg, setPreviewImg] = useState('');
     const [thumbnail, setThumbnail] = useState(null);
     const { id, accessToken } = useSelector((state) => state.users);
-    const { register, handleSubmit, formState:{errors}, getValues, setValue } = useForm();
+    const { register, handleSubmit, formState:{errors} } = useForm();
+
+    const createBoardMutation = useMutation(['createBoard',id],
+    (data)=>createBoard(data,getCookie('accessToken')),{
+        onSuccess: () => {
+            navigate('/study');
+        }
+    });
 
     const study = [
         {id:0, val: "PREPARE", text: '스터디 준비 중'}, {id:1, val: "STUDYING", text: '스터디 진행 중'}, 
@@ -58,7 +72,19 @@ const MakeRoomComp = () => {
     ];
 
     const onCreateBoard = (data) => {
-        console.log(data);
+        const formData = new FormData();
+        formData.append('content', data.content);
+        formData.append('headCount', data.headCount);
+        formData.append('memberId',id);
+        formData.append("profileImg", thumbnail);
+        formData.append('recruitState',data.recruitState);
+        formData.append('schedule',data.schedule);
+        formData.append('studyMethod',data.method);
+        formData.append('tags',[Tags.map((tag)=>{return tag.val})]);
+        formData.append('studyState',data.studyState);
+        formData.append('title',data.title);
+
+        createBoardMutation.mutate(formData);
         /*
         createBoard(content, title, topic, headCount, studyState, recruitState, id, accessToken)
             .then(response => {
@@ -92,7 +118,11 @@ const MakeRoomComp = () => {
           setPreviewImg(reader.result);
         }
         reader.readAsDataURL(files[0]);
-      }
+    };
+
+    const TagsClickHandler = (id) => {
+        setTags(prev=>prev.filter(tag => tag.id !== id));
+    };
 
     return (
         <MakeBoardContainer>
@@ -136,7 +166,9 @@ const MakeRoomComp = () => {
                         multiline
                         fullWidth
                         rows={5}
+                        {...register('content',{required:'스터디 내용을 입력해 주세요'})}
                     />
+                    <FormHelperText sx={{color:'red'}}>{errors?.content?.message}</FormHelperText>
                 </FormControl>
                 <FormControl sx={{ width: "50ch", m: 1 }} >
                     <InputLabel htmlFor="outlined-study-schedule">스터디 일정</InputLabel>
@@ -156,7 +188,14 @@ const MakeRoomComp = () => {
                         onKeyDown={(e)=>handleTags(e)}
                         {...register('tags')}
                     />
-                    <FormHelperText sx={{color:'blue'}}>{Tags?.map(tag=><TagsStyle key={tag.id}>#{tag.val}</TagsStyle>)}</FormHelperText>
+                    <FormHelperText sx={{color:'blue'}}>{Tags?.map(tag=><TagsStyle onClick={()=>TagsClickHandler(tag.id)} key={tag.id}>#{tag.val}</TagsStyle>)}</FormHelperText>
+                </FormControl>
+                <FormControl sx={{ width: "50ch", m: 1 }}>
+                    <select {...register('method')}>
+                        <option value="FACE">대면</option>
+                        <option value="NONFACE">비대면</option>
+                        <option value="UNDEFINED">미정</option>
+                    </select>
                 </FormControl>
                 {previewImg === '' ? null : <img src={previewImg} alt="preview" style={{width:'10ch'}}/>}
                 <label htmlFor="contained-button-file">
@@ -166,7 +205,7 @@ const MakeRoomComp = () => {
                     </Button>
                 </label>
                 <label htmlFor="studyState">스터디 상태</label>
-                <select {...register('department')}>
+                <select {...register('studyState')}>
                     {study.map((x) => (
                         <option key={x.id} value={x.val}>{x.val}</option>
                     ))}
