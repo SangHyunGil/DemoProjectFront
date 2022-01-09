@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
-import { useQuery, useMutation, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient} from "react-query";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   getBoardCategory,
   createBoardCategory,
   getStudyMembers,
   grantStudyMember,
   rejectStudyMember,
+  deleteBoard
 } from "../../Api/Api";
 //import { useSelector } from "react-redux";
 import { getCookie } from "../../utils/cookie";
@@ -61,12 +62,13 @@ const ApplicantStyle = styled.span`
 function StudyManage() {
   const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
   const { studyId } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [isApplyModalUp, setisApplyModalUp] = useState(false);
   const [ApplyInfo, setApplyInfo] = useState({
     memberId: "",
     applyContent: "",
-  })
+  });
   const {
     register,
     handleSubmit,
@@ -83,9 +85,6 @@ function StudyManage() {
     () => getStudyMembers(studyId, getCookie("accessToken")),
     {
       select: (x) => x.data.data,
-      onSuccess: () => {
-        console.log(Members);
-      },
       retry: false,
     }
   );
@@ -108,6 +107,12 @@ function StudyManage() {
       },
     }
   );
+
+  const deleteBoardMutation = useMutation( () => deleteBoard(studyId, getCookie("accessToken")), {
+    onSuccess: () => {
+      navigate("/study");
+    }
+  });
 
   const { data: board } = useQuery(
     ["boardManage", studyId],
@@ -138,6 +143,10 @@ function StudyManage() {
     AddBoardMutation.mutate(BoardTitle);
     reset({ BoardTitle: "" });
     setIsBoardModalUp(false);
+  };
+
+  const updateStudyHandler = () => {
+    navigate(`/study/${studyId}/edit`);
   };
 
   return (
@@ -236,7 +245,16 @@ function StudyManage() {
         </StudyBoardManageContainer>
         <StudyControlContainer>
           <h2>스터디 관리</h2>
-          <Button variant="contained" color="error" onClick={ModalUpHandler}>
+          <Button variant="contained" color="secondary" onClick={updateStudyHandler} >
+            스터디 수정
+          </Button>
+          <Button variant="contained" color="error" 
+            onClick={() => {
+              if (window.confirm("정말 삭제하시겠습니까?")) {
+                deleteBoardMutation.mutate();
+              }
+            }}
+          >
             스터디 삭제
           </Button>
         </StudyControlContainer>

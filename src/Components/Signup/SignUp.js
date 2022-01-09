@@ -107,6 +107,7 @@ function SignUp() {
     { id: 4, val: "산업경영학부" },
     { id: 5, val: "에너지신소재화학공학부" },
     { id: 6, val: "컴퓨터공학부" },
+    {id: 7, val: "고용서비스정책학부"}
   ];
 
   const handleDepartMent = (e) => {

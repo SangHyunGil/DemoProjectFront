@@ -6,11 +6,17 @@ export const findAllRooms = async () => {
 };
 
 export const findBoard = async (boardId) => {
-  return await axios.get("/study/" + boardId);
+  return await axios.get(`/study/${boardId}`);
 };
 
-export const findAllBoards = async () => {
-  return await axios.get("/study");
+export const findAllBoards = async (studyId,department,size) => {
+  return await axios.get("/study",{
+    params: {
+      studyId: studyId,
+      department: department,
+      size: size
+    }
+  });
 };
 
 export const findUserBoard = async (accessToken) => {
@@ -20,6 +26,36 @@ export const findUserBoard = async (accessToken) => {
   return await axios.post(
     `/users/info`,
     {},
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
+};
+
+export const updateBoard = async (data,studyId,accessToken) => {
+  if (!accessToken) {
+    accessToken = getCookie("accessToken");
+  }
+  return await axios.put(
+    `/study/${studyId}`,
+    data,
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+        'Content-Type': 'multipart/form-data'
+      },
+    }
+  );
+};
+
+export const deleteBoard = async (studyId,accessToken) => {
+  if (!accessToken) {
+    accessToken = getCookie("accessToken");
+  }
+  return await axios.delete(
+    `/study/${studyId}`,
     {
       headers: {
         "X-AUTH-TOKEN": accessToken,
