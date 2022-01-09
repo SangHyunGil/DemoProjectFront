@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { findAllBoards } from "../../Api/Api";
+import { findAllBoards, findBoard } from "../../Api/Api";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Outlet,Link } from "react-router-dom";
 import Card from "@mui/material/Card";
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import Avatar from '@mui/material/Avatar';
 import "./RoomStyles.css";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
@@ -17,14 +13,12 @@ import { useQuery } from "react-query";
 const CardWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(6, minmax(200px,1fr));
-  grid-template-rows: repeat(2, 1fr);
   grid-auto-rows: 1fr;
   grid-gap: 10px;
   margin: 10px 10%;
   justify-items: center;
   @media (max-width: 900px) {
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
   }
 `;
 
@@ -47,27 +41,33 @@ const TagWrapper = styled.span`
   font-size: 12px;
 `;
 
-const CardContext = [
-  {
-    id: 0,
-    img: "https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    title: "정문 콜밴 파티원",
-  },
-  {
-    id: 1,
-    img: "https://images.unsplash.com/photo-1624552184280-9e9631bbeee9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    title: "콜밴=콜라 밴",
-  },
+const DepartWrapper = styled.ul`
+  display: flex;
+  list-style: none;
+`;
+
+const LinkWrapper = styled.li`
+  & + & {
+    margin-left: 10px;
+  }
+`;
+
+const Depart = [
+  { id: 0, headTo: 'me', val: "기계공학부" },
+  { id: 1, headTo: 'ece', val: "전기전자통신공학부" },
+  { id: 2, headTo: 'dea', val: "디자인,건축공학부" },
+  { id: 3, headTo: 'mce', val: "메카트로닉스공학부" },
+  { id: 4, headTo: 'im', val: "산업경영학부" },
+  { id: 5, headTo: 'emce', val: "에너지신소재화학공학부" },
+  { id: 6, headTo: 'cse', val: "컴퓨터공학부" },
+  { id: 7, headTo: 'esp', val: "고용서비스정책학부"},
+  { id: 8, headTo: 'other', val: "기타" },
 ];
 
 const BoardComp = () => {
   const navigate = useNavigate();
   const { isLogin, isChecked, studyIds } = useSelector((state) => state.users);
   const [isModalUp, setIsModalUp] = useState(false);
-
-  const { data:boards } = useQuery("allBoards", findAllBoards,{
-    select: (x) => x.data.data,
-  });
 
   const onNavigate = () => {
     if (isChecked && isLogin) {
@@ -91,38 +91,14 @@ const BoardComp = () => {
           </p>
         </Modal>
       )}
-      <CardWrapper>
-        {boards?.map((board, idx) => { 
-          const {profileUrlImg, creator: {profileImgUrl}} = board;
-          const imgSplitedurl = profileUrlImg.split("/").reverse()[0];
-          const profileSplitedUrl = profileImgUrl.split("/").reverse()[0];
-          return (
-          <Link style={{textDecoration: 'none'}} to={{ pathname: `/study/${board.studyId}` }} key={idx}>
-            <StudyCard>
-              <CardHeader
-                avatar={
-                  <Avatar src={profileSplitedUrl.startsWith('/') ? profileSplitedUrl : `/profile/${profileSplitedUrl}`} />
-                }
-                title={board.creator?.nickname}
-              />
-              <CardMedia
-                component="img"
-                height="140"
-                image={imgSplitedurl.startsWith('/') ? imgSplitedurl : `/profile/${imgSplitedurl}`}
-                alt="study Thumbnail"
-              />
-              <CardContent>
-                <h2>{board.title}</h2>
-                {board.tags?.map((tag)=>(
-                  <TagWrapper key={Math.random()}>{tag}</TagWrapper>
-                ))}
-                <p>{`recruit: ${board?.recruitState}`}</p>
-                <p>{`study: ${board?.studyState}`}</p>
-              </CardContent>
-            </StudyCard>
-          </Link>
-        )})}
-      </CardWrapper>
+      <DepartWrapper>
+        {Depart.map((depart) => (
+          <LinkWrapper key={depart.id}>
+            <Link to={`/study/depart/${depart.headTo}`} >{depart.val}</Link>
+          </LinkWrapper>
+        ))}
+      </DepartWrapper>
+      <Outlet />
     </>
   );
 };

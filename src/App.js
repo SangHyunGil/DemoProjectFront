@@ -30,6 +30,7 @@ import BoardArticlesPost from './Components/Study/BoardArticlesPost';
 import StudyManage from './Components/Study/StudyManage';
 import BoardArticlePostEdit from './pages/BoardArticlePostEdit';
 import { getCookie } from './utils/cookie';
+import StudyDepartmentComp from './Components/Study/StudyDepartmentComp';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -71,16 +72,19 @@ const App = () => {
           <Route path="/callvan/:id" element={<PrivateRoute><h1>하위 페이지!</h1></PrivateRoute>} />
           <Route path="/signup/complete" element={<SignUpCompletePage />} />
           <Route path="/logout" element={<Logout />} />
-          <Route path="*" element={<div>Not Found</div>} />
-          <Route path="/study" element={<BoardPage />} />
-          <Route path="/study/create" element={<MakeBoardPage />} />
           <Route path="/study/:boardId" element={<BoardDetailPage />} />
+          <Route path="/study" element={<BoardPage />} >
+            <Route path="depart/:department" element={<StudyDepartmentComp />} />
+          </Route>
+          <Route path="/study/create" element={<MakeBoardPage />} />
+          <Route path="/study/:studyId/edit" element={<UpdateStudy />} />
           <Route path="/study/:studyId/board" element={<StudyBoard />} >
             <Route path=":boardId/articles" element={<BoardArticles />} />
             <Route path=":boardId/article/:articleId" element={<BoardArticlesPost />} />
             <Route path=":boardId/article/:articleId/edit" element={<BoardArticlePostEdit />} />
             <Route path="manage" element={<StudyManage />} />
           </Route>
+          <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </Router>
     </div>

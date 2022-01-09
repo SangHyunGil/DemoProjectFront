@@ -140,7 +140,7 @@ const StyledTextarea = styled(TextareaAutosize)`
 `;
 
 
-function BoardDetail({ boardId }) {
+function BoardDetail({boardId}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const params = useParams();
@@ -159,11 +159,11 @@ function BoardDetail({ boardId }) {
     () => getBoardCategory(params.boardId, getCookie("accessToken")),
     {
       select: (x) => x.data.data,
+
       onError: (err) => console.log(err),
       enabled: isLogin,
     }
   );
-  
   const applyMutation = useMutation(
     ["apply", params.boardId],
     (applyContent)=> join(params.boardId, id, applyContent, getCookie("accessToken")),
@@ -181,9 +181,9 @@ function BoardDetail({ boardId }) {
     {
       select: (x) => x.data.data,
       onSuccess: (data) => {
-        const {profileUrlImg} = data;
-        const SpiltedprofileImgUrl = profileUrlImg.split("/").reverse();
-        SpiltedprofileImgUrl[0].startsWith("/") ? setbackGroundImg(SpiltedprofileImgUrl[0]) : setbackGroundImg(`/profile/${SpiltedprofileImgUrl[0]}`);
+        const {profileImg} = data;
+        const SpiltedprofileImgUrl = profileImg.split("/").reverse();
+        SpiltedprofileImgUrl[0].startsWith("/") ? setbackGroundImg(SpiltedprofileImgUrl[0]) : setbackGroundImg(`/profile/${SpiltedprofileImgUrl[0].split('\\').reverse()[0]}`);
       },
       retry: false,
     }
@@ -194,7 +194,6 @@ function BoardDetail({ boardId }) {
       let a = BoardContent?.joinCount;
       BoardContent?.studyMembers?.forEach((member) => {
         const { nickname: Nick, studyRole } = member;
-        console.log(Nick, nickname === Nick);
         if (nickname === Nick) {
           if (studyRole === "APPLY") {
             a -= 1;

@@ -79,8 +79,10 @@ const MakeRoomComp = () => {
             formData.append("profileImg", thumbnail);
         }
         formData.append('recruitState',data.recruitState);
-        formData.append('schedule',data.schedule);
+        formData.append('startDate',data.startSchedule);
+        formData.append('endDate',data.endSchedule);
         formData.append('studyMethod',data.method);
+        formData.append('department',data.department);
         formData.append('tags',[Tags.map((tag)=>{return tag.val})]);
         formData.append('studyState',data.studyState);
         formData.append('title',data.title);
@@ -90,6 +92,7 @@ const MakeRoomComp = () => {
 
     const handleTags = (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
             const value = e.target.value;
             setTags(prev=>[...prev,{id:prev.length, val:value}]);
             e.target.value = '';
@@ -124,12 +127,13 @@ const MakeRoomComp = () => {
                 <h1>스터디 만들기</h1>
                 <p>스터디를 만들어 볼까요?</p>
             </MakeBoardHeader>
-            <MakeBoardForm onSubmit={handleSubmit(onCreateBoard)} onKeyDown={(e)=>{CheckKeyDown(e)}}>
+            <MakeBoardForm onSubmit={handleSubmit(onCreateBoard)} >
                 <FormControl sx={{ width: "50ch", m: 1 }}>
                     <InputLabel htmlFor="outlined-study-name">스터디 이름</InputLabel>
                     <OutlinedInput 
                         id="outlined-study-name"
                         label="스터디 이름"
+                        onKeyDown={(e)=>{CheckKeyDown(e)}}
                         {...register('title',{required:'스터디 이름을 입력해 주세요'})}
                     />
                     <FormHelperText sx={{color:'red'}}>{errors?.title?.message}</FormHelperText>
@@ -150,6 +154,7 @@ const MakeRoomComp = () => {
                         id="outlined-study-headCount"
                         label="스터디 인원"
                         type="number"
+                        onKeyDown={(e)=>{CheckKeyDown(e)}}
                         {...register('headCount',{required:'스터디 인원을 입력해 주세요',pattern:{value:/^\d*[1-9]\d*$/, message:'0이상의 숫자만 입력해 주세요'}})}
                     />
                     <FormHelperText sx={{color:'red'}}>{errors?.headCount?.message}</FormHelperText>
@@ -160,20 +165,37 @@ const MakeRoomComp = () => {
                         label="스터디 내용"
                         multiline
                         fullWidth
+                        onKeyDown={(e)=>{
+                            if(e.key === 'Enter'){
+                                if (!e.shiftKey){
+                                    e.preventDefault();
+                                }
+                            }
+                        }}
                         rows={5}
                         {...register('content',{required:'스터디 내용을 입력해 주세요'})}
                     />
                     <FormHelperText sx={{color:'red'}}>{errors?.content?.message}</FormHelperText>
                 </FormControl>
                 <FormControl sx={{ width: "50ch", m: 1 }} >
-                    <InputLabel htmlFor="outlined-study-schedule">스터디 일정</InputLabel>
+                    <InputLabel htmlFor="outlined-study-schedule">스터디 시작 일정</InputLabel>
                     <OutlinedInput 
                         id="outlined-study-schedule"
-                        label="스터디 일정"
-                        {...register('schedule',{required:'스터디 일정을 입력해 주세요'})}
+                        label="스터디 시작 일정"
+                        onKeyDown={(e)=>{CheckKeyDown(e)}}
+                        {...register('startSchedule',{required:'스터디  시작 일정을 입력해 주세요'})}
                     />
                     <FormHelperText sx={{color:'red'}}>{errors?.schedule?.message}</FormHelperText>
-                    
+                </FormControl>
+                <FormControl sx={{ width: "50ch", m: 1 }} >
+                    <InputLabel htmlFor="outlined-study-schedule">스터디 종료 일정</InputLabel>
+                    <OutlinedInput 
+                        id="outlined-study-schedule"
+                        label="스터디 종료 일정"
+                        onKeyDown={(e)=>{CheckKeyDown(e)}}
+                        {...register('endSchedule',{required:'스터디 종료 일정을 입력해 주세요'})}
+                    />
+                    <FormHelperText sx={{color:'red'}}>{errors?.schedule?.message}</FormHelperText>
                 </FormControl>
                 
                 <FormControl sx={{ width: "50ch", m: 1 }}>
@@ -181,6 +203,19 @@ const MakeRoomComp = () => {
                         <option value="FACE">대면</option>
                         <option value="NONFACE">비대면</option>
                         <option value="UNDEFINED">미정</option>
+                    </select>
+                </FormControl>
+                <FormControl sx={{ width: "50ch", m: 1 }}>
+                    <select  {...register('department')}>
+                        <option value="cse">컴퓨터공학부</option>
+                        <option value="me">기계공학부</option>
+                        <option value="eca">전기전자통신공학부</option>
+                        <option value="dea">디자인,건축공학부</option>
+                        <option value="mce">메카트로닉스공학부</option>
+                        <option value="im">산업경영학부</option>
+                        <option value="emce">에너지신소재화학공학부</option>
+                        <option value="esp">고용서비스정책학부</option>
+                        <option value="other">기타</option>
                     </select>
                 </FormControl>
                 {previewImg === '' ? null : <img src={previewImg} alt="preview" style={{width:'10ch'}}/>}
