@@ -13,7 +13,7 @@ const ModalBackground = styled.div`
     background-color: rgba(0, 0, 0, 0.7);
 `;
 
-export const ModalContainer = styled.div`
+const ModalContainer = styled.div`
     position: fixed;
     z-index: 100;
     background-color: white;
@@ -23,12 +23,6 @@ export const ModalContainer = styled.div`
     transform: translate(-50%);
     border-radius: 10px;
     overflow: hidden;
-    padding: 2rem;
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
 `;
 
 function Modal(props) {
@@ -38,9 +32,9 @@ function Modal(props) {
             <ModalContainer>
                 <header>
                     {props.title}
-                    {props.closeButton}
                 </header>
                 <main>
+                    {props.message}
                     {props.children}
                 </main>
             </ModalContainer>

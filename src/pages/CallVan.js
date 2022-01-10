@@ -36,8 +36,8 @@ function CallVan() {
             essage={<p>채팅방을 생성합니다</p>} ModalHandler={()=>{setIsModalUp(false)}}><input></input></Modal>}
             <button onClick={ModalUPHandler}>생성</button>
             <CardWrapper>
-                {CardContext.map(card => (<Link key={card.id} to={`${card.id}`}>
-                <Card  titleImg={card.img}><h3>{card.title}</h3></Card>
+                {CardContext.map(card => (<Link to={`${card.id}`}>
+                <Card key={card.id} titleImg={card.img}><h3>{card.title}</h3></Card>
                 </Link>))}
             </CardWrapper>
         </React.Fragment>
