@@ -59,39 +59,54 @@ const sliderVariants = {
   },
 };
 
-const swipeConfidenceThreshold = 10000;
-const swipePower = (offset, velocity) => {
-  return Math.abs(offset) * velocity;
-};
-
 function StudyDepartmentComp() {
   const [[page, direction], setPage] = useState([0, 0]);
-  const queryClient = useQueryClient();
-
+  const [lastId, setlastId] = useState(100000);
   const { department } = useParams();
-  const { data: boards } = useQuery(
+  const queryClient = useQueryClient();
+  const [currDepartment, setcurrDepartment] = useState(department);
+  
+  const { data: boards, isPreviousData } = useQuery(
     ["study", department,page],
-    () => findAllBoards((page+1)+2, department, 2),
+    () => findAllBoards(lastId, department, 6),
     {
       select: (data) => data.data.data,
       onSuccess: (data) => console.log(data),
+      retry: false,
       keepPreviousData: true,
     }
   );
-
+  
   const paginate = (newDirection) => {
     setPage([page + newDirection, newDirection]);
   };
 
   useEffect(() => {
-    if (boards?.hasNext){
-      queryClient.prefetchQuery(["study", department,page+1],()=>findAllBoards((page+3)+2, department, 2));
+    if (currDepartment !== department) {
+      setPage([0, 0]);
+      setlastId(100000);
+      setcurrDepartment(department);
     }
-  },[boards,page,queryClient,department]);
+  },[department, currDepartment]);
 
+  useEffect(() => {
+    if (boards?.hasNext){
+      queryClient.prefetchQuery(["study",department,page+1],()=>findAllBoards(lastId, department, 6));
+    }
+  },[boards,department,page,queryClient,lastId]);
+
+  const nextButtonClickHandler = () => {
+    paginate(1);
+    setlastId(boards.data[boards.data.length-1].studyId);
+  };
+  
+  const prevButtonClickHandler = () => {
+    paginate(-1);
+    setlastId(boards.data[0].studyId+7);
+  };
   return (
     <>
-      <AnimatePresence initial={false} custom={direction}>
+      <AnimatePresence initial={false} custom={direction} exitBeforeEnter>
         <CardWrapper
           key={page}
           custom={direction}
@@ -100,20 +115,7 @@ function StudyDepartmentComp() {
           animate="center"
           exit="exit"
           transition={{
-            x: { type: "spring", stiffness: 300, damping: 30 },
-            opacity: { duration: 0.2 },
-          }}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={1}
-          onDragEnd={(e, { offset, velocity }) => {
-            const swipe = swipePower(offset.x, velocity.x);
-
-            if (swipe < -swipeConfidenceThreshold) {
-              paginate(1);
-            } else if (swipe > swipeConfidenceThreshold) {
-              paginate(-1);
-            }
+            x: {type: "spring", stiffness: 300, damping: 30},
           }}
         >
           {boards?.data?.map((board, idx) => {
@@ -166,10 +168,10 @@ function StudyDepartmentComp() {
           })}
         </CardWrapper>
       </AnimatePresence>
-      <button disabled={!boards?.hasNext} onClick={() => paginate(1)}>
+      <button disabled={!boards?.hasNext || isPreviousData} onClick={nextButtonClickHandler}>
         다음
       </button>
-      <button disabled={page===0} onClick={() => paginate(-1)}>
+      <button disabled={isPreviousData || page===0} onClick={prevButtonClickHandler}>
         이전
       </button>
     </>
