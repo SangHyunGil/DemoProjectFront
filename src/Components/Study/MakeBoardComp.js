@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { createBoard } from "../../Api/Api";
-import useInput from "../../hooks/useInput";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { updateStudyIds } from '../../reducers/users';
 import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
 import { useMutation } from "react-query";
-
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { getCookie } from "../../utils/cookie";
+
 
 const MakeBoardHeader = styled.header`
     display: flex;
@@ -51,6 +52,8 @@ const MakeRoomComp = () => {
     const [Tags, setTags] = useState([])
     const [previewImg, setPreviewImg] = useState('');
     const [thumbnail, setThumbnail] = useState(null);
+    const [startDay, setstartDay] = useState(null);
+    const [endDay, setendDay] = useState(null);
     const { id, accessToken } = useSelector((state) => state.users);
     const { register, handleSubmit, formState:{errors} } = useForm();
 
@@ -79,8 +82,8 @@ const MakeRoomComp = () => {
             formData.append("profileImg", thumbnail);
         }
         formData.append('recruitState',data.recruitState);
-        formData.append('startDate',data.startSchedule);
-        formData.append('endDate',data.endSchedule);
+        formData.append('startDate',startDay);
+        formData.append('endDate',endDay);
         formData.append('studyMethod',data.method);
         formData.append('department',data.department);
         formData.append('tags',[Tags.map((tag)=>{return tag.val})]);
@@ -177,27 +180,30 @@ const MakeRoomComp = () => {
                     />
                     <FormHelperText sx={{color:'red'}}>{errors?.content?.message}</FormHelperText>
                 </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }} >
-                    <InputLabel htmlFor="outlined-study-schedule">스터디 시작 일정</InputLabel>
-                    <OutlinedInput 
-                        id="outlined-study-schedule"
-                        label="스터디 시작 일정"
-                        onKeyDown={(e)=>{CheckKeyDown(e)}}
-                        {...register('startSchedule',{required:'스터디  시작 일정을 입력해 주세요'})}
+                <LocalizationProvider dateAdapter={DateAdapter} sx={{m:1}}>
+                    <DatePicker
+                        label="스터디 시작날짜"
+                        value={startDay}
+                        onChange={(date)=>{
+                            //setstartDay(date);
+                            const [year,month,day] = [date.getFullYear(),date.getMonth()+1,date.getDate()];
+                            setstartDay(`${year}-${month}-${day}`);
+                        }}
+                        renderInput={(params) => <TextField sx={{ width: "50ch", m: 1 }} {...params} />}
                     />
-                    <FormHelperText sx={{color:'red'}}>{errors?.schedule?.message}</FormHelperText>
-                </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }} >
-                    <InputLabel htmlFor="outlined-study-schedule">스터디 종료 일정</InputLabel>
-                    <OutlinedInput 
-                        id="outlined-study-schedule"
-                        label="스터디 종료 일정"
-                        onKeyDown={(e)=>{CheckKeyDown(e)}}
-                        {...register('endSchedule',{required:'스터디 종료 일정을 입력해 주세요'})}
+                </LocalizationProvider>
+                <LocalizationProvider dateAdapter={DateAdapter} >
+                    <DatePicker
+                        
+                        label="스터디 종료날짜"
+                        value={endDay}
+                        onChange={(date)=>{
+                            const [year,month,day] = [date.getFullYear(),date.getMonth()+1,date.getDate()];
+                            setendDay(`${year}-${month}-${day}`);
+                        }}
+                        renderInput={(params) => <TextField sx={{ width: "50ch", m: 1 }} {...params} />}
                     />
-                    <FormHelperText sx={{color:'red'}}>{errors?.schedule?.message}</FormHelperText>
-                </FormControl>
-                
+                </LocalizationProvider>
                 <FormControl sx={{ width: "50ch", m: 1 }}>
                     <select {...register('method')}>
                         <option value="FACE">대면</option>
