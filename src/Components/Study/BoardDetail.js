@@ -47,6 +47,7 @@ const MainHeaderWrapper = styled.header`
     }
     img {
       transform: scale(0.7);
+      border-radius: 50%;
     }
   }
 `;
@@ -293,6 +294,12 @@ function BoardDetail({boardId}) {
             </p>
             <p>
               스터디 모집 방법: {StudyStatus.method[BoardContent?.studyMethod]}
+            </p>
+            <p>
+              스터디 시작일: {BoardContent?.startDate}
+            </p>
+            <p>
+              스터디 종료일: {BoardContent?.endDate}
             </p>
           </CardContent>
         </DetailCard>
