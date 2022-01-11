@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RoomComp from "../Components/Study/RoomComp";
 
 const RoomPage = () => {
