@@ -13,7 +13,7 @@ function ChattingPage () {
     const { isLogin, isChecked, id, nickname, accessToken } = useSelector(
         (state) => state.users);
 
-    const sendMessage = (username, content) => {
+    const sendMessage = (content) => {
         const newMessage = {
             "roomId" : params.roomId,
             "memberId" : id,
