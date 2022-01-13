@@ -209,16 +209,12 @@ function BoardArticlesPost() {
       <h2>댓글</h2>
       {comments?.length === 0 && <p>댓글이 없습니다.</p>}
       {comments?.map((comment) => {
-        if (!comment.content) {
-          return (
-            <p key={comment.commentId} style={{ color: "red" }}>
-              삭제된 댓글 입니다!
-            </p>
-          );
-        }
         return (
           <div key={comment.commentId}>
-            <span>{comment.memberName}</span>
+            {
+              comment.content ? (
+                <React.Fragment>
+                  <span>{comment.memberName}</span>
             <span>{comment.content}</span>
             <button
               type="button"
@@ -274,6 +270,9 @@ function BoardArticlesPost() {
                 </button>
               </React.Fragment>
             )}
+                </React.Fragment>
+              ) : (<span style={{color:"red"}}>삭제된 댓글입니다!</span>)
+            }
             <div>
               {comment?.children?.map((child) => (
                 <CommentsReplyContentStyle key={child.commentId}>
