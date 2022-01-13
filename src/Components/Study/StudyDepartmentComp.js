@@ -168,11 +168,11 @@ function StudyDepartmentComp() {
           })}
         </CardWrapper>
       </AnimatePresence>
-      <button disabled={!boards?.hasNext || isPreviousData} onClick={nextButtonClickHandler}>
-        다음
-      </button>
       <button disabled={isPreviousData || page===0} onClick={prevButtonClickHandler}>
         이전
+      </button>
+      <button disabled={!boards?.hasNext || isPreviousData} onClick={nextButtonClickHandler}>
+        다음
       </button>
     </>
   );

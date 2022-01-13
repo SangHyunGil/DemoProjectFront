@@ -314,3 +314,50 @@ export const updateProfileInfo = async (data,memberId,accessToken) => {
   );
 
 };
+
+export const getAllComments = async (studyId, boardId, articleId, accessToken) => {
+  return await axios.get(`/study/${studyId}/board/${boardId}/article/${articleId}/comment`, {
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    },
+  });
+};
+
+export const createComment = async (studyId, boardId, articleId, data, accessToken) => {
+  return await axios.post(
+    `/study/${studyId}/board/${boardId}/article/${articleId}/comment`,
+    {
+      content: data.content,
+      memberId: data.memberId,
+      parentCommentId: data.parentCommentId,
+    },
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
+};
+
+export const deleteComment = async (studyId, boardId, articleId, commentId, accessToken) => {
+  return await axios.delete(`/study/${studyId}/board/${boardId}/article/${articleId}/comment/${commentId}`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const updateComment = async (studyId, boardId, articleId, commentId, content, accessToken) => {
+  console.log(content);
+  return await axios.put(
+    `/study/${studyId}/board/${boardId}/article/${articleId}/comment/${commentId}`,
+    {
+      content : content
+    },
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
+};
