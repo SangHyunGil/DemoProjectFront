@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "react-query";
-import { findAllBoards } from "../../Api/Api";
+import { findAllBoardsPreview } from "../../Api/Api";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
@@ -68,7 +68,7 @@ function StudyDepartmentComp() {
   
   const { data: boards, isPreviousData } = useQuery(
     ["study", department,page],
-    () => findAllBoards(lastId, department, 6),
+    () => findAllBoardsPreview(lastId, department, 6),
     {
       select: (data) => data.data.data,
       onSuccess: (data) => console.log(data),
@@ -91,7 +91,7 @@ function StudyDepartmentComp() {
 
   useEffect(() => {
     if (boards?.hasNext){
-      queryClient.prefetchQuery(["study",department,page+1],()=>findAllBoards(lastId, department, 6));
+      queryClient.prefetchQuery(["study",department,page+1],()=>findAllBoardsPreview(lastId, department, 6));
     }
   },[boards,department,page,queryClient,lastId]);
 
@@ -168,6 +168,7 @@ function StudyDepartmentComp() {
           })}
         </CardWrapper>
       </AnimatePresence>
+      <Link to='all'>전체보기</Link>
       <button disabled={isPreviousData || page===0} onClick={prevButtonClickHandler}>
         이전
       </button>

@@ -31,6 +31,7 @@ import StudyManage from './Components/Study/StudyManage';
 import BoardArticlePostEdit from './pages/BoardArticlePostEdit';
 import { getCookie } from './utils/cookie';
 import StudyDepartmentComp from './Components/Study/StudyDepartmentComp';
+import AllDepartmentStudy from './pages/AllDepartmentStudy';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -75,6 +76,7 @@ const App = () => {
           <Route path="/study/:boardId" element={<BoardDetailPage />} />
           <Route path="/study" element={<BoardPage />} >
             <Route path="depart/:department" element={<StudyDepartmentComp />} />
+            <Route path="depart/:department/all" element={<AllDepartmentStudy />} />
           </Route>
           <Route path="/study/create" element={<MakeBoardPage />} />
           <Route path="/study/:studyId/edit" element={<UpdateStudy />} />
