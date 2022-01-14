@@ -9,7 +9,12 @@ export const findBoard = async (boardId) => {
   return await axios.get(`/study/${boardId}`);
 };
 
-export const findAllBoards = async (studyId,department,size) => {
+export const findAllBoardsTotal = async (pageParam) => {
+  console.log(pageParam);
+  return await axios.get(`/study?studyId=${pageParam?.studyId}&department=${pageParam?.department}&size=${pageParam?.size}`);
+};
+
+export const findAllBoardsPreview = async (studyId,department,size) => {
   return await axios.get("/study",{
     params: {
       studyId: studyId,
