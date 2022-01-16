@@ -40,6 +40,7 @@
     "sass-loader": "^12.3.0",
     "styled-components": "^5.3.3",
     "styled-normalize": "^8.0.7",
+    "swiper": "^7.4.1",
     "universal-cookie": "^4.0.4",
     "web-vitals": "^2.1.2"
   },

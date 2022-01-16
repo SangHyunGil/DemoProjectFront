@@ -39,7 +39,6 @@ function AllDepartmentStudy() {
             }
             return {studyId:data[data.length-1].studyId,department,size:8};
         },
-        onSuccess: (lastPage) => console.log(lastPage),
     });
     
     useEffect(()=>{

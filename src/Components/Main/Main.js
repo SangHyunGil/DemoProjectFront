@@ -4,68 +4,36 @@ import {
   motion,
   useAnimation,
 } from "framer-motion";
-import { ReactComponent as Group } from "../../Assets/group-study.svg";
 import { useInView } from "react-intersection-observer";
+import { Swiper, SwiperSlide } from 'swiper/react/swiper-react.js';
+import 'swiper/swiper.scss'; 
+import 'swiper/modules/pagination/pagination.scss';
+import 'swiper/modules/navigation/navigation.scss';
+import { Navigation, Pagination } from 'swiper';
+
+const Images = [
+  'https://cdn.pixabay.com/photo/2020/03/06/12/30/flamingos-4906958_960_720.jpg',
+  'https://cdn.pixabay.com/photo/2019/10/11/16/56/cat-4542301_960_720.jpg',
+  'https://cdn.pixabay.com/photo/2015/09/05/20/02/coding-924920_960_720.jpg',
+  'https://cdn.pixabay.com/photo/2017/10/31/19/05/web-design-2906159_960_720.jpg',
+];
 
 const Header = styled(motion.section)`
-  height: 70vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(220, 240, 249, 1);
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
+  height: 55vh;
 `;
 
-const HeaderTextArea = styled(motion.div)`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: column;
-  padding-left: 10vw;
-  @media (max-width: 768px) {
+const HeaderSlider = styled(Swiper)`
+  height: 100%;
+  .swiper-slide {
+    width: 80%;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    padding: 0 20px;
-    text-align: center;
-  }
-  @media (max-height: 650px) {
-    flex: 1;
-    padding: 0;
-    align-items: center;
-  }
-`;
-
-const HeaderMainText = styled(motion.h1)`
-  color: rgba(13, 58, 92, 1);
-  font-family: "OTWelcomeBA", sans-serif;
-  font-size: 3rem;
-`;
-
-const HeaderSubText = styled(motion.p)`
-  color: rgba(13, 58, 92, 1);
-  font-size: 1.5rem;
-`;
-
-const HeaderImgWrapper = styled(motion.div)`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @media (max-height: 650px) {
-    display: none;
-  }
-`;
-
-const HeaderImg = styled(Group)`
-  transform: scale(1);
-  width: 80%;
-  @media (min-width: 400px) and (max-width: 768px) {
-    transform: scale(1.5);
-  }
-  @media (min-width: 399px) {
-    transform: scale(1);
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
   }
 `;
 
@@ -117,19 +85,6 @@ const InfoSectionHeadImgWrapper = styled(motion.div)`
   }
 `;
 
-const TextVariants = {
-  start: {
-    opacity: 0,
-    y: 100,
-  },
-  end: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 2,
-    },
-  },
-};
 
 const cardVariants = {
   hidden: {
@@ -200,7 +155,7 @@ const InfoTextItemVariants = {
   },
 };
 
-const Temp = () => {
+const MainComp = () => {
   const animation = useAnimation();
   const ImgAnimation = useAnimation();
   const [ref, inView] = useInView();
@@ -213,23 +168,18 @@ const Temp = () => {
 
   return (
     <React.Fragment>
-      <Header
-        transition={{ duration: 2, delayChildren: 0.5 }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        <HeaderTextArea>
-          <HeaderMainText variants={TextVariants} initial="start" animate="end">
-            XX에 오신것을 환영합니다!
-          </HeaderMainText>
-          <HeaderSubText variants={TextVariants} initial="start" animate="end">
-            "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
-            consectetur, adipisci velit..."
-          </HeaderSubText>
-        </HeaderTextArea>
-        <HeaderImgWrapper variants={TextVariants} initial="start" animate="end">
-          <HeaderImg />
-        </HeaderImgWrapper>
+      <Header>
+      <HeaderSlider
+      modules={[Navigation, Pagination]} 
+      slidesPerView={2} centeredSlides={true} navigation={true} spaceBetween={50} loop={true} pagination={{
+        "clickable": true
+      }} className="mySwiper">
+        {Images.map((image, index) => (
+          <SwiperSlide key={index}>
+            <img src={image} alt=""/>
+          </SwiperSlide>
+        ))}
+        </HeaderSlider>
       </Header>
       <Main>
         <CardWrapper initial="hidden" animate="visible" variants={variants}>
@@ -270,4 +220,4 @@ const Temp = () => {
   );
 };
 
-export default Temp;
+export default MainComp;
