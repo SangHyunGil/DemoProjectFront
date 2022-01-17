@@ -20,10 +20,12 @@ const Images = [
 
 const Header = styled(motion.section)`
   height: 55vh;
+  display: flex;
+  align-items: center;
 `;
 
 const HeaderSlider = styled(Swiper)`
-  height: 100%;
+   height: 90%;
   .swiper-slide {
     width: 80%;
     display: flex;
@@ -33,7 +35,17 @@ const HeaderSlider = styled(Swiper)`
       display: block;
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
     }
+  }
+  .swiper-button-prev{
+    color: white;
+    left: 11%;
+  }
+  .swiper-button-next{
+    color: white;
+    right: 11%;
   }
 `;
 
@@ -171,7 +183,7 @@ const MainComp = () => {
       <Header>
       <HeaderSlider
       modules={[Navigation, Pagination]} 
-      slidesPerView={2} centeredSlides={true} navigation={true} spaceBetween={50} loop={true} pagination={{
+      slidesPerView={'auto'} centeredSlides={true} navigation={true} spaceBetween={30} loop={true} pagination={{
         "clickable": true
       }} className="mySwiper">
         {Images.map((image, index) => (
