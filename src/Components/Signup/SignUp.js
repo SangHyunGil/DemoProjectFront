@@ -17,7 +17,7 @@ import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Button from '@mui/material/Button';
-import {motion} from "framer-motion";
+import {motion} from "framer-motion/dist/framer-motion";
 
 const SignUpformStyle = styled.form`
     display: flex;
