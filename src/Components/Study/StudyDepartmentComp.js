@@ -4,8 +4,13 @@ import { useQuery, useQueryClient } from "react-query";
 import { findAllBoardsPreview } from "../../Api/Api";
 import Card from "@mui/material/Card";
 import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion/dist/framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  LayoutGroup,
+} from "framer-motion/dist/framer-motion";
 import StudyDetailCard from "../Card/StudyDetailCard";
+import Avatar from "@mui/material/Avatar";
 
 const CardWrapper = styled(motion.div)`
   width: 90vw;
@@ -25,6 +30,7 @@ const CardLink = styled(Link)`
 
 const StudyCardWrapper = styled(motion.div)`
   position: relative;
+  z-index: 1;
 `;
 
 const StudyCard = styled(Card)`
@@ -85,7 +91,7 @@ const StudyCardDetailBackDrop = styled(motion.div)`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 0;
+  z-index: 2;
 `;
 
 const TagWrapper = styled.span`
@@ -206,76 +212,101 @@ function StudyDepartmentComp() {
   };
   return (
     <>
-      <AnimatePresence initial={false} custom={direction} exitBeforeEnter>
-        <CardWrapper
-          key={page}
+      <LayoutGroup id="slider">
+        <AnimatePresence
+          initial={false}
           custom={direction}
-          variants={sliderVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            x: { type: "spring", stiffness: 300, damping: 30 },
-          }}
+          exitBeforeEnter
+          key={1}
         >
-          {boards?.data?.map((board, idx) => {
-            const {
-              profileImg,
-              creator: { profileImgUrl },
-            } = board;
-            const imgSplitedurl = profileImg.split("/").reverse()[0];
-            const profileSplitedUrl = profileImgUrl.split("/").reverse()[0];
-            return (
-                <StudyCardWrapper
-                  key={board.studyId}
-                  variants={StudyWrapperVariants}
-                  initial="hidden"
-                  whileHover="visible"
-                  layoutId={`Detail${board.studyId}`}
-                  onClick={() => setSelectedId(board.studyId)}
-                >
-                  <StudyCard>
-                    <StudyCardHeader>
-                      <span>{board.recruitState}</span>
-                      <span>{board.studyState}</span>
-                    </StudyCardHeader>
-                    <img
-                      src={
-                        imgSplitedurl.startsWith("/")
-                          ? imgSplitedurl
-                          : `/profile/${imgSplitedurl}`
-                      }
-                      alt="study-img"
-                    />
-                    <StudyCardBackDrop variants={StudyCardBackDropVariants} />
-                    <StudyCardTextWrapper variants={StudyCardTextVariants}>
-                      <motion.h2>{board.title}</motion.h2>
-                      <motion.p>{board.creator.nickname}</motion.p>
-                      {board.tags.map((tag) => (
-                        <TagWrapper key={Math.random()*1000+idx}>{tag}</TagWrapper>
-                      ))}
-                    </StudyCardTextWrapper>
-                  </StudyCard>
-                  <StudyCardSubInfo variants={StudyCardSubInfoVariants}>
-                    <p>{board.studyMethod}</p>
-                    <p>
-                      {board.startDate}~{board.endDate}
-                    </p>
-                  </StudyCardSubInfo>
-                </StudyCardWrapper>
-              
-            );
-          })}
-        </CardWrapper>
-      </AnimatePresence>
-      {SelectedId && (
-          <>
-            <StudyCardDetailBackDrop onClick={()=>setSelectedId(null)} />
-            <StudyCardDetailContainer layoutId={`Detail${SelectedId}`}>
-              <StudyDetailCard />
-            </StudyCardDetailContainer>
-          </>
-      )}
+          <CardWrapper
+            key={page}
+            custom={direction}
+            variants={sliderVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+            }}
+          >
+            {boards?.data?.map((board, idx) => {
+              const {
+                profileImg,
+                creator: { profileImgUrl },
+              } = board;
+              const imgSplitedurl = profileImg.split("/").reverse()[0];
+              const profileSplitedUrl = profileImgUrl.split("/").reverse()[0];
+              return (
+                <React.Fragment key={board.studyId}>
+                  <StudyCardWrapper
+                    variants={StudyWrapperVariants}
+                    initial="hidden"
+                    whileHover="visible"
+                    layoutId={`Detail${board.studyId}`}
+                    onClick={() => setSelectedId(board.studyId)}
+                  >
+                    <StudyCard>
+                      <StudyCardHeader>
+                        <span>{board.recruitState}</span>
+                        <span>{board.studyState}</span>
+                      </StudyCardHeader>
+                      <img
+                        src={
+                          imgSplitedurl.startsWith("/")
+                            ? imgSplitedurl
+                            : `/profile/${imgSplitedurl}`
+                        }
+                        alt="study-img"
+                      />
+                      <StudyCardBackDrop variants={StudyCardBackDropVariants} />
+                      <StudyCardTextWrapper variants={StudyCardTextVariants}>
+                        <motion.h2>{board.title}</motion.h2>
+                        <motion.div>
+                          <Avatar style={{ display: "inline-block" }}>
+                            <img
+                              src={
+                                profileSplitedUrl.startsWith("/")
+                                  ? profileSplitedUrl
+                                  : `/profile/${profileSplitedUrl}`
+                              }
+                              alt="profileimg"
+                            />
+                          </Avatar>
+                          <span>{board.creator.nickname}</span>
+                        </motion.div>
+                        {board.tags.map((tag) => (
+                          <TagWrapper key={Math.random() * 1000 + idx}>
+                            {tag}
+                          </TagWrapper>
+                        ))}
+                      </StudyCardTextWrapper>
+                    </StudyCard>
+                    <StudyCardSubInfo variants={StudyCardSubInfoVariants}>
+                      <p>{board.studyMethod}</p>
+                      <p>
+                        {board.startDate}~{board.endDate}
+                      </p>
+                    </StudyCardSubInfo>
+                  </StudyCardWrapper>
+                </React.Fragment>
+              );
+            })}
+          </CardWrapper>
+        </AnimatePresence>
+      </LayoutGroup>
+      <LayoutGroup id="modal">
+        {SelectedId && (
+          <AnimatePresence>
+            <React.Fragment key={SelectedId}>
+              <StudyCardDetailBackDrop onClick={() => setSelectedId(null)} />
+              <StudyCardDetailContainer layoutId={`Detail${SelectedId}`}>
+                <StudyDetailCard id={SelectedId} StudyData={boards} />
+              </StudyCardDetailContainer>
+            </React.Fragment>
+          </AnimatePresence>
+        )}
+      </LayoutGroup>
       <Link to="all">전체보기</Link>
       <button
         disabled={isPreviousData || page === 0}
