@@ -50,6 +50,24 @@ const LinkWrapper = styled.li`
   & + & {
     margin-left: 10px;
   }
+  a {
+    text-decoration: none;
+    color: white;
+  }
+  background-color: rgba(253, 203, 110,1.0);
+  
+  padding: 2px;
+  border-radius: 5px;
+`;
+
+const StudyCardsWrapper = styled.div`
+  position: relative;
+`;
+
+const StudyInfoWrapper = styled.section`
+  height: 50vh;
+  background: linear-gradient(to bottom, #00e7ae, #ffffff 60%);
+  overflow: hidden;
 `;
 
 const Depart = [
@@ -98,7 +116,11 @@ const BoardComp = () => {
           </LinkWrapper>
         ))}
       </DepartWrapper>
-      <Outlet />
+      <StudyCardsWrapper>
+        <Outlet />
+      </StudyCardsWrapper>
+      <StudyInfoWrapper>
+      </StudyInfoWrapper>
     </>
   );
 };

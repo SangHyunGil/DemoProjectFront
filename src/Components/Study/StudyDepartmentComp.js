@@ -11,6 +11,8 @@ import {
 } from "framer-motion/dist/framer-motion";
 import StudyDetailCard from "../Card/StudyDetailCard";
 import Avatar from "@mui/material/Avatar";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const CardWrapper = styled(motion.div)`
   width: 90vw;
@@ -100,6 +102,36 @@ const TagWrapper = styled.span`
   padding: 0 5px;
   color: white;
   font-size: 12px;
+`;
+
+const PrevButton = styled.button`
+  position: absolute;
+  top: 40%;
+  left: 0;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  svg {
+    font-size: 3rem;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const NextButton = styled.button`
+  position: absolute;
+  top: 40%;
+  right: 0;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  svg {
+    font-size: 3rem;
+  }
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const sliderVariants = {
@@ -308,18 +340,18 @@ function StudyDepartmentComp() {
         )}
       </LayoutGroup>
       <Link to="all">전체보기</Link>
-      <button
+      <PrevButton
         disabled={isPreviousData || page === 0}
         onClick={prevButtonClickHandler}
       >
-        이전
-      </button>
-      <button
+        <ArrowBackIosNewIcon />
+      </PrevButton>
+      <NextButton
         disabled={!boards?.hasNext || isPreviousData}
         onClick={nextButtonClickHandler}
       >
-        다음
-      </button>
+        <ArrowForwardIosIcon />
+      </NextButton>
     </>
   );
 }
