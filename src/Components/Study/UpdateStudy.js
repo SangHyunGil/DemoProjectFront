@@ -11,6 +11,9 @@ import FormHelperText from "@mui/material/FormHelperText";
 import styled from "styled-components";
 import { getCookie } from '../../utils/cookie';
 import Button from '@mui/material/Button';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
 
 const TagsStyle = styled.span`
     margin-left: 10px;
@@ -22,6 +25,12 @@ const TagsStyle = styled.span`
         background-color: skyblue;
         padding: 5px 10px;
     }
+`;
+
+const UpdateFormStyle = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `;
 
 const study = [
@@ -48,11 +57,16 @@ function UpdateStudy() {
             setValue('content', x.content);
             setValue('headCount', x.headCount);
             setValue('schedule', x.schedule);
-            x.tags.forEach((tag) => {
+            Tags.length === 0 && x.tags.forEach((tag) => {
                 setTags(prev=>[...prev,{id:Math.random(),val:tag}])
-            })
+            });
+            setstartDay(x.startDate);
+            setendDay(x.endDate);
         },
+        staleTime: Infinity
     });
+    const [startDay, setstartDay] = useState(null);
+    const [endDay, setendDay] = useState(null);
     const { register, handleSubmit, formState: {errors}, setValue } = useForm();
     const UpdateBoard = useMutation(['updateBoard', params.studyId], (data) => updateBoard(data,params.studyId,getCookie('accessToken')),{
         onSuccess: () => {
@@ -71,8 +85,10 @@ function UpdateStudy() {
             formData.append("profileImg", thumbnail);
         }
         formData.append('recruitState',data.recruitState);
-        formData.append('schedule',data.schedule);
+        formData.append('startDate',startDay);
+        formData.append('endDate',endDay);
         formData.append('studyMethod',data.method);
+        formData.append('department',data.department);
         formData.append('tags',[Tags.map((tag)=>{return tag.val})]);
         formData.append('studyState',data.studyState);
         formData.append('title',data.title);
@@ -113,7 +129,7 @@ function UpdateStudy() {
     return (
         <>
             <h1>수정 페이지</h1>
-            <form onSubmit={handleSubmit(UpdateSubmitHandler)}>
+            <UpdateFormStyle onSubmit={handleSubmit(UpdateSubmitHandler)}>
                 <FormControl>
                     <InputLabel htmlFor="BoardTitle">제목</InputLabel>
                     <OutlinedInput
@@ -161,21 +177,50 @@ function UpdateStudy() {
                     />
                     <FormHelperText sx={{color:'red'}}>{errors?.headCount?.message}</FormHelperText>
                 </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }} >
-                    <InputLabel htmlFor="outlined-study-schedule">스터디 일정</InputLabel>
-                    <OutlinedInput 
-                        id="outlined-study-schedule"
-                        label="스터디 일정"
-                        onKeyDown={(e)=>{CheckKeyDown(e)}}
-                        {...register('schedule',{value: ' ',required:'스터디 일정을 입력해 주세요'})}
+                <LocalizationProvider dateAdapter={DateAdapter} sx={{m:1}}>
+                    <DatePicker
+                        inputFormat="yyyy/MM/dd"
+                        label="스터디 시작날짜"
+                        value={startDay}
+                        onChange={(date)=>{
+                            setstartDay(date);
+                            /*
+                            const [year,month,day] = [date.getFullYear(),date.getMonth()+1,date.getDate()];
+                            setstartDay(`${year}-${month}-${day}`);*/
+                        }}
+                        renderInput={(params) => <TextField sx={{ width: "50ch", m: 1 }} {...params} />}
                     />
-                    <FormHelperText sx={{color:'red'}}>{errors?.schedule?.message}</FormHelperText>
-                </FormControl>
+                </LocalizationProvider>
+                <LocalizationProvider dateAdapter={DateAdapter} >
+                    <DatePicker
+                        inputFormat="yyyy/MM/dd"
+                        label="스터디 종료날짜"
+                        value={endDay}
+                        onChange={(date)=>{
+                            const [year,month,day] = [date.getFullYear(),date.getMonth()+1,date.getDate()];
+                            setendDay(`${year}-${month}-${day}`);
+                        }}
+                        renderInput={(params) => <TextField sx={{ width: "50ch", m: 1 }} {...params} />}
+                    />
+                </LocalizationProvider>
                 <FormControl sx={{ width: "50ch", m: 1 }}>
                     <select {...register('method')}>
                         <option value="FACE">대면</option>
                         <option value="NONFACE">비대면</option>
                         <option value="UNDEFINED">미정</option>
+                    </select>
+                </FormControl>
+                <FormControl sx={{ width: "50ch", m: 1 }}>
+                    <select  {...register('department')}>
+                        <option value="cse">컴퓨터공학부</option>
+                        <option value="me">기계공학부</option>
+                        <option value="eca">전기전자통신공학부</option>
+                        <option value="dea">디자인,건축공학부</option>
+                        <option value="mce">메카트로닉스공학부</option>
+                        <option value="im">산업경영학부</option>
+                        <option value="emce">에너지신소재화학공학부</option>
+                        <option value="esp">고용서비스정책학부</option>
+                        <option value="other">기타</option>
                     </select>
                 </FormControl>
                 {previewImg === '' ? null : <img src={previewImg} alt="preview" style={{width:'10ch'}}/>}
@@ -191,22 +236,23 @@ function UpdateStudy() {
                         <option key={x.id} value={x.val}>{x.val}</option>
                     ))}
                 </select>
-                <label htmlFor="recruitState">모집 상태</label>
-    
-                    {recruit.map((x) =>
-                    <React.Fragment key={x.id}>
-                        <input
-                        id = {x.val}
-                        name={x.val}
-                        type="radio" 
-                        value={x.val} 
-                        {...register('recruitState',{required: '모집 상태를 선택해 주세요!'})}
-                        checked={recruitState===x.val}
-                        onChange={()=>{setRecruitState(x.val)}} />
-                        <label htmlFor={x.val}>{x.text}</label>
-                    </React.Fragment>)}
+                <div>
+                    <label htmlFor="recruitState">모집 상태</label>
+                        {recruit.map((x) =>
+                        <React.Fragment key={x.id}>
+                            <input
+                            id = {x.val}
+                            name={x.val}
+                            type="radio" 
+                            value={x.val} 
+                            {...register('recruitState',{required: '모집 상태를 선택해 주세요!'})}
+                            checked={recruitState===x.val}
+                            onChange={()=>{setRecruitState(x.val)}} />
+                            <label htmlFor={x.val}>{x.text}</label>
+                        </React.Fragment>)}
+                </div>
                 <button type="submit">수정</button>
-            </form>
+            </UpdateFormStyle>
         </>
     )
 }

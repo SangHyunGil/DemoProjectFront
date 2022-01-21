@@ -51,7 +51,7 @@ const App = () => {
   });
 
   return (
-    <div>
+    <>
       <Router>
         <Categories />
         <Routes>
@@ -89,7 +89,7 @@ const App = () => {
           <Route path="*" element={<div>Not Found</div>} />
         </Routes>
       </Router>
-    </div>
+    </>
   );
 }
 

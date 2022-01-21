@@ -17,13 +17,17 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 const CardWrapper = styled(motion.div)`
   width: 90vw;
   display: grid;
-  grid-template-columns: repeat(6, minmax(200px, 1fr));
-  grid-gap: 30px;
+  grid-template-columns: repeat(6, minmax(250px, 1fr));
+  grid-gap: 40px;
   justify-items: center;
   margin: 0 auto;
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(4, 1fr);
+  @media (max-width: 1230px) {
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
   }
+  @media (min-width: 1131px) and (max-width: 1400px) {
+    grid-template-columns: repeat(4, minmax(250px, 1fr));
+  }
+  z-index: 1;
 `;
 
 const CardLink = styled(Link)`
@@ -106,7 +110,7 @@ const TagWrapper = styled.span`
 
 const PrevButton = styled.button`
   position: absolute;
-  top: 40%;
+  top: 50%;
   left: 0;
   transform: translateY(-50%);
   background: transparent;
@@ -117,11 +121,12 @@ const PrevButton = styled.button`
   &:hover {
     cursor: pointer;
   }
+  z-index: 10;
 `;
 
 const NextButton = styled.button`
   position: absolute;
-  top: 40%;
+  top: 50%;
   right: 0;
   transform: translateY(-50%);
   background: transparent;
@@ -132,6 +137,7 @@ const NextButton = styled.button`
   &:hover {
     cursor: pointer;
   }
+  z-index: 10;
 `;
 
 const sliderVariants = {
@@ -251,6 +257,7 @@ function StudyDepartmentComp() {
           exitBeforeEnter
           key={1}
         >
+          <div style={{ position:'relative' }}>
           <CardWrapper
             key={page}
             custom={direction}
@@ -325,6 +332,19 @@ function StudyDepartmentComp() {
               );
             })}
           </CardWrapper>
+            <PrevButton
+              disabled={isPreviousData || page === 0}
+              onClick={prevButtonClickHandler}
+            >
+              <ArrowBackIosNewIcon />
+            </PrevButton>
+            <NextButton
+              disabled={!boards?.hasNext || isPreviousData}
+              onClick={nextButtonClickHandler}
+            >
+              <ArrowForwardIosIcon />
+            </NextButton>
+          </div>
         </AnimatePresence>
       </LayoutGroup>
       <LayoutGroup id="modal">
@@ -340,18 +360,6 @@ function StudyDepartmentComp() {
         )}
       </LayoutGroup>
       <Link to="all">전체보기</Link>
-      <PrevButton
-        disabled={isPreviousData || page === 0}
-        onClick={prevButtonClickHandler}
-      >
-        <ArrowBackIosNewIcon />
-      </PrevButton>
-      <NextButton
-        disabled={!boards?.hasNext || isPreviousData}
-        onClick={nextButtonClickHandler}
-      >
-        <ArrowForwardIosIcon />
-      </NextButton>
     </>
   );
 }
