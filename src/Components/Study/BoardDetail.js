@@ -3,11 +3,9 @@ import {
   findBoard,
   join,
   getBoardCategory,
-  getStudyMembers,
 } from "../../Api/Api";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { updateStudyIds } from "../../reducers/users";
 import { useQuery , useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { getCookie } from "../../utils/cookie";
@@ -140,12 +138,21 @@ const StyledTextarea = styled(TextareaAutosize)`
   outline-color: blue;
 `;
 
+const DirectButton = styled.button`
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 20px;
+  cursor: pointer;
+  font-size: 3rem;
+`;
+
 
 function BoardDetail({boardId}) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const params = useParams();
-  const { isChecked, isLogin, id, accessToken, studyInfos, nickname } =
+  const { isChecked, isLogin, id, nickname } =
     useSelector((state) => state.users);
   const [IsAlreadyJoined, setIsAlreadyJoined] = useState(false);
   const [isClosed, setisClosed] = useState(false);
@@ -341,9 +348,9 @@ function BoardDetail({boardId}) {
           isClosed ? (
             <h3>마감되었습니다!</h3>
           ) : IsAlreadyJoined ? (
-            <button name="Direct" onClick={BoardDetailHandler}>
+            <DirectButton name="Direct" onClick={BoardDetailHandler}>
               바로가기
-            </button>
+            </DirectButton>
           ) : isApply ? (
             <h3>스터디 신청중입니다!</h3>
           ) : (

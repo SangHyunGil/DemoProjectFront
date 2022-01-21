@@ -52,7 +52,6 @@ function UpdateStudy() {
     const {data:BoardData} = useQuery(['findBoard', params.studyId], () => findBoard(params.studyId),{
         select: (data) => data.data.data,
         onSuccess: (x) => {
-            console.log(x);
             setValue('title', x.title);
             setValue('content', x.content);
             setValue('headCount', x.headCount);

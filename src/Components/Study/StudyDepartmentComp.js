@@ -140,6 +140,17 @@ const NextButton = styled.button`
   z-index: 10;
 `;
 
+const NoneOfStudyCard = styled.div`
+  min-height: 260px;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  grid-column: 1 / -1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const sliderVariants = {
   enter: (direction) => {
     return {
@@ -269,6 +280,11 @@ function StudyDepartmentComp() {
               x: { type: "spring", stiffness: 300, damping: 30 },
             }}
           >
+            {boards?.data.length === 0 && (
+              <NoneOfStudyCard>
+                <h2>아직 스터디가 없어요!</h2>
+              </NoneOfStudyCard>
+            ) }
             {boards?.data?.map((board, idx) => {
               const {
                 profileImg,
