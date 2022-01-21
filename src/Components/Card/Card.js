@@ -3,12 +3,13 @@ import styled from 'styled-components';
 
 const MyCard = styled.div`
     background-color: white;
-    box-shadow: 0 5px 8px rgba(0,0,0,0.5);
-    border-radius: 10px;
+    box-shadow: 0px 0px 3px 0px rgb(0 0 0 / 50%);
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
     width: 80%;
     height: 100%;
+    padding: 1rem 0;
     &:hover {
         background-color: #f5f5f5;
     }

@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import Profile from "../Components/MyPage/Profile";
 import {Outlet, Link,useNavigate, NavLink} from 'react-router-dom';
 import styled from "styled-components";
-import { motion } from "framer-motion";
 
 const ProfilePageWrapper = styled.div`
     display: flex;

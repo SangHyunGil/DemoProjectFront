@@ -11,9 +11,12 @@ import Pagination from "react-js-pagination";
 import styled from "styled-components";
 
 const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
   .pagination {
     display: flex;
     list-style: none;
+    padding: 0;
     li {
       &:first-child {
         margin-left: 0;
@@ -27,6 +30,17 @@ const PaginationWrapper = styled.div`
           color: #fff;
       }
     }
+  }
+`;
+
+const ArticleLink = styled(Link)`
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  color: black;
+  margin: 2rem 0;
+  &:last-child {
+    margin-bottom: 0;
   }
 `;
 
@@ -52,7 +66,7 @@ function BoardArticles() {
   } = useQuery(
     ["boardArticles", boardId, page],
     () =>
-      findAllBoardArticles(studyId, boardId, page, 2, getCookie("accessToken")),
+      findAllBoardArticles(studyId, boardId, page, 6 , getCookie("accessToken")),
     {
       select: (article) => article.data.data,
       onSuccess: (x) => {
@@ -79,7 +93,7 @@ function BoardArticles() {
           studyId,
           boardId,
           page + 1,
-          2,
+          6,
           getCookie("accessToken")
         )
       );
@@ -121,7 +135,7 @@ function BoardArticles() {
         ) : (
           BoardArticle?.data.map((article) => (
             <React.Fragment key={article.articleId}>
-              <Link
+              <ArticleLink
                 to={`/study/${studyId}/board/${boardId}/article/${article.articleId}`}
               >
                 <Card>
@@ -129,7 +143,7 @@ function BoardArticles() {
                   <p>{article.content}</p>
                   <p>{article.memberName}</p>
                 </Card>
-              </Link>
+              </ArticleLink>
             </React.Fragment>
           ))
         )
@@ -139,8 +153,8 @@ function BoardArticles() {
       <PaginationWrapper>
         <Pagination
           activePage={page + 1}
-          itemsCountPerPage={2}
-          totalItemsCount={BoardArticle?.totalPages * 2}
+          itemsCountPerPage={6}
+          totalItemsCount={BoardArticle?.totalPages * 10}
           pageRangeDisplayed={BoardArticle?.totalPages}
           prevPageText={"‹"}
           nextPageText={"›"}

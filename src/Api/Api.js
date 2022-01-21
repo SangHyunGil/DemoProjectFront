@@ -10,7 +10,6 @@ export const findBoard = async (boardId) => {
 };
 
 export const findAllBoardsTotal = async (pageParam) => {
-  console.log(pageParam);
   return await axios.get(`/study?studyId=${pageParam?.studyId}&department=${pageParam?.department}&size=${pageParam?.size}`);
 };
 
