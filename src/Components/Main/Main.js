@@ -219,43 +219,7 @@ const MainComp = () => {
           ))}
         </HeaderSlider>
       </Header>
-      <Main>
-        <CardWrapper initial="hidden" animate="visible" variants={variants}>
-          <MainCards variants={cardVariants}>
-            <p>test</p>
-          </MainCards>
-          <MainCards variants={cardVariants}>
-            <p>test</p>
-          </MainCards>
-          <MainCards variants={cardVariants}>
-            <p>test</p>
-          </MainCards>
-          <MainCards variants={cardVariants}>
-            <p>test</p>
-          </MainCards>
-        </CardWrapper>
-        <InfoSection>
-          <InfoSectionHeadTextWrapper
-            ref={ref}
-            variants={InfoTextVariants}
-            initial="hidden"
-            animate={animation}
-          >
-            <motion.h2 variants={InfoTextItemVariants}>ABOUT US</motion.h2>
-            <motion.p variants={InfoTextItemVariants}>
-              스터디원이 고민이세요?
-            </motion.p>
-          </InfoSectionHeadTextWrapper>
-          <InfoSectionHeadImgWrapper
-            ref={ref2}
-            variants={InfoImgVariants}
-            initial="hidden"
-            animate={ImgAnimation}
-          >
-            <motion.img src="worry.png" alt="worry"></motion.img>
-          </InfoSectionHeadImgWrapper>
-        </InfoSection>
-        <TodaysStudySection>
+      <TodaysStudySection>
           <h1>오늘의 스터디</h1>
           <SubSlider1
             modules={[EffectCoverflow]}
@@ -280,6 +244,31 @@ const MainComp = () => {
             ))}
           </SubSlider1>
         </TodaysStudySection>
+      <Main>
+        <CardWrapper initial="hidden" animate="visible" variants={variants}>
+    
+        </CardWrapper>
+        <InfoSection>
+          <InfoSectionHeadTextWrapper
+            ref={ref}
+            variants={InfoTextVariants}
+            initial="hidden"
+            animate={animation}
+          >
+            <motion.h2 variants={InfoTextItemVariants}>ABOUT US</motion.h2>
+            <motion.p variants={InfoTextItemVariants}>
+              스터디원이 고민이세요?
+            </motion.p>
+          </InfoSectionHeadTextWrapper>
+          <InfoSectionHeadImgWrapper
+            ref={ref2}
+            variants={InfoImgVariants}
+            initial="hidden"
+            animate={ImgAnimation}
+          >
+            <motion.img src="worry.png" alt="worry"></motion.img>
+          </InfoSectionHeadImgWrapper>
+        </InfoSection>
       </Main>
     </React.Fragment>
   );

@@ -365,3 +365,11 @@ export const updateComment = async (studyId, boardId, articleId, commentId, cont
     }
   );
 };
+
+export const getMyStudyInfo = async (accessToken) => {
+  return await axios.get(`/study/join`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    },
+  });
+};

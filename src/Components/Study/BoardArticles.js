@@ -133,7 +133,7 @@ function BoardArticles() {
         isLoading ? (
           "LOADING"
         ) : (
-          BoardArticle?.data.map((article) => (
+          BoardArticle?.data?.map((article) => (
             <React.Fragment key={article.articleId}>
               <ArticleLink
                 to={`/study/${studyId}/board/${boardId}/article/${article.articleId}`}

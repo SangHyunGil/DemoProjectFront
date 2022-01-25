@@ -9,7 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 const category = [
   { name: "all", title: "메인" },
   { name: "callvan", title: "콜밴" },
-  { name: "study", title: "스터디" },
+  { name: "study/depart/cse", title: "스터디" },
   { name: "market", title: "장터" },
 ];
 
@@ -130,12 +130,12 @@ function Categories() {
             <Category
               key={c.name}
               activeclassname="active"
-              onClick={() => setIsSelected(c.name)}
+              onClick={() => setIsSelected(c.name.split("/")[0])}
               to={c.name === "all" ? "/" : `/${c.name}`}
               ismenuopen={isMenuOpen+''}
             >
               {c.title}
-              {IsSelected === c.name ? (
+              {IsSelected === c.name.split("/")[0] ? (
                 <UnderLine
                   variants={LineVariants}
                   initial="start"

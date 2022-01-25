@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getBoardCategory } from "../../Api/Api";
-import { useQuery } from "react-query";
+import { getBoardCategory, findBoard } from "../../Api/Api";
+import { useQuery, useQueryClient } from "react-query";
 import { getCookie } from "../../utils/cookie";
 import { Category } from "../Categories/Categories";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 
 const CategoryWrapper = styled.div`
     display: flex;
@@ -14,20 +14,39 @@ const CategoryWrapper = styled.div`
 `;
 
 function StudyBoard() {
+  const queryClient = useQueryClient();
   const [IsGranted, setIsGranted] = useState(false);
-  const { studyInfos } = useSelector((state) => state.users);
   const { studyId } = useParams();
+  const { nickname } = useSelector((state) => state.users);
+  
+  const {data:studyInfos} = useQuery([`studyInfos`, studyId], ()=>findBoard(studyId), {
+    select: (data) => data.data.data.studyMembers,
+    onSuccess: (data) => {
+      console.log(data);
+      const myInfo = data.find((info) => info.nickname === nickname);
+      if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
+        setIsGranted(true);
+      }
+      else {
+        setIsGranted(false);
+      }
+    },
+    staleTime: Infinity,
+  });
+
   const { data: category } = useQuery(
     ["getBoardCategory", studyId],
     () => getBoardCategory(studyId, getCookie("accessToken")),
     {
       select: (cat) => cat.data.data,
       retry: false,
+      staleTime: Infinity,
     }
   );
 
   useEffect(() => {
     if (category) {
+      /*
       const Role = studyInfos.find(
         (x) => x.studyId === Number(studyId)
       )?.studyRole;
@@ -35,9 +54,9 @@ function StudyBoard() {
         setIsGranted(true);
       } else {
         setIsGranted(false);
-      }
+      }*/
     }
-  },[category, studyInfos, studyId]);
+  },[category, studyId]);
 
   return (
     <>

@@ -11,23 +11,23 @@ import {
 } from "framer-motion/dist/framer-motion";
 import StudyDetailCard from "../Card/StudyDetailCard";
 import Avatar from "@mui/material/Avatar";
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const CardWrapper = styled(motion.div)`
   width: 90vw;
   display: grid;
-  grid-template-columns: repeat(6, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 40px;
   justify-items: center;
   margin: 0 auto;
-  @media (max-width: 1230px) {
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
-  }
-  @media (min-width: 1131px) and (max-width: 1400px) {
-    grid-template-columns: repeat(4, minmax(250px, 1fr));
-  }
   z-index: 1;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const CardLink = styled(Link)`
@@ -37,51 +37,29 @@ const CardLink = styled(Link)`
 const StudyCardWrapper = styled(motion.div)`
   position: relative;
   z-index: 1;
+  width: 100%;
+`;
+
+const StudyProceedStatus = styled.span`
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  background-color: #9fffe5;
+  color: #047d37;
+  padding: 5px 10px;
+  margin-right: 5px;
+  margin-top: 10px;
+  border-radius: 5px;
 `;
 
 const StudyCard = styled(Card)`
   text-decoration: none;
   position: relative;
+  font-family: "SEBANG_Gothic_Bold", sans-serif;
   img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    border: 1px solid rgba(0,0,0,0.2);
   }
-`;
-
-const StudyCardBackDrop = styled(motion.div)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-`;
-
-const StudyCardHeader = styled(motion.div)`
-  position: absolute;
-  top: 5%;
-  right: 0;
-  span {
-    background: rgba(231, 76, 60, 1);
-    padding: 1px;
-    border-radius: 4px;
-    &:first-child {
-      margin-right: 5px;
-    }
-  }
-`;
-
-const StudyCardTextWrapper = styled(motion.div)`
-  position: absolute;
-  bottom: 0;
-  color: rgba(0, 0, 0, 1);
-`;
-
-const StudyCardSubInfo = styled(motion.div)`
-  display: none;
-  background-color: rgba(149, 165, 166, 1);
-  border-radius: 0 0 4px 4px;
 `;
 
 const StudyCardDetailContainer = styled(motion.div)`
@@ -100,12 +78,47 @@ const StudyCardDetailBackDrop = styled(motion.div)`
   z-index: 2;
 `;
 
-const TagWrapper = styled.span`
-  background-color: #fd79a8;
+const StudyCardContent = styled(CardContent)`
+  padding: .5rem 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+`;
+
+const TagWrapper = styled.ul`
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 5px 0;
+`;
+
+const Tag = styled.li`
+  display: flex;
+  align-items: center;
+  background-color: #047d37;
   border-radius: 5px;
-  padding: 0 5px;
+  padding: 2px 5px;
   color: white;
   font-size: 12px;
+  & + & {
+    margin-left: 5px;
+  } 
+`;
+
+const StudyCardCreator = styled(CardActions)`
+  img {
+    width: 50%;
+    height: 50%;
+    border: 0;
+  }
+`;
+
+const StudySubInfo = styled(motion.div)`
+  display: flex;
+  p {
+    &:first-child {
+      margin-right: 5px;
+    }
+  }
 `;
 
 const PrevButton = styled.button`
@@ -149,6 +162,18 @@ const NoneOfStudyCard = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const StudyAllLinkWrapper = styled.div`
+  text-align: center;
+  margin-top: 3rem;
+  a {
+    text-decoration: none;
+    color: #047d37;
+    background: #9fffe5;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
 `;
 
 const sliderVariants = {
@@ -268,86 +293,75 @@ function StudyDepartmentComp() {
           exitBeforeEnter
           key={1}
         >
-          <div style={{ position:'relative' }}>
-          <CardWrapper
-            key={page}
-            custom={direction}
-            variants={sliderVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-            }}
-          >
-            {boards?.data.length === 0 && (
-              <NoneOfStudyCard>
-                <h2>아직 스터디가 없어요!</h2>
-              </NoneOfStudyCard>
-            ) }
-            {boards?.data?.map((board, idx) => {
-              const {
-                profileImg,
-                creator: { profileImgUrl },
-              } = board;
-              const imgSplitedurl = profileImg.split("/").reverse()[0];
-              const profileSplitedUrl = profileImgUrl.split("/").reverse()[0];
-              return (
-                <React.Fragment key={board.studyId}>
-                  <StudyCardWrapper
-                    variants={StudyWrapperVariants}
-                    initial="hidden"
-                    whileHover="visible"
-                    layoutId={`Detail${board.studyId}`}
-                    onClick={() => setSelectedId(board.studyId)}
-                  >
-                    <StudyCard>
-                      <StudyCardHeader>
-                        <span>{board.recruitState}</span>
-                        <span>{board.studyState}</span>
-                      </StudyCardHeader>
-                      <img
-                        src={
-                          imgSplitedurl.startsWith("/")
-                            ? imgSplitedurl
-                            : `/profile/${imgSplitedurl}`
-                        }
-                        alt="study-img"
-                      />
-                      <StudyCardBackDrop variants={StudyCardBackDropVariants} />
-                      <StudyCardTextWrapper variants={StudyCardTextVariants}>
-                        <motion.h2>{board.title}</motion.h2>
-                        <motion.div>
-                          <Avatar style={{ display: "inline-block" }}>
-                            <img
-                              src={
-                                profileSplitedUrl.startsWith("/")
-                                  ? profileSplitedUrl
-                                  : `/profile/${profileSplitedUrl}`
-                              }
-                              alt="profileimg"
-                            />
-                          </Avatar>
-                          <span>{board.creator.nickname}</span>
-                        </motion.div>
-                        {board.tags.map((tag) => (
-                          <TagWrapper key={Math.random() * 1000 + idx}>
-                            {tag}
+          <div style={{ position: "relative" }}>
+            <CardWrapper
+              key={page}
+              custom={direction}
+              variants={sliderVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+              }}
+            >
+              {boards?.data.length === 0 && (
+                <NoneOfStudyCard>
+                  <h2>아직 스터디가 없어요!</h2>
+                </NoneOfStudyCard>
+              )}
+              {boards?.data?.map((board, idx) => {
+                const {
+                  profileImg,
+                  creator: { profileImgUrl },
+                } = board;
+                const imgSplitedurl = profileImg.split("/").reverse()[0];
+                const profileSplitedUrl = profileImgUrl.split("/").reverse()[0];
+                return (
+                  <React.Fragment key={board.studyId}>
+                    <StudyCardWrapper
+                      variants={StudyWrapperVariants}
+                      initial="hidden"
+                      whileHover="visible"
+                      layoutId={`Detail${board.studyId}`}
+                      onClick={() => setSelectedId(board.studyId)}
+                    >
+                      <StudyProceedStatus>{board.recruitState}</StudyProceedStatus>
+                      <StudyCard>
+                        <CardMedia 
+                          component="img"
+                          height="200"
+                          alt="Study"
+                          image={imgSplitedurl.startsWith("/")
+                          ? imgSplitedurl
+                          : `/profile/${imgSplitedurl}`}
+                        />
+                        <StudyCardContent>
+                          <h2>{board?.title}</h2>
+                          <TagWrapper>
+                            {board?.tags?.map((tag) => (
+                              <Tag key={Math.random()}>{tag}</Tag>
+                            ))}
                           </TagWrapper>
-                        ))}
-                      </StudyCardTextWrapper>
-                    </StudyCard>
-                    <StudyCardSubInfo variants={StudyCardSubInfoVariants}>
-                      <p>{board.studyMethod}</p>
-                      <p>
-                        {board.startDate}~{board.endDate}
-                      </p>
-                    </StudyCardSubInfo>
-                  </StudyCardWrapper>
-                </React.Fragment>
-              );
-            })}
-          </CardWrapper>
+                          <StudySubInfo variants={StudyCardSubInfoVariants}>
+                              <p>{board.studyMethod}</p>
+                              <p>{board.startDate}~{board.endDate}</p>
+                          </StudySubInfo>
+                        </StudyCardContent>
+                        <StudyCardCreator>
+                          <Avatar
+                            src={profileSplitedUrl.startsWith("/")
+                              ? profileSplitedUrl
+                              : `/profile/${profileSplitedUrl}`}
+                          />
+                          <p>{board.creator.nickname}</p>
+                        </StudyCardCreator>
+                      </StudyCard>
+                    </StudyCardWrapper>
+                  </React.Fragment>
+                );
+              })}
+            </CardWrapper>
             <PrevButton
               disabled={isPreviousData || page === 0}
               onClick={prevButtonClickHandler}
@@ -363,6 +377,9 @@ function StudyDepartmentComp() {
           </div>
         </AnimatePresence>
       </LayoutGroup>
+      <StudyAllLinkWrapper>
+              <Link to="all">전체보기</Link>
+      </StudyAllLinkWrapper>
       <LayoutGroup id="modal">
         {SelectedId && (
           <AnimatePresence>
@@ -375,7 +392,6 @@ function StudyDepartmentComp() {
           </AnimatePresence>
         )}
       </LayoutGroup>
-      <Link to="all">전체보기</Link>
     </>
   );
 }

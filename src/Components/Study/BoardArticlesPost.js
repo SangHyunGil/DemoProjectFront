@@ -9,6 +9,7 @@ import {
   createComment,
   deleteComment,
   updateComment,
+  findBoard
 } from "../../Api/Api";
 import { getCookie } from "../../utils/cookie";
 import TextField from "@mui/material/TextField";
@@ -43,7 +44,8 @@ function BoardArticlesPost() {
   } = useForm();
   const queryClient = useQueryClient();
   const { id, nickname } = useSelector((state) => state.users);
-
+  const {data:{data:{studyMembers}}} = queryClient.getQueryData(['MembersOfStudy',studyId]);
+  const myInfo = studyMembers.find(member => member.nickname === nickname);
   const { data: article } = useQuery(
     ["Post", studyId, boardId, articleId],
     () => getArticlePost(studyId, boardId, articleId, getCookie("accessToken")),
@@ -56,6 +58,9 @@ function BoardArticlesPost() {
     () => findUserBoard(getCookie("accessToken")),
     {
       select: (x) => x.data.data,
+      onSuccess: (x) => {
+        console.log(x);
+      },
     }
   );
 
@@ -64,9 +69,6 @@ function BoardArticlesPost() {
     () => getAllComments(studyId, boardId, articleId, getCookie("accessToken")),
     {
       select: (x) => x.data.data,
-      onSuccess: (x) => {
-        console.log(x);
-      },
     }
   );
 
@@ -185,10 +187,8 @@ function BoardArticlesPost() {
       <h3>{`#${userInfo?.department}`}</h3>
       <p>{article?.memberName}</p>
       <p>{article?.content}</p>
-      {(["ADMIN, CREATOR"].includes(
-        userInfo?.studyInfos[studyId - 1]?.studyRole
-      ) ||
-        userInfo?.nickname === article?.memberName) && (
+      { (( myInfo.studyRole === 'ADMIN' || myInfo.studyRole === 'CREATOR') ||
+        (userInfo?.nickname === article?.memberName)) && (
         <React.Fragment>
           <Link to="edit">수정</Link>
           <button onClick={deleteArticlePostHandler} type="button">
