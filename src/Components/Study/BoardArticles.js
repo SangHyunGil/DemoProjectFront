@@ -9,6 +9,11 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getCookie } from "../../utils/cookie";
 import Pagination from "react-js-pagination";
 import styled from "styled-components";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { FormControl } from "@mui/material";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import TextField from '@mui/material/TextField';
 
 const PaginationWrapper = styled.div`
   display: flex;
@@ -42,6 +47,19 @@ const ArticleLink = styled(Link)`
   &:last-child {
     margin-bottom: 0;
   }
+`;
+
+const AddArticleButton = styled(AddCircleOutlineIcon)`
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  cursor: pointer;
+`;
+
+const CreateArticleForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 function BoardArticles() {
@@ -163,30 +181,39 @@ function BoardArticles() {
       </PaginationWrapper>
       {IsModalUp && (
         <Modal
-          title="게시글 생성"
           ModalHandler={() => {
             setIsModalUp(false);
           }}
         >
-          <form onSubmit={createArticleHandler}>
-            <input
-              type="text"
-              placeholder="제목"
-              onChange={onChangeArticleTitle}
-              value={articleTitle}
-            />
-            <textarea
-              placeholder="내용"
-              onChange={onChangeArticleContent}
-              value={articleContent}
-            />
+          <h2 style={{textAlign:'center'}}>게시글 작성</h2>
+          <CreateArticleForm onSubmit={createArticleHandler}>
+            <FormControl sx={{m:1, width:'50ch'}} >
+              <InputLabel htmlFor="article-title">제목</InputLabel>
+              <OutlinedInput
+                id="article-title"
+                value={articleTitle}
+                onChange={onChangeArticleTitle}
+                label="제목"
+              />
+            </FormControl>
+            <FormControl sx={{m:1, width: '50ch'}}>
+              <TextField
+                id="article-content"
+                label="내용"
+                multiline
+                rows={4}
+                variant="outlined"
+                value={articleContent}
+                onChange={onChangeArticleContent}
+              />
+            </FormControl>
             <button type="submit">만들기</button>
-          </form>
+          </CreateArticleForm>
         </Modal>
       )}
-      <button type="button" onClick={createArticleModalHandler}>
+      <AddArticleButton sx={{fontSize:60}} onClick={createArticleModalHandler}>
         게시글 추가
-      </button>
+      </AddArticleButton>
     </div>
   );
 }
