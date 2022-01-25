@@ -1,32 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useInfiniteQuery } from 'react-query';
 import { useParams, Link } from 'react-router-dom';
-import { findAllBoards, findAllBoardsTotal } from '../Api/Api';
+import { findAllBoardsTotal } from '../Api/Api';
 import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 
 const StudyCardContainer = styled.div`
     width: 90vw;
     display: grid;
-    grid-template-columns: repeat(4, minmax(200px, 1fr));
-    grid-auto-rows: minmax(400px, auto);
-    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    grid-gap: 30px;
     margin: 0 auto;
     @media (max-width: 600px) {
         grid-template-columns: minmax(200px, 1fr);
     }
 `;
 
-const StudyCard = styled.div`
-    width: 100%;
-    text-decoration: none;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-    border-radius: 5px;
-    img {
-        width: 60%;
-    }
+const StudyCard = styled(Card)`
+    display: flex;
 `;
 
+const StudyCardContent = styled(CardContent)`
+    flex-grow: 1;
+
+`;
 
 function AllDepartmentStudy() {
     const { department } = useParams();
@@ -56,16 +57,26 @@ function AllDepartmentStudy() {
                             
                             const {
                                 profileImg,
-                                creator: { profileImgUrl },
+                                creator: { profileImgUrl, nickname },
                               } = study;
                               const imgSplitedurl = profileImg.split("/").reverse()[0];
-                              const profileSplitedUrl = profileImgUrl.split("/").reverse()[0];
+                              //const profileSplitedUrl = profileImgUrl.split("/").reverse()[0];
                               
                             return (
-                            <Link to={{ pathname: `/study/${study.studyId}` }} key={study.studyId}>
+                            <Link to={{ pathname: `/study/${study.studyId}` }} key={study.studyId} style={{textDecoration:'none'}}>
                                 <StudyCard ref={idx === page?.data?.data?.data?.length-1 ? ref : null}>
-                                    <p>{study.content}</p>
-                                    <img src={imgSplitedurl} alt='profile'></img>
+                                    <CardMedia 
+                                        component="img"
+                                        sx={{width: '150px'}}
+                                        image = {imgSplitedurl}
+                                        alt="StudyCardImg"
+                                    />
+                                    <StudyCardContent>
+                                        <h2>{study.content}</h2>
+                                        <Typography variant="subtitle1" color="text.secondary" component="div">
+                                            {nickname}
+                                        </Typography>
+                                    </StudyCardContent>
                                 </StudyCard>
                             </Link>)
                         })}

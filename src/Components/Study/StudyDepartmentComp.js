@@ -20,16 +20,10 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 const CardWrapper = styled(motion.div)`
   width: 90vw;
   display: grid;
-  grid-template-columns: repeat(6, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   grid-gap: 40px;
   justify-items: center;
   margin: 0 auto;
-  @media (max-width: 1230px) {
-    grid-template-columns: repeat(3, minmax(250px, 1fr));
-  }
-  @media (min-width: 1131px) and (max-width: 1400px) {
-    grid-template-columns: repeat(4, minmax(250px, 1fr));
-  }
   z-index: 1;
   &:hover {
     cursor: pointer;
@@ -168,6 +162,18 @@ const NoneOfStudyCard = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const StudyAllLinkWrapper = styled.div`
+  text-align: center;
+  margin-top: 3rem;
+  a {
+    text-decoration: none;
+    color: #047d37;
+    background: #9fffe5;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
 `;
 
 const sliderVariants = {
@@ -371,6 +377,9 @@ function StudyDepartmentComp() {
           </div>
         </AnimatePresence>
       </LayoutGroup>
+      <StudyAllLinkWrapper>
+              <Link to="all">전체보기</Link>
+      </StudyAllLinkWrapper>
       <LayoutGroup id="modal">
         {SelectedId && (
           <AnimatePresence>
@@ -383,7 +392,6 @@ function StudyDepartmentComp() {
           </AnimatePresence>
         )}
       </LayoutGroup>
-      <Link to="all">전체보기</Link>
     </>
   );
 }

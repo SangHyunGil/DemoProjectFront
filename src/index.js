@@ -45,7 +45,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.withCredentials = true;

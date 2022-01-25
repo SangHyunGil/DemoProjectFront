@@ -85,7 +85,6 @@ function StudyManage() {
     () => getStudyMembers(studyId, getCookie("accessToken")),
     {
       select: (x) => x.data.data,
-      retry: false,
     }
   );
 

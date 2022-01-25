@@ -1,52 +1,48 @@
 import React, {useEffect,useState} from 'react';
-import { useSelector } from "react-redux";
-import {getStudyInfo} from '../../Api/Api';
-import {Link} from 'react-router-dom';
-import Card from '../Card/Card';
+import { getMyStudyInfo} from '../../Api/Api';
+import { Link } from 'react-router-dom';
+import Card from '@mui/material/Card';
+import { useQuery } from 'react-query';
+import { getCookie } from '../../utils/cookie';
+import styled from 'styled-components';
+
+const StudyCardContainer = styled.div`
+    width: 90vw;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-auto-rows: minmax(200px,1fr);
+    grid-gap: 20px;
+    margin: 20px auto;
+
+`;
 
 function MyStudy() {
-    const studyInfos = useSelector((state) => state.users.studyInfos);
-    const [BoardInfo, setBoardInfo] = useState([]);
-    const [HasBoard, setHasBoard] = useState(false);
-
-    useEffect(() => {
-        console.log(studyInfos.length,BoardInfo.length);
-        if (studyInfos.length !== BoardInfo.length && studyInfos.length !== 0) {
-            studyInfos.map((studyInfo) => (
-                getStudyInfo(studyInfo.studyId).then((res) => {
-                    const {data:{data}} = res;
-                    setBoardInfo((prev)=> [...prev, data]);
-                    setHasBoard(true);
-                })
-            ))
-        }
-    },[]);
-
-    useEffect(() => {
-        if (BoardInfo.length !== 0) {
-            setHasBoard(true);
-        }
-        else {
-            setHasBoard(false);
-        }
-    } ,[BoardInfo]);
+    const {data:studyInfos} = useQuery(["myStudyInfos"],()=>getMyStudyInfo(getCookie('accessToken')),{
+        select: (data) => data.data.data,
+        retry: false,
+        staleTime: Infinity,
+    });
 
     return (
-        <React.Fragment>
-            {HasBoard ? 
-            BoardInfo.map((c) => (
+        <StudyCardContainer>
+            {studyInfos ? 
+            studyInfos?.map((c) => (
                 <Card key={c.studyId}>
-                    <h1>제목: {c.title}</h1>
-                    <p>토픽: {c.topic}</p>
-                    <p>총 정원: {c.headCount}</p>
-                    <p>가입한 인원: {c.joinCount}</p>
+                    <h2>{c.title}</h2>
                     <p>모집 상태: {c.recruitState}</p>
                     <p>스터디 상태: {c.studyState}</p>
-                    <Link to={`/profile/updateStudyInfo/${c.studyId}`}>수정하기</Link>
+                    <p>{c.startDate}~{c.endDate}</p>
+                    <p>{c.studyMethod}</p>
+                    <p>
+                        {c.tags?.map((tag,index)=>(
+                            <span key={index}>{tag}</span>
+                        ))}
+                    </p>
+                    <Link to={`/study/${c.studyId}/edit`}>수정하기</Link>
                     <Link to={`/study/${c.studyId}`}>보러가기</Link>
                 </Card>
             )): <div>스터디 게시판이 없습니다.</div>}
-        </React.Fragment>
+        </StudyCardContainer>
     )
 }
 

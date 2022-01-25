@@ -28,64 +28,81 @@ const MainHeaderWrapper = styled.header`
   padding-top: 20px;
   background: white;
   background-image: url(${props => props.backgroundImg});
-  background-size: cover;
   background-position: center;
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    li {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.3rem;
-    }
-    img {
-      transform: scale(0.7);
-      border-radius: 50%;
-    }
-  }
+  background-repeat: no-repeat;
+  height: 10vh;
 `;
 
 const MainWrapper = styled.section`
   display: grid;
   grid-template-columns: repeat(2, minmax(300px, 1fr));
-  grid-tmpate-rows: repeat(3, minmax(300px, 1fr));
+  grid-tmpate-rows: repeat(4,1fr);
+  grid-auto-rows:1fr;
   row-gap: 20px;
   column-gap: 10px;
   padding: 0 20px;
   padding: 20px 0;
-  @media (max-width: 860px) {
+  @media (min-width: 461px) and (max-width: 860px) {
     grid-template-columns: repeat(1, minmax(300px, 1fr));
+    .jend {
+      width: 50ch;
+      justify-self: center !important;
+    }
+  }
+  @media (max-width: 460px) {
+    grid-template-columns: repeat(1, 1fr);
+    .jend {
+      width: 30ch;
+      justify-self: center !important;
+    }
+  }
+  .jend {
+    justify-self: end;
   }
 `;
 
 const DetailCard = styled(Card)`
-  display: inline-block;
-  &:nth-child(odd) {
-    justify-self: end;
-    @media (max-width: 860px) {
-      width: 60%;
-      justify-self: center;
+  .Stitle{
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.3rem;
+      }
+      img {
+        transform: scale(0.7);
+        border-radius: 50%;
+      }
     }
   }
-  &:nth-child(2n) {
-    justify-self: start;
-    @media (max-width: 860px) {
-      justify-self: center;
-      width: 60%;
-    }
+  &:first-child {
+    grid-area: 1 / 1 / span 1 / -1;
+    justify-self: center;
   }
   &:last-child {
+    grid-area: 4 / 1 / span 1 / -1;
     justify-self: center;
-    grid-column: span 2;
-    @media (max-width: 860px) {
-      width: 60%;
-      grid-column: 1 / span 1;
+  }
+  @media (min-width: 1350px) {
+    &:first-child, &:last-child {
+      width: calc(150ch + 10px) !important;
     }
+    width: 75ch !important;
+  }
+  @media (min-width: 461px) and (max-width: 860px) {
+    width: 50ch !important;
+    justify-self: center;
+  }
+  @media (max-width: 460px) {
+    width: 30ch !important;
+    justify-self: center;
   }
 `;
 
@@ -133,6 +150,18 @@ export const Boxstyle = {
   pb: 3,
   borderRadius: '10px',
 };
+
+const StudyStatusWrapper = styled.span`
+  background :rgb(209, 250, 229);
+  padding: 5px;
+  border-radius: 5px;
+  color: black;
+  margin-right: 10px;
+  margin-top: 5px;
+  &:last-child {
+    margin-right: 0;
+  }
+`;
 
 const StyledTextarea = styled(TextareaAutosize)`
   outline-color: blue;
@@ -243,13 +272,13 @@ function BoardDetail({boardId}) {
 
   const StudyStatus = {
     study: {
-      PREPARE: "준비중",
-      STUDYING: "진행중",
-      FINISH: "종료",
+      PREPARE: "스터디 준비중",
+      STUDYING: "스터디 진행중",
+      FINISH: "스터디 종료",
     },
     recruit: {
-      PROCEED: "진행중",
-      END: "종료",
+      PROCEED: "모집 진행중",
+      END: "모집 종료",
     },
     method: {
       FACE: "대면",
@@ -260,22 +289,31 @@ function BoardDetail({boardId}) {
 
   return (
     <>
-      <MainHeaderWrapper backgroundImg={backGroundImg}>
-        <h2>{BoardContent?.title}</h2>
-        <ul>
-          <li>
-            <Avatar
-              alt={BoardContent?.creator?.nickname}
-              src={BoardContent?.creator?.profileImgUrl}
-            />
-          </li>
-          <li style={{ paddingTop: "10px" }}>
-            {BoardContent?.creator?.nickname}
-          </li>
-        </ul>
-      </MainHeaderWrapper>
+      <MainHeaderWrapper backgroundImg={backGroundImg} />
       <MainWrapper>
-        <DetailCard sx={{ width: "50ch" }}>
+        <DetailCard sx={{ width: "calc(100ch + 10px)" }}>
+          <CardContent className="Stitle">
+            <h2>{BoardContent?.title}</h2>
+            <ul>
+              <li>
+                <Avatar
+                  alt={BoardContent?.creator?.nickname}
+                  src={BoardContent?.creator?.profileImgUrl}
+                />
+              </li>
+              <li style={{ paddingTop: "10px" }}>
+                {BoardContent?.creator?.nickname}
+              </li>
+            </ul>
+            <StudyStatusWrapper>
+              {StudyStatus.study[BoardContent?.studyState]}
+            </StudyStatusWrapper>
+            <StudyStatusWrapper>
+              {StudyStatus.recruit[BoardContent?.recruitState]}
+            </StudyStatusWrapper>
+          </CardContent>
+        </DetailCard>
+        <DetailCard sx={{ width: "50ch" }} className="jend">
           <CardContent>
             <h3>주제</h3>
             <p>{BoardContent?.tags}</p>
@@ -289,16 +327,9 @@ function BoardDetail({boardId}) {
             </p>
           </CardContent>
         </DetailCard>
-        <DetailCard sx={{ width: "50ch" }}>
+        <DetailCard sx={{ width: "50ch" }} className="jend">
           <CardContent>
             <h3>진행상태</h3>
-            <p>
-              스터디 진행 상태: {StudyStatus.study[BoardContent?.studyState]}
-            </p>
-            <p>
-              스터디 모집 상태:{" "}
-              {StudyStatus.recruit[BoardContent?.recruitState]}
-            </p>
             <p>
               스터디 모집 방법: {StudyStatus.method[BoardContent?.studyMethod]}
             </p>
@@ -335,7 +366,7 @@ function BoardDetail({boardId}) {
             })}
           </CardContent>
         </DetailCard>
-        <DetailCard sx={{ width: "100ch", marginBottom: "20px" }}>
+        <DetailCard sx={{ width: "calc(100ch + 10px)", marginBottom: "20px" }}>
           <CardContent>
             <h3>내용</h3>
             <h4>{BoardContent?.content}</h4>

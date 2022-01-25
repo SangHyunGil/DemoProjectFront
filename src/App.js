@@ -5,6 +5,7 @@ import {BrowserRouter as Router,
         Route} from 'react-router-dom';
 import Temp from './Components/Temp';
 //import { useNavigate } from 'react-router';
+import {  } from './Api/Api';
 import { checkAccessToken } from './utils/jwt'
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
@@ -66,7 +67,6 @@ const App = () => {
             <Route path="mystudy" element={<PrivateRoute><MyStudy /></PrivateRoute>} />
             <Route path="mycallvan" element={<PrivateRoute><h1>마이 콜밴 페이지</h1></PrivateRoute>} />
             <Route path="mymarket" element={<PrivateRoute><h1>마이 마켓 페이지</h1></PrivateRoute>} />
-            <Route path="updateStudyInfo/:id" element={<PrivateRoute><UpdateStudy /></PrivateRoute>} />
           </Route>
           <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
           <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
@@ -78,13 +78,13 @@ const App = () => {
             <Route path="depart/:department" element={<StudyDepartmentComp />} />
             <Route path="depart/:department/all" element={<AllDepartmentStudy />} />
           </Route>
-          <Route path="/study/create" element={<MakeBoardPage />} />
-          <Route path="/study/:studyId/edit" element={<UpdateStudy />} />
-          <Route path="/study/:studyId/board" element={<StudyBoard />} >
+          <Route path="/study/create" element={<PrivateRoute><MakeBoardPage /></PrivateRoute>} />
+          <Route path="/study/:studyId/edit" element={<PrivateRoute><UpdateStudy /></PrivateRoute>} />
+          <Route path="/study/:studyId/board" element={<PrivateRoute><StudyBoard /></PrivateRoute>} >
             <Route path=":boardId/articles" element={<BoardArticles />} />
-            <Route path=":boardId/article/:articleId" element={<BoardArticlesPost />} />
-            <Route path=":boardId/article/:articleId/edit" element={<BoardArticlePostEdit />} />
-            <Route path="manage" element={<StudyManage />} />
+            <Route path=":boardId/article/:articleId" element={<PrivateRoute><BoardArticlesPost /></PrivateRoute>} />
+            <Route path=":boardId/article/:articleId/edit" element={<PrivateRoute><BoardArticlePostEdit /></PrivateRoute>} />
+            <Route path="manage" element={<PrivateRoute><StudyManage /></PrivateRoute>} />
           </Route>
           <Route path="*" element={<div>Not Found</div>} />
         </Routes>

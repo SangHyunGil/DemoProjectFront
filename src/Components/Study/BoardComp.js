@@ -14,6 +14,7 @@ import 'swiper/modules/navigation/navigation.scss';
 import 'swiper/modules/pagination/pagination.scss';
 import { Navigation } from "swiper";
 import { motion } from "framer-motion/dist/framer-motion";
+import {useParams} from 'react-router-dom' 
 
 const StudyWrapper = styled.section`
   height: calc(100vh - 66px);
@@ -73,7 +74,7 @@ const LinkWrapper = styled(motion.div)`
       color: rgba(241, 196, 15,1.0);
     }
   }
-  width: 150px;
+  width: 170px;
   height: 130px;
   display: flex;
   flex-direction: column;
@@ -86,7 +87,7 @@ const LinkWrapper = styled(motion.div)`
     font-size: 1rem;
     white-space: pre-wrap;
     word-wrap: break-word;
-    color: rgba(255,255,255,1);
+    color: ${props => props.isActive ? 'rgba(241, 196, 15,1.0)' : 'white'};
     transition: all .5s linear;
   }
   p {
@@ -105,6 +106,9 @@ const StudyCardsWrapper = styled.div`
 const StudyInfoWrapper = styled.section`
   background: #63cdda;
   height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Depart = [
@@ -121,9 +125,10 @@ const Depart = [
 
 const BoardComp = () => {
   const navigate = useNavigate();
+  const { department } = useParams();
   const { isLogin, isChecked, studyIds } = useSelector((state) => state.users);
   const [isModalUp, setIsModalUp] = useState(false);
-  const [studyHeight, setStudyHeight] = useState(0);
+
 
   const onNavigate = () => {
     if (isChecked && isLogin) {
@@ -148,7 +153,7 @@ const BoardComp = () => {
           </Modal>
         )}
         <StudyInfoWrapper>
-
+          <h2>스터디 찾고 나의 성공시대 시작됬다~</h2>
         </StudyInfoWrapper>
         <DepartWrapper
           modules={[Navigation]}
@@ -169,7 +174,7 @@ const BoardComp = () => {
           {Depart?.map((depart) => (
             <SwiperSlide key={depart?.id}>
               <Link to={`/study/depart/${depart?.headTo}`} style={{textDecoration: 'none'}} >
-                <LinkWrapper background={depart.img}>
+                <LinkWrapper background={depart.img} isActive={department===depart.headTo} >
                   <motion.span>{depart?.val}</motion.span>
                   <p>{depart.ename}</p>
                 </LinkWrapper>
