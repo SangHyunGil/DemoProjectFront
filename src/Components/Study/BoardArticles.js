@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { findAllBoardArticles, createBoardArticle } from "../../Api/Api";
 import useInput from "../../hooks/useInput";
-import Card from "../Card/Card";
+//import Card from "../Card/Card";
 import Modal from "../Modal/Modal";
 import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
@@ -43,10 +43,6 @@ const ArticleLink = styled(Link)`
   display: flex;
   justify-content: center;
   color: black;
-  margin: 2rem 0;
-  &:last-child {
-    margin-bottom: 0;
-  }
 `;
 
 const AddArticleButton = styled(AddCircleOutlineIcon)`
@@ -54,12 +50,34 @@ const AddArticleButton = styled(AddCircleOutlineIcon)`
   bottom: 1rem;
   right: 1rem;
   cursor: pointer;
+  &:hover {
+    transition: all 0.3s linear;
+    color: #2ecc71;
+  }
 `;
 
 const CreateArticleForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const ArticleList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  li {
+    width: 70ch;
+    margin: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    &:first-child {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+  }
+`;
+
+const ArticleCard = styled.div`
+    
 `;
 
 function BoardArticles() {
@@ -151,19 +169,23 @@ function BoardArticles() {
         isLoading ? (
           "LOADING"
         ) : (
-          BoardArticle?.data?.map((article) => (
-            <React.Fragment key={article.articleId}>
-              <ArticleLink
-                to={`/study/${studyId}/board/${boardId}/article/${article.articleId}`}
-              >
-                <Card>
-                  <h3>{article.title}</h3>
-                  <p>{article.content}</p>
-                  <p>{article.memberName}</p>
-                </Card>
-              </ArticleLink>
-            </React.Fragment>
-          ))
+          <ArticleList>
+            {BoardArticle?.data?.map((article) => (
+              <li key={article.articleId}>
+                <ArticleLink
+                  to={`/study/${studyId}/board/${boardId}/article/${article.articleId}`}
+                >
+                  <ArticleCard>
+                    <h3>{article.title}</h3>
+                    <p>{article.content}</p>
+                    <p>{article.memberName}</p>
+                    <p>{article.views}</p>
+                  </ArticleCard>
+                </ArticleLink>
+              </li>
+            ))}
+          </ArticleList>
+          
         )
       ) : (
         <div>데이터가 없습니다.</div>

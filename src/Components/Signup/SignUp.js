@@ -84,14 +84,13 @@ function SignUp() {
 
   const handleSignUp = (data,e) => {
     e.preventDefault();
-    
     const formData = new FormData();
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("nickname", data.nickname);
     formData.append("department", Department);
     if (thumbnail) {
-      formData.append("thumbnail", thumbnail);
+      formData.append("profileImg", thumbnail);
     }
     dispatch(registerRequest(formData));
     setValue('email', '');

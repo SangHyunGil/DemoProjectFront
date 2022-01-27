@@ -13,9 +13,6 @@ const MyCard = styled.div`
     &:hover {
         background-color: #f5f5f5;
     }
-    h3 {
-        text-align: center;
-    }
 `;
 
 const CardImgWrapper = styled.div`
