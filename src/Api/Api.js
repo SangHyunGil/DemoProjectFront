@@ -373,3 +373,25 @@ export const getMyStudyInfo = async (accessToken) => {
     },
   });
 };
+
+export const updateBoardCategory = async (studyId, boardId,title,accessToken) => {
+  return await axios.put(
+    `/study/${studyId}/board/${boardId}`,
+    {
+      title
+    },
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
+};
+
+export const deleteBoardCategory = async (studyId, boardId,accessToken) => {
+  return await axios.delete(`/study/${studyId}/board/${boardId}`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};

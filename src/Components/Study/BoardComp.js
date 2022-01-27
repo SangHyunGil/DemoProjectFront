@@ -109,6 +109,10 @@ const StudyInfoWrapper = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const Depart = [
@@ -153,7 +157,7 @@ const BoardComp = () => {
           </Modal>
         )}
         <StudyInfoWrapper>
-          <h2>스터디 찾고 나의 성공시대 시작됬다~</h2>
+          <img src="/StudyImg/StudyMainImg.png" alt="study main img" />
         </StudyInfoWrapper>
         <DepartWrapper
           modules={[Navigation]}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
+import MuiModal from "../Modal/MuiModal";
 import { useQuery, useMutation, useQueryClient} from "react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -9,7 +10,9 @@ import {
   getStudyMembers,
   grantStudyMember,
   rejectStudyMember,
-  deleteBoard
+  deleteBoard,
+  updateBoardCategory,
+  deleteBoardCategory,
 } from "../../Api/Api";
 //import { useSelector } from "react-redux";
 import { getCookie } from "../../utils/cookie";
@@ -18,6 +21,10 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
 import { StyledModal, Backdrop, Boxstyle } from "./BoardDetail";
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import { FormControl } from "@mui/material";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
 
 const StudyManageContainer = styled.section`
   width: 100%;
@@ -59,8 +66,17 @@ const ApplicantStyle = styled.span`
   }
 `;
 
+const BoardCatergoryWrapper = styled.li`
+  &:hover {
+    cursor:pointer;
+  }
+`;
+
 function StudyManage() {
   const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
+  const [isBoardCategoryModalUp, setIsBoardCategoryModalUp] = useState(false);
+  const [boardCategoryName, setBoardCategoryName] = useState('');
+  const [boardCategoryId,setBoardCategoryId] = useState(0);
   const { studyId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -132,6 +148,20 @@ function StudyManage() {
     }
   );
 
+  const updateBoardCategoryMutation = useMutation(({newTitle,boardId})=> updateBoardCategory(studyId,boardId,newTitle,getCookie("accessToken")), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["boardManage", studyId]);
+      queryClient.invalidateQueries(["getBoardCategory", studyId]);
+    }
+  });
+
+  const deleteBoardCategoryMutation = useMutation(()=> deleteBoardCategory(studyId,boardCategoryId,getCookie("accessToken")), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["boardManage", studyId]);
+      queryClient.invalidateQueries(["getBoardCategory", studyId]);
+    }
+  });
+
   const ModalUpHandler = () => {
     //모달 핸들러
     setIsBoardModalUp(true);
@@ -146,6 +176,16 @@ function StudyManage() {
 
   const updateStudyHandler = () => {
     navigate(`/study/${studyId}/edit`);
+  };
+
+  const updateStudyBoardCategoryHandler = (data) => {
+    updateBoardCategoryMutation.mutate({newTitle:data.newBoardCategory,boardId:boardCategoryId});
+    setIsBoardCategoryModalUp(false);
+  };
+
+  const deleteStudyBoardCategoryHandler = () => {
+    window.confirm("삭제하시겠습니까?") && deleteBoardCategoryMutation.mutate();
+    setIsBoardCategoryModalUp(false);
   };
 
   return (
@@ -235,7 +275,11 @@ function StudyManage() {
           <h2>게시판 관리</h2>
           <ul>
             {board?.map((b) => (
-              <li key={b.studyBoardId}>{b.title}</li>
+              <BoardCatergoryWrapper onClick={()=>{
+                setIsBoardCategoryModalUp(true);
+                setBoardCategoryName(b.title);
+                setBoardCategoryId(b.studyBoardId);
+              }} key={b.studyBoardId}>{b.title}</BoardCatergoryWrapper>
             ))}
           </ul>
           <Button variant="contained" onClick={ModalUpHandler}>
@@ -294,6 +338,23 @@ function StudyManage() {
           </button>
         </Box>
       </StyledModal>
+      <MuiModal open={isBoardCategoryModalUp} setOpen={setIsBoardCategoryModalUp}>
+        <span>{boardCategoryName}</span>
+        <ArrowCircleRightIcon/>
+        <form onSubmit={handleSubmit(updateStudyBoardCategoryHandler)}>
+          <FormControl>
+            <InputLabel id="new-board-categories">새로운 게시판 이름</InputLabel>
+            <OutlinedInput
+              label="새로운 게시판 이름"
+              id="new-board-categories"
+              {...register("newBoardCategory",{required: "한글자라도 입력해주세요!"})}
+            />
+          </FormControl>
+          <button>수정</button>
+        </form>
+        <button onClick={deleteStudyBoardCategoryHandler}>삭제</button>
+        {errors?.newBoardCategory?.message}
+      </MuiModal>
     </>
   );
 }

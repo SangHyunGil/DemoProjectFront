@@ -16,6 +16,7 @@ const category = [
 export const CategoryWrapper = styled.nav`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 20px 30px 18px 30px;
   //box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
   border-bottom: 2px solid #e6e6e6;
@@ -38,7 +39,7 @@ export const Category = styled(NavLink)`
   white-space: pre;
   text-decoration: none;
   position: relative;
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   font-family: "OTWelcomeBA", sans-serif;
   &:hover {
     color: #ffc107;
@@ -52,10 +53,11 @@ export const Category = styled(NavLink)`
     }
   }
   & + & {
-    margin-left: 1rem;
+    margin-left: 1.8rem;
   }
   @media (max-width: 480px) {
-    display: ${(props) => (props.ismenuopen === 'true' ? "inline-block" : "none")};
+    display: ${(props) =>
+      props.ismenuopen === "true" ? "inline-block" : "none"};
     & + & {
       margin-left: 0;
     }
@@ -94,6 +96,27 @@ export const UnderLine = styled(motion.div)`
   }
 `;
 
+const MainLogoWrapper = styled.a`
+  width: 110px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  img {
+    width: 50%;
+  }
+  p {
+    margin-left: 0.5rem;
+    font-family: 'Rubik Mono One',sans-serif;
+    font-size: 2rem;
+    flex: 1;
+    white-space: nowrap;
+    color: #ffc107;
+    span {
+      color: #0049AF;
+    }
+  }
+`;
+
 const LineVariants = {
   start: {
     opacity: 0,
@@ -125,6 +148,10 @@ function Categories() {
   return (
     <>
       <CategoryWrapper>
+        <MainLogoWrapper href="/">
+          <img src="/main-logo.png" alt="main logo" />
+          <p><span>KO</span>NER</p>
+        </MainLogoWrapper>
         <CategoryMiddleWrapper>
           {category.map((c) => (
             <Category
@@ -132,7 +159,7 @@ function Categories() {
               activeclassname="active"
               onClick={() => setIsSelected(c.name.split("/")[0])}
               to={c.name === "all" ? "/" : `/${c.name}`}
-              ismenuopen={isMenuOpen+''}
+              ismenuopen={isMenuOpen + ""}
             >
               {c.title}
               {IsSelected === c.name.split("/")[0] ? (
@@ -149,10 +176,10 @@ function Categories() {
         <CategoryMiddleWrapper>
           {isLogin ? (
             <>
-              <Category to="/logout" ismenuopen={isMenuOpen+''}>
+              <Category to="/logout" ismenuopen={isMenuOpen + ""}>
                 로그아웃
               </Category>
-              <Category to="/profile" ismenuopen={isMenuOpen+''}>
+              <Category to="/profile" ismenuopen={isMenuOpen + ""}>
                 마이페이지
                 {IsSelected === "profile" ? (
                   <UnderLine
@@ -166,20 +193,20 @@ function Categories() {
             </>
           ) : (
             <>
-              <Category ismenuopen={isMenuOpen+''} to="/login">
+              <Category ismenuopen={isMenuOpen + ""} to="/login">
                 로그인
               </Category>
-              <Category ismenuopen={isMenuOpen+''} to="/signup">
+              <Category ismenuopen={isMenuOpen + ""} to="/signup">
                 회원가입
               </Category>
             </>
           )}
           {isMenuOpen ? (
-            <motion.div initial={{opacity:0}} animate={{opacity:1}}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <MenuCloseButton onClick={MenuClickHandler} />
             </motion.div>
           ) : (
-            <motion.div initial={{opacity:0}} animate={{opacity:1}}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <MenuButton onClick={MenuClickHandler} />
             </motion.div>
           )}
