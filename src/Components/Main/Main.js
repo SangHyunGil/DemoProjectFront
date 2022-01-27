@@ -68,11 +68,15 @@ const SubSlider1 = styled(Swiper)`
 `;
 
 const Main = styled(motion.section)`
-  height: 70vh;
+  height: auto;
   padding: 2rem 0;
+  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media (max-width: 480px) {
+    height: auto;
+  }
   hr {
     width: 70%;
     border-top-width: 1px;
@@ -98,8 +102,15 @@ const MainInfo = styled.div`
   p {
     font-family: sans-serif;
   }
-  @media (max-width: 900px) { 
-    width: 100%;
+  @media (max-width: 480px) {
+    flex-direction: column;
+    div {
+      margin-left: 0;
+      text-align: center;
+    }
+  }
+  @media (min-width: 481px) and (max-width: 900px) { 
+    width: 90%;
   }
 `;
 
@@ -107,6 +118,12 @@ const SubInfo = styled.div`
   display: flex;
   width: 70%;
   flex-grow: 1;
+  @media (max-width: 480px) {
+    flex-direction: column;
+    div {
+      align-items: center;
+    }
+  }
 `;
 
 const SubInfoBlockStyle = styled.div`
@@ -171,6 +188,13 @@ const ImgInfoWrapper = styled.div`
   width: 70%;
   display: flex;
   align-items: center;
+  text-align: center;
+  @media (min-width: 901px) and (max-width: 1400px) {
+    width: 90%;
+    .text-wrapper {
+      margin-right: 0 !important;
+    }
+  }
   @media (max-width: 900px) {
     .text-wrapper {
       display: flex;
@@ -215,35 +239,74 @@ const ImgInfoWrapper = styled.div`
       left: 0;
       width: 100%;
       height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       div {
-        position: absolute;
         color: black;
         display: inline-block;
-        font-size: 3rem;
+        font-size: 2vw;
         border-radius: 20px;
         font-weight: bolder;
         padding: 10px 20px;
       }
       .mySpeechBubble {
-        left: 10%;
-        &:first-child {
-          top: 10%;
-        }
-        &:last-child {
-          top: 50%;
+        position: relative;
+        align-self: flex-start;
+        margin-left: 10%;
+        &:after {
+          content: '';
+          position: absolute;
+          border-top: 15px solid #2980b9;
+          border-right: 0px solid transparent;
+          border-left: 15px solid transparent;
+          border-bottom: 0px solid transparent;
+          top: 10px;
+          left: -10px;
         }
         background: #2980b9;
         color: white;
       }
       .opponentSpeechBubble {
-        right: 10%;
-        top: 30%;
         background: rgba(255,235,51,1);
+        align-self: flex-end;
+        margin: 10px 10% 10px 0;
+        position: relative;
+        &:after {
+          content: '';
+          position: absolute;
+          border-top: 15px solid rgba(255,235,51,1);
+          border-right: 15px solid transparent;
+          border-left: 0px solid transparent;
+          border-bottom: 0px solid transparent;
+          top: 10px;
+          right: -10px;
+        }
       }
     }
   }
 `;
 
+const TextChattingVariants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.5,
+      staggerChildren: 1,
+    }
+  },
+};
+
+const TextChattingItemVariants = {
+  hidden: { y: 100, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1
+  }
+};
 
 const Footer = styled.footer`
   height: 40vh;
@@ -253,14 +316,14 @@ const Footer = styled.footer`
 const MainComp = () => {
   const animation = useAnimation();
   const ImgAnimation = useAnimation();
+  const TextAnimation = useAnimation();
   const navigate = useNavigate();
   const [ref, inView] = useInView();
   const [ref2, inView2] = useInView({ threshold: 0.2 });
 
   useEffect(() => {
-    inView ? animation.start("visible") : animation.start("hidden");
-    inView2 ? ImgAnimation.start("visible") : ImgAnimation.start("hidden");
-  }, [animation, inView, ImgAnimation, inView2]);
+    inView ? TextAnimation.start("visible") : TextAnimation.start("hidden");
+  }, [TextAnimation, inView]);
 
   return (
     <React.Fragment>
@@ -359,10 +422,10 @@ const MainComp = () => {
           </div>
           <div className="img-wrapper">
             <motion.img src="/StudyImg/monitor.png" alt="monitor" />
-            <motion.div className="text-wrapper">
-              <div className="mySpeechBubble">우리 스터디 할래?</div>
-              <div className="opponentSpeechBubble">어디서?</div>
-              <div className="mySpeechBubble">코너에서!</div>
+            <motion.div ref={ref} variants={TextChattingVariants} initial="hidden" animate={TextAnimation} className="text-wrapper">
+              <motion.div variants={TextChattingItemVariants} className="mySpeechBubble">우리 스터디 할래?</motion.div>
+              <motion.div variants={TextChattingItemVariants} className="opponentSpeechBubble">어디서?</motion.div>
+              <motion.div variants={TextChattingItemVariants} className="mySpeechBubble">코너에서!</motion.div>
             </motion.div>
           </div>
         </ImgInfoWrapper>
