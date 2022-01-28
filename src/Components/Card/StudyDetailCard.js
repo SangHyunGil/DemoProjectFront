@@ -23,31 +23,16 @@ function StudyDetailCard({id,StudyData}) {
     const [StudyDetailData, setStudyDetailData] = useState(
         StudyData ? StudyData.data.find(item=> item.studyId === id) : null
     );
-    const [profileSplitedUrl, setprofileSplitedUrl] = useState(
-        StudyData ? StudyData.data.find(item=> item.studyId === id).creator.profileImgUrl.split('/').reverse()[0] : null
-    );
-    const [imgSplitedurl, setimgSplitedurl] = useState(
-        StudyData ? StudyData.data.find(item=> item.studyId === id).profileImg.split("/").reverse()[0] : null
-    );
-
-    console.log(StudyDetailData);
-
     return (
         <StudyDetailCardWrapper>
-            <StudyDetailCardHeader avatar={<Avatar src={
-                                profileSplitedUrl?.startsWith("/")
-                                  ? profileSplitedUrl
-                                  : `/profile/${profileSplitedUrl}`
-                              }
+            <StudyDetailCardHeader avatar={<Avatar src={StudyDetailData?.creator?.profileImgUrl}
                               alt="profileimg" />}  
                               title={StudyDetailData?.title}
                               subheader={StudyDetailData?.creator.nickname} />
             <CardMedia
                 component="img"
                 height="194"
-                image={imgSplitedurl.startsWith("/")
-                ? imgSplitedurl
-                : `/profile/${imgSplitedurl}`}
+                image={StudyDetailData?.profileImg}
                 alt="study-img"
             />
             <CardContent>

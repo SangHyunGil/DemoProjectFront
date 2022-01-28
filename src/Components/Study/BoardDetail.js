@@ -90,19 +90,15 @@ const DetailCard = styled(Card)`
     grid-area: 4 / 1 / span 1 / -1;
     justify-self: center;
   }
-  @media (min-width: 1350px) {
+  @media (min-width:861px) and (max-width: 1350px) {
     &:first-child, &:last-child {
-      width: calc(150ch + 10px) !important;
+      width: calc(80vw + 10px) !important;
     }
-    width: 75ch !important;
+    width: 40vw !important;
   }
-  @media (min-width: 461px) and (max-width: 860px) {
-    width: 50ch !important;
+  @media (max-width: 860px) {
     justify-self: center;
-  }
-  @media (max-width: 460px) {
-    width: 30ch !important;
-    justify-self: center;
+    width: 80vw !important;
   }
 `;
 
@@ -217,11 +213,6 @@ function BoardDetail({boardId}) {
     () => findBoard(params.boardId),
     {
       select: (x) => x.data.data,
-      onSuccess: (data) => {
-        const {profileImg} = data;
-        const SpiltedprofileImgUrl = profileImg.split("/").reverse();
-        SpiltedprofileImgUrl[0].startsWith("/") ? setbackGroundImg(SpiltedprofileImgUrl[0]) : setbackGroundImg(`/profile/${SpiltedprofileImgUrl[0].split('\\').reverse()[0]}`);
-      },
       retry: false,
     }
   );
@@ -349,16 +340,11 @@ function BoardDetail({boardId}) {
               if (studyRole === "APPLY") {
                 return null;
               }
-              const target = profileImgUrl.split("\\");
               return (
                 <AvatarWrapper key={Nick}>
                   <Avatar
                     alt={Nick}
-                    src={
-                      target[0][0] === "/"
-                        ? target[0]
-                        : `/${target[target.length - 1]}`
-                    }
+                    src={profileImgUrl}
                   />
                   <span>{Nick}</span>
                 </AvatarWrapper>

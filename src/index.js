@@ -41,8 +41,9 @@ const GlobalStyle = createGlobalStyle`
   body,html {
     padding:0;
     margin:0;
-    height: 100%;
+    height: auto;
     width: 100%;
+    overflow: auto;
   }
   h1,h2,h3,h4,h5,h6,p {
     margin:0;

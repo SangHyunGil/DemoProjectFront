@@ -96,6 +96,12 @@ function StudyManage() {
     },
   });
 
+  const {
+    register:register2,
+    handleSubmit:handleSubmit2,
+    formState: { errors:errors2 },
+  } = useForm();
+
   const { data: Members } = useQuery(
     ["studyMembers", studyId],
     () => getStudyMembers(studyId, getCookie("accessToken")),
@@ -168,6 +174,7 @@ function StudyManage() {
   };
 
   const BoardAddHandler = (data) => {
+    console.log(data);
     let { BoardTitle } = data;
     AddBoardMutation.mutate(BoardTitle);
     reset({ BoardTitle: "" });
@@ -263,7 +270,7 @@ function StudyManage() {
                     })}
                   />
                   <ErrorMessage>{errors?.BoardTitle?.message}</ErrorMessage>
-                  <Button variant="contained" type="submit">
+                  <Button type="submit">
                     게시판 추가
                   </Button>
                 </form>
@@ -341,19 +348,19 @@ function StudyManage() {
       <MuiModal open={isBoardCategoryModalUp} setOpen={setIsBoardCategoryModalUp}>
         <span>{boardCategoryName}</span>
         <ArrowCircleRightIcon/>
-        <form onSubmit={handleSubmit(updateStudyBoardCategoryHandler)}>
+        <form onSubmit={handleSubmit2(updateStudyBoardCategoryHandler)}>
           <FormControl>
             <InputLabel id="new-board-categories">새로운 게시판 이름</InputLabel>
             <OutlinedInput
               label="새로운 게시판 이름"
               id="new-board-categories"
-              {...register("newBoardCategory",{required: "한글자라도 입력해주세요!"})}
+              {...register2("newBoardCategory",{required: "한글자라도 입력해주세요!"})}
             />
           </FormControl>
           <button>수정</button>
         </form>
         <button onClick={deleteStudyBoardCategoryHandler}>삭제</button>
-        {errors?.newBoardCategory?.message}
+        {errors2?.newBoardCategory?.message}
       </MuiModal>
     </>
   );

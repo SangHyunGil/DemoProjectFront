@@ -28,6 +28,10 @@ const TransitionUp = (props) => {
 const StyleProfileImgWrapper = styled.div`
   position: relative;
   display: inline-block;
+  width: 10%;
+  img {
+    width: 100%;
+  }
 `;
 
 const ProfileImgAddButton = styled.label`
@@ -94,12 +98,6 @@ const Profile = () => {
 
   const { isLoading, data:myInfo } = useQuery(['loadMyInfo'],()=>getUserProfileInfo(id,getCookie('accessToken')),{
     select: (data) => data.data.data,
-    onSuccess: (data) => {
-      console.log(data);
-      const {profileImgUrl} = data;
-      const SpiltedprofileImgUrl = profileImgUrl.split("/").reverse();
-      backGroundImg === '' && (SpiltedprofileImgUrl[0].startsWith("/") ? setbackGroundImg(SpiltedprofileImgUrl[0]) : setbackGroundImg(`/profile/${SpiltedprofileImgUrl[0]}`));
-    }
   });
 
   const updateProfileInfoMutation = useMutation(['updateProfileInfo',id], (data)=>updateProfileInfo(data,id,getCookie('accessToken')),{
@@ -180,7 +178,7 @@ const Profile = () => {
       <ProfileFormStyle onSubmit={handleSubmit(handleProfile)}>
         <ProfileFormHeader>
           <StyleProfileImgWrapper>
-            <img src={backGroundImg} alt="profile img" style={{width:'10ch'}} />
+            <img src={myInfo?.profileImgUrl} alt="profile img"/>
             <ProfileImgAddButton htmlFor="contained-button-file">
               <input style={{display:'none'}} accept="image/*" id="contained-button-file" name="thumbNailImg" type="file" onChange={handleUpload}/>
               <AddPhotoAlternateIcon sx={{m:2}} />

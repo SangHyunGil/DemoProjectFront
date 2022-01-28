@@ -17,7 +17,6 @@ import { motion } from "framer-motion/dist/framer-motion";
 import {useParams} from 'react-router-dom' 
 
 const StudyWrapper = styled.section`
-  height: calc(100vh - 66px);
 `;
 
 const CardWrapper = styled.div`
