@@ -74,8 +74,9 @@ const StudyCardDetailBackDrop = styled(motion.div)`
   left: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden; 
   background: rgba(0, 0, 0, 0.5);
-  z-index: 2;
+  z-index: 3;
 `;
 
 const StudyCardContent = styled(CardContent)`
@@ -113,7 +114,7 @@ const StudyCardCreator = styled(CardActions)`
 `;
 
 const StudySubInfo = styled(motion.div)`
-  display: flex;
+  display: none;
   p {
     &:first-child {
       margin-right: 5px;
@@ -229,7 +230,7 @@ const StudyCardSubInfoVariants = {
     display: "none",
   },
   visible: {
-    display: "block",
+    display: "flex",
   },
 };
 
@@ -315,14 +316,13 @@ function StudyDepartmentComp() {
                   profileImg,
                   creator: { profileImgUrl },
                 } = board;
-                const imgSplitedurl = profileImg.split("/").reverse()[0];
-                const profileSplitedUrl = profileImgUrl.split("/").reverse()[0];
                 return (
                   <React.Fragment key={board.studyId}>
                     <StudyCardWrapper
                       variants={StudyWrapperVariants}
                       initial="hidden"
                       whileHover="visible"
+                      exit="hidden"
                       layoutId={`Detail${board.studyId}`}
                       onClick={() => setSelectedId(board.studyId)}
                     >
@@ -332,9 +332,7 @@ function StudyDepartmentComp() {
                           component="img"
                           height="200"
                           alt="Study"
-                          image={imgSplitedurl.startsWith("/")
-                          ? imgSplitedurl
-                          : `/profile/${imgSplitedurl}`}
+                          image={profileImg}
                         />
                         <StudyCardContent>
                           <h2>{board?.title}</h2>
@@ -350,9 +348,7 @@ function StudyDepartmentComp() {
                         </StudyCardContent>
                         <StudyCardCreator>
                           <Avatar
-                            src={profileSplitedUrl.startsWith("/")
-                              ? profileSplitedUrl
-                              : `/profile/${profileSplitedUrl}`}
+                            src={profileImgUrl}
                           />
                           <p>{board.creator.nickname}</p>
                         </StudyCardCreator>
@@ -377,21 +373,17 @@ function StudyDepartmentComp() {
           </div>
         </AnimatePresence>
       </LayoutGroup>
-      <StudyAllLinkWrapper>
-              <Link to="all">전체보기</Link>
-      </StudyAllLinkWrapper>
-      <LayoutGroup id="modal">
         {SelectedId && (
-          <AnimatePresence>
             <React.Fragment key={SelectedId}>
+              <StudyCardDetailContainer>
               <StudyCardDetailBackDrop onClick={() => setSelectedId(null)} />
-              <StudyCardDetailContainer layoutId={`Detail${SelectedId}`}>
                 <StudyDetailCard id={SelectedId} StudyData={boards} />
               </StudyCardDetailContainer>
             </React.Fragment>
-          </AnimatePresence>
         )}
-      </LayoutGroup>
+      <StudyAllLinkWrapper>
+              <Link to="all">전체보기</Link>
+      </StudyAllLinkWrapper>
     </>
   );
 }
