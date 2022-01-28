@@ -60,7 +60,7 @@ const MakeRoomComp = () => {
     const createBoardMutation = useMutation(['createBoard',id],
     (data)=>createBoard(data,getCookie('accessToken')),{
         onSuccess: () => {
-            navigate('/study');
+            navigate('/study/depart/cse');
         }
     });
 

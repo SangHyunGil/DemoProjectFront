@@ -114,7 +114,7 @@ const StudyCardCreator = styled(CardActions)`
 `;
 
 const StudySubInfo = styled(motion.div)`
-  display: flex;
+  display: none;
   p {
     &:first-child {
       margin-right: 5px;
@@ -230,7 +230,7 @@ const StudyCardSubInfoVariants = {
     display: "none",
   },
   visible: {
-    display: "block",
+    display: "flex",
   },
 };
 
@@ -322,6 +322,7 @@ function StudyDepartmentComp() {
                       variants={StudyWrapperVariants}
                       initial="hidden"
                       whileHover="visible"
+                      exit="hidden"
                       layoutId={`Detail${board.studyId}`}
                       onClick={() => setSelectedId(board.studyId)}
                     >

@@ -160,7 +160,7 @@ const BoardComp = () => {
         </StudyInfoWrapper>
         <DepartWrapper
           modules={[Navigation]}
-          slidesPerView={7}
+          slidesPerView={1}
           centeredSlides={true}
           navigation={true}
           spaceBetween={10}
@@ -170,8 +170,20 @@ const BoardComp = () => {
           }}
           breakpoints={{
             1600: {
-              slidesPerView: 8,
-            }  
+              slidesPerView: 7,
+            },
+            1500: {
+              slidesPerView: 6,
+            },
+            980: {
+              slidesPerView: 5,
+            },
+            870: {
+              slidesPerView: 4,
+            },
+            700: {
+              slidesPerView: 3,
+            },
           }}
         >
           {Depart?.map((depart) => (
