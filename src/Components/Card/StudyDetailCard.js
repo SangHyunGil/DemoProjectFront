@@ -20,12 +20,13 @@ const StudyDetailCardHeader = styled(CardHeader)`
 `;
 
 function StudyDetailCard({id,StudyData}) {
+    console.log(StudyData);
     const [StudyDetailData, setStudyDetailData] = useState(
-        StudyData ? StudyData.data.find(item=> item.studyId === id) : null
+        StudyData ? StudyData.find(item=> item.studyId === id) : null
     );
     return (
         <StudyDetailCardWrapper>
-            <StudyDetailCardHeader avatar={<Avatar src={StudyDetailData?.creator?.profileImgUrl}
+            <StudyDetailCardHeader avatar={<Avatar src={StudyDetailData?.creator?.profileImgUrl === '디폴트이미지 경로' ? 'https://koner-bucket.s3.ap-northeast-2.amazonaws.com/profileImg/koryong1.jpg' : StudyDetailData?.creator?.profileImgUrl}
                               alt="profileimg" />}  
                               title={StudyDetailData?.title}
                               subheader={StudyDetailData?.creator.nickname} />

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion/dist/framer-motion";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
+import Paper from '@mui/material/Paper';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import HomeIcon from '@mui/icons-material/Home';
 
 const category = [
   { name: "all", title: "메인" },
@@ -20,17 +23,28 @@ export const CategoryWrapper = styled.nav`
   padding: 20px 30px 18px 30px;
   //box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
   border-bottom: 2px solid #e6e6e6;
-  @media (max-width: 480px) {
+  @media (min-width:341px) and (max-width: 900px) {
+    div {
+      &:nth-child(2) {
+        display: none;
+      }
+    }
+  }
+  @media (max-width: 340px) {
     flex-direction: column;
-    align-items: flex-start;
+    a {
+      transform: translateX(-50%);
+    }
+    div {
+      &:nth-child(2) {
+        display: none;
+      }
+    }
   }
 `;
 
 const CategoryMiddleWrapper = styled.div`
-  @media (max-width: 480px) {
-    display: flex;
-    flex-direction: column;
-  }
+  
 `;
 
 export const Category = styled(NavLink)`
@@ -44,7 +58,7 @@ export const Category = styled(NavLink)`
   &:hover {
     color: #ffc107;
   }
-  &.active {
+  &.active, &.StilActive {
     /*border-bottom: 2px solid #ffc107;*/
     color: #ffc107;
     padding-bottom: 5px;
@@ -55,32 +69,13 @@ export const Category = styled(NavLink)`
   & + & {
     margin-left: 1.8rem;
   }
-  @media (max-width: 480px) {
-    display: ${(props) =>
-      props.ismenuopen === "true" ? "inline-block" : "none"};
+  @media (max-width: 900px) {
     & + & {
-      margin-left: 0;
+      margin-left: 10px;
     }
   }
-`;
-
-const MenuButton = styled(MenuIcon)`
-  cursor: pointer;
-  @media (min-width: 481px) {
-    display: none !important;
-  }
-  @media (max-width: 480px) {
-    display: block;
-  }
-`;
-
-const MenuCloseButton = styled(CloseIcon)`
-  cursor: pointer;
-  @media (min-width: 481px) {
-    display: none !important;
-  }
-  @media (max-width: 480px) {
-    display: block;
+  @media (max-width: 500px) {
+    font-size: 1.1rem;
   }
 `;
 
@@ -91,9 +86,6 @@ export const UnderLine = styled(motion.div)`
   right: 0;
   height: 2px;
   background: #ffc107;
-  @media (max-width: 480px) {
-    display: none;
-  }
 `;
 
 const MainLogoWrapper = styled.a`
@@ -102,7 +94,7 @@ const MainLogoWrapper = styled.a`
   display: flex;
   align-items: center;
   img {
-    width: 50%;
+    width: 30%;
   }
   p {
     margin-left: 0.5rem;
@@ -114,6 +106,30 @@ const MainLogoWrapper = styled.a`
     span {
       color: #0049AF;
     }
+  }
+  @media  (max-width: 900px) {
+    width: 30%;
+    p {
+      font-size: 1.5rem;
+    }
+  }
+`;
+
+const BottomNavBar = styled(Paper)`
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  display: none;
+  z-index: 99;
+  @media (max-width: 900px) {
+    display: flex;
+    justify-content: center;
+  }
+`;
+
+const BottomNavBarAction = styled(BottomNavigationAction)`
+  svg {
+    padding-bottom: 6px;
   }
 `;
 
@@ -128,10 +144,9 @@ const LineVariants = {
   },
 };
 
-function Categories() {
+function Categories(props) {
   const isLogin = useSelector((state) => state.users.isLogin);
   const location = useLocation();
-  const [isMenuOpen, setisMenuOpen] = useState(false);
   const [IsSelected, setIsSelected] = useState(
     location.pathname !== "/" ? location.pathname.split("/")[1] : "all"
   );
@@ -139,12 +154,8 @@ function Categories() {
     setIsSelected(
       location.pathname !== "/" ? location.pathname.split("/")[1] : "all"
     );
-  }, [location, isMenuOpen]);
-
-  const MenuClickHandler = () => {
-    setisMenuOpen((prev) => !prev);
-  };
-
+  }, [location]);
+  const navigate = useNavigate();
   return (
     <>
       <CategoryWrapper>
@@ -159,7 +170,7 @@ function Categories() {
               activeclassname="active"
               onClick={() => setIsSelected(c.name.split("/")[0])}
               to={c.name === "all" ? "/" : `/${c.name}`}
-              ismenuopen={isMenuOpen + ""}
+              className={IsSelected === c.name.split("/")[0] ? "StilActive" : ""}
             >
               {c.title}
               {IsSelected === c.name.split("/")[0] ? (
@@ -176,10 +187,10 @@ function Categories() {
         <CategoryMiddleWrapper>
           {isLogin ? (
             <>
-              <Category to="/logout" ismenuopen={isMenuOpen + ""}>
+              <Category to="/logout" >
                 로그아웃
               </Category>
-              <Category to="/profile" ismenuopen={isMenuOpen + ""}>
+              <Category to="/profile">
                 마이페이지
                 {IsSelected === "profile" ? (
                   <UnderLine
@@ -193,25 +204,30 @@ function Categories() {
             </>
           ) : (
             <>
-              <Category ismenuopen={isMenuOpen + ""} to="/login">
+              <Category to="/login">
                 로그인
               </Category>
-              <Category ismenuopen={isMenuOpen + ""} to="/signup">
+              <Category to="/signup">
                 회원가입
               </Category>
             </>
           )}
-          {isMenuOpen ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <MenuCloseButton onClick={MenuClickHandler} />
-            </motion.div>
-          ) : (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <MenuButton onClick={MenuClickHandler} />
-            </motion.div>
-          )}
         </CategoryMiddleWrapper>
       </CategoryWrapper>
+      {props.children}
+      <BottomNavBar elevation={2}>
+          <BottomNavigation
+            showLabels={true}
+            value={IsSelected}
+            onChange={(newValue) => {
+              newValue = newValue === 0 ? 'all' : 'study';
+              setIsSelected(newValue);
+            }}
+          >
+            <BottomNavBarAction label="메인" value='all' onClick={()=>navigate('/')} icon={<HomeIcon />} />
+            <BottomNavBarAction label="스터디" value='study' onClick={()=>navigate('/study/depart/cse')} icon={<BorderColorIcon />} />
+          </BottomNavigation>
+      </BottomNavBar>
     </>
   );
 }

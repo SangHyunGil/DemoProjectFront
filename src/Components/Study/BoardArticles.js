@@ -54,6 +54,7 @@ const AddArticleButton = styled(AddCircleOutlineIcon)`
     transition: all 0.3s linear;
     color: #2ecc71;
   }
+  z-index: 100;
 `;
 
 const CreateArticleForm = styled.form`
@@ -79,6 +80,27 @@ const ArticleList = styled.ul`
 const ArticleCard = styled.div`
     
 `;
+
+const AritcleEmptyBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  h2 {
+    margin: 6rem 0;
+    text-align: center;
+    font-family: "OTWelcomeBA",sans-serif;
+    font-size: 2.8rem;
+  }
+`;
+
+const ArticleEmpty = () => {
+  return (
+    <AritcleEmptyBlock>
+      <img src="/StudyImg/ArticleNotFound.png" alt="studyImgNotFound" />
+      <h2>아직 게시글이 없습니다! 게시글을 작성해 보세요!</h2>
+    </AritcleEmptyBlock>
+  );
+};
 
 function BoardArticles() {
   const { studyId, boardId } = useParams();
@@ -188,13 +210,13 @@ function BoardArticles() {
           
         )
       ) : (
-        <div>데이터가 없습니다.</div>
+        <ArticleEmpty />
       )}
       <PaginationWrapper>
         <Pagination
           activePage={page + 1}
           itemsCountPerPage={6}
-          totalItemsCount={BoardArticle?.totalPages * 10}
+          totalItemsCount={BoardArticle?.totalPages * 6}
           pageRangeDisplayed={BoardArticle?.totalPages}
           prevPageText={"‹"}
           nextPageText={"›"}

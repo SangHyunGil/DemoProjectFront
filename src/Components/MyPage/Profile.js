@@ -16,6 +16,8 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import Slide from '@mui/material/Slide';
+import DefaultProfileImg from "../DefaultProfileImg";
+import { Link } from "react-router-dom";
 
 const Alert = forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -64,7 +66,7 @@ const ProfileFormHeader = styled.header`
   padding: 10px 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  width: 100ch;
+  width: 80%;
   justify-content: center;
 `;
 
@@ -72,7 +74,7 @@ const ProfileFormMain = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100ch;
+  width: 80%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
 `;
@@ -80,10 +82,6 @@ const ProfileFormMain = styled.main`
 const Profile = () => {
   const {
     id,
-    email,
-    nickname,
-    accessToken,
-    department,
     isChecked,
     isLogin,
     changeUserInfoDone,
@@ -98,6 +96,9 @@ const Profile = () => {
 
   const { isLoading, data:myInfo } = useQuery(['loadMyInfo'],()=>getUserProfileInfo(id,getCookie('accessToken')),{
     select: (data) => data.data.data,
+    onSuccess: (data) => {
+      console.log(data);
+    }
   });
 
   const updateProfileInfoMutation = useMutation(['updateProfileInfo',id], (data)=>updateProfileInfo(data,id,getCookie('accessToken')),{
@@ -178,7 +179,7 @@ const Profile = () => {
       <ProfileFormStyle onSubmit={handleSubmit(handleProfile)}>
         <ProfileFormHeader>
           <StyleProfileImgWrapper>
-            <img src={myInfo?.profileImgUrl} alt="profile img"/>
+            {myInfo?.profileImgUrl === '디폴트이미지 경로' ? <DefaultProfileImg isRandom={false} /> : <img src={myInfo?.profileImgUrl} alt="profileImg" />}
             <ProfileImgAddButton htmlFor="contained-button-file">
               <input style={{display:'none'}} accept="image/*" id="contained-button-file" name="thumbNailImg" type="file" onChange={handleUpload}/>
               <AddPhotoAlternateIcon sx={{m:2}} />
@@ -216,6 +217,7 @@ const Profile = () => {
         </ProfileFormMain>
         <button type="submit">수정하기</button>
       </ProfileFormStyle>
+      <Link to="/changepassword">비밀번호 변경하기</Link>
     </section>
   );
 };

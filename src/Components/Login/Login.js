@@ -46,6 +46,7 @@ const LoginformStyle = styled.form`
 
 const LoginButton = styled(Button)`
     padding: 0 18px;
+    color: #0049AF;
 `;
 
 const LoginTextStyle = styled.footer`
@@ -119,7 +120,6 @@ function Login() {
             <LoginButton
               type="submit"
               variant="contained"
-              color="warning"
               sx={{width: "55ch",m:1}}
               startIcon={<LoginIcon />}
             >
