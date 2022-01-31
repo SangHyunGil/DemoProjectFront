@@ -18,6 +18,13 @@ import TextField from '@mui/material/TextField';
 const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  @media (max-width: 900px) {
+    bottom: 1%;
+  }
   .pagination {
     display: flex;
     list-style: none;
@@ -67,18 +74,56 @@ const ArticleList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   li {
     width: 70ch;
-    margin: 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    &:first-child {
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    margin: 1rem 0;
+    padding: 1rem 2rem;
+    &:hover {
+      background-color: #c7ecee;
+    }
+    a {
+      .ArticleWrapper{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      } 
+    }
+  }
+  @media (max-width: 640px) {
+    li {
+      width: 80vw;
+      padding: 1rem 0.5rem;
     }
   }
 `;
 
 const ArticleCard = styled.div`
-    
+  display: flex;
+  flex-direction: column;
+  .mainContent {
+    main {
+      text-overflow: ellipsis;
+    }
+  }
+`;
+
+const ViewBoxBlock = styled.div`
+  .viewBox {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  justify-self: flex-end;
 `;
 
 const AritcleEmptyBlock = styled.div`
@@ -124,7 +169,7 @@ function BoardArticles() {
   } = useQuery(
     ["boardArticles", boardId, page],
     () =>
-      findAllBoardArticles(studyId, boardId, page, 6 , getCookie("accessToken")),
+      findAllBoardArticles(studyId, boardId, page, 4 , getCookie("accessToken")),
     {
       select: (article) => article.data.data,
       onSuccess: (x) => {
@@ -151,7 +196,7 @@ function BoardArticles() {
           studyId,
           boardId,
           page + 1,
-          6,
+          4,
           getCookie("accessToken")
         )
       );
@@ -197,12 +242,26 @@ function BoardArticles() {
                 <ArticleLink
                   to={`/study/${studyId}/board/${boardId}/article/${article.articleId}`}
                 >
-                  <ArticleCard>
-                    <h3>{article.title}</h3>
-                    <p>{article.content}</p>
-                    <p>{article.memberName}</p>
-                    <p>{article.views}</p>
-                  </ArticleCard>
+                  <div className="ArticleWrapper">
+                    <ArticleCard>
+                      <div className="mainContent">
+                        <header>
+                          <h3>{article.title}</h3>
+                        </header>
+                        <main>
+                          <p>{article.content}</p>
+                        </main>
+                        <footer>
+                          <p>{article.memberName}</p>
+                        </footer>
+                      </div>
+                    </ArticleCard>
+                    <ViewBoxBlock>
+                        <div className="viewBox">
+                          <p>{article.views}회 조회</p>
+                        </div>
+                    </ViewBoxBlock>
+                  </div>
                 </ArticleLink>
               </li>
             ))}
@@ -215,8 +274,8 @@ function BoardArticles() {
       <PaginationWrapper>
         <Pagination
           activePage={page + 1}
-          itemsCountPerPage={6}
-          totalItemsCount={BoardArticle?.totalPages * 6}
+          itemsCountPerPage={4}
+          totalItemsCount={BoardArticle?.totalPages * 4}
           pageRangeDisplayed={BoardArticle?.totalPages}
           prevPageText={"‹"}
           nextPageText={"›"}
@@ -231,7 +290,7 @@ function BoardArticles() {
         >
           <h2 style={{textAlign:'center'}}>게시글 작성</h2>
           <CreateArticleForm onSubmit={createArticleHandler}>
-            <FormControl sx={{m:1, width:'50ch'}} >
+            <FormControl sx={{m:1, width:'60%'}} >
               <InputLabel htmlFor="article-title">제목</InputLabel>
               <OutlinedInput
                 id="article-title"
@@ -240,7 +299,7 @@ function BoardArticles() {
                 label="제목"
               />
             </FormControl>
-            <FormControl sx={{m:1, width: '50ch'}}>
+            <FormControl sx={{m:1, width: '60%'}}>
               <TextField
                 id="article-content"
                 label="내용"
