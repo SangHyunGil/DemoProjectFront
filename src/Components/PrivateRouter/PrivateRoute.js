@@ -15,9 +15,7 @@ function PrivateRoute(props) {
     const isChecked = useSelector(state => state.users.isChecked);
     const navigate = useNavigate();
     const params = useParams();
-
-    console.log(params);
-
+    
     const {data} = useQuery(['MembersOfStudy',params.studyId],()=>findBoard(params.studyId,getCookie('accessToken')),{
         enabled: !!params.studyId
     });

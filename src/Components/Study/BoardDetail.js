@@ -18,6 +18,8 @@ import { TextareaAutosize } from '@mui/base';
 import styled from "styled-components";
 import {useForm} from "react-hook-form";
 
+const defaultProfileImgUrl = 'https://koner-bucket.s3.ap-northeast-2.amazonaws.com/profileImg/koryong1.jpg';
+
 const MainHeaderWrapper = styled.header`
   display: flex;
   flex-flow: column;
@@ -184,7 +186,6 @@ function BoardDetail({boardId}) {
   const [isApply, setIsApply] = useState(false);
   const [JoinCnt, setJoinCnt] = useState(0);
   const [isApplyModalUp, setisApplyModalUp] = useState(false);
-  const [backGroundImg, setbackGroundImg] = useState('');
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
   const { data: board } = useQuery(
@@ -213,6 +214,9 @@ function BoardDetail({boardId}) {
     () => findBoard(params.boardId),
     {
       select: (x) => x.data.data,
+      onSuccess: (data) => {
+        console.log(data);
+      },
       retry: false,
     }
   );
@@ -280,7 +284,7 @@ function BoardDetail({boardId}) {
 
   return (
     <>
-      <MainHeaderWrapper backgroundImg={backGroundImg} />
+      <MainHeaderWrapper backgroundImg={BoardContent?.profileImg} />
       <MainWrapper>
         <DetailCard sx={{ width: "calc(100ch + 10px)" }}>
           <CardContent className="Stitle">
@@ -289,7 +293,7 @@ function BoardDetail({boardId}) {
               <li>
                 <Avatar
                   alt={BoardContent?.creator?.nickname}
-                  src={BoardContent?.creator?.profileImgUrl}
+                  src={BoardContent?.creator?.profileImgUrl === '디폴트이미지 경로' ? defaultProfileImgUrl : BoardContent?.creator?.profileImgUrl}
                 />
               </li>
               <li style={{ paddingTop: "10px" }}>
@@ -344,7 +348,7 @@ function BoardDetail({boardId}) {
                 <AvatarWrapper key={Nick}>
                   <Avatar
                     alt={Nick}
-                    src={profileImgUrl}
+                    src={profileImgUrl === '디폴트이미지 경로' ? defaultProfileImgUrl : profileImgUrl}
                   />
                   <span>{Nick}</span>
                 </AvatarWrapper>

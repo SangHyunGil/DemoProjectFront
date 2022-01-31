@@ -43,7 +43,16 @@ const GlobalStyle = createGlobalStyle`
     margin:0;
     height: auto;
     width: 100%;
-    overflow: auto;
+    min-height: 100vh;
+    #root {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      #main-content {
+        flex: 1;
+        position: relative;
+      }
+    }
   }
   h1,h2,h3,h4,h5,h6,p {
     margin:0;

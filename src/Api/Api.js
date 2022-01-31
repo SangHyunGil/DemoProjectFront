@@ -395,3 +395,11 @@ export const deleteBoardCategory = async (studyId, boardId,accessToken) => {
     }
   });
 };
+
+export const changepassword = async (data,accessToken) => {
+  return await axios.post(`/sign/password`,data,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};

@@ -14,7 +14,7 @@ import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 
 const Images = [
-  "https://cdn.pixabay.com/photo/2020/03/06/12/30/flamingos-4906958_960_720.jpg",
+  "/MainImg/001.png",
   "https://cdn.pixabay.com/photo/2019/10/11/16/56/cat-4542301_960_720.jpg",
   "https://cdn.pixabay.com/photo/2015/09/05/20/02/coding-924920_960_720.jpg",
   "https://cdn.pixabay.com/photo/2017/10/31/19/05/web-design-2906159_960_720.jpg",
@@ -336,7 +336,7 @@ const MainComp = () => {
           spaceBetween={50}
           loop={true}
           autoplay={{
-            delay: 2500,
+            delay: 5000,
             disableOnInteraction: false,
           }}
           pagination={{
