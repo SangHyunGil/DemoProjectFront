@@ -5,7 +5,6 @@ import { useQuery, useQueryClient } from "react-query";
 import { getCookie } from "../../utils/cookie";
 import { Category } from "../Categories/Categories";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
 
 const CategoryWrapper = styled.div`
     display: flex;
@@ -17,13 +16,13 @@ function StudyBoard() {
   const queryClient = useQueryClient();
   const [IsGranted, setIsGranted] = useState(false);
   const { studyId } = useParams();
-  const { nickname } = useSelector((state) => state.users);
   
+  const myinfos = queryClient.getQueryData(['loadMyInfo']);
+
   const {data:studyInfos} = useQuery([`studyInfos`, studyId], ()=>findBoard(studyId), {
     select: (data) => data.data.data.studyMembers,
     onSuccess: (data) => {
-      console.log(data);
-      const myInfo = data.find((info) => info.nickname === nickname);
+      const myInfo = data.find((info) => info.nickname === myinfos?.data?.data?.nickname);
       if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
         setIsGranted(true);
       }
@@ -45,18 +44,17 @@ function StudyBoard() {
   );
 
   useEffect(() => {
-    if (category) {
-      /*
-      const Role = studyInfos.find(
-        (x) => x.studyId === Number(studyId)
-      )?.studyRole;
-      if (Role === "CREATOR" || Role === "ADMIN") {
+    if (!!myinfos?.data?.data?.nickname && !!studyInfos) {
+      const {data: {data: {nickname}}} = myinfos;
+      const myInfo = studyInfos?.find((info) => info.nickname === nickname);
+      if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
         setIsGranted(true);
-      } else {
+      }
+      else {
         setIsGranted(false);
-      }*/
+      }
     }
-  },[category, studyId]);
+  },[myinfos, studyInfos]);
 
   return (
     <>
