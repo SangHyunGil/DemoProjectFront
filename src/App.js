@@ -34,6 +34,7 @@ import { getCookie } from './utils/cookie';
 import StudyDepartmentComp from './Components/Study/StudyDepartmentComp';
 import AllDepartmentStudy from './pages/AllDepartmentStudy';
 import { useQuery } from 'react-query';
+import StudyCalendar from './Components/Study/StudyCalendar';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -91,6 +92,7 @@ const App = () => {
                 <Route path=":boardId/article/:articleId" element={<PrivateRoute><BoardArticlesPost /></PrivateRoute>} />
                 <Route path=":boardId/article/:articleId/edit" element={<PrivateRoute><BoardArticlePostEdit /></PrivateRoute>} />
                 <Route path="manage" element={<PrivateRoute><StudyManage /></PrivateRoute>} />
+                <Route path="calendar" element={<StudyCalendar />} />
               </Route>
               <Route path="*" element={<div>Not Found</div>} />
             </Routes>

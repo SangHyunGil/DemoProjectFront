@@ -106,11 +106,9 @@ const ArticleList = styled.ul`
 const ArticleCard = styled.div`
   display: flex;
   flex-direction: column;
-  .mainContent {
-    main {
-      text-overflow: ellipsis;
-    }
-  }
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 1rem;
 `;
 
 const ViewBoxBlock = styled.div`

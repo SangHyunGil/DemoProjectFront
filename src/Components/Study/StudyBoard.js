@@ -75,6 +75,10 @@ function StudyBoard() {
             게시판 관리
           </Category>
         )}
+        <Category to={`/study/${studyId}`} style={{color:'black'}}>
+          게시판 정보
+        </Category>
+        <Category to={`/study/${studyId}/board/calendar`}>스터디 캘린더</Category>
       </CategoryWrapper>
       <Outlet />
     </>
