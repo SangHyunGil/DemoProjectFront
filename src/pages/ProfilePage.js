@@ -6,16 +6,21 @@ import styled from "styled-components";
 const ProfilePageWrapper = styled.div`
     display: flex;
     border-bottom: 2px solid #e6e6e6;
+    padding: 10px 30px 8px 30px;
 `;
 
 const ProfilePageLinks = styled(NavLink)`
   cursor: pointer;
   text-decoration: none;
   white-space: pre;
+  color: black;
+  font-family: "OTWelcomeBA", sans-serif;
+  font-size: 1.1rem;
     &:hover {
         color: #ffc107;
     }
     &.active {
+        color: #ffc107;
         border-bottom: 2px solid #ffc107;
         &:hover {
             color: #13C6DC;
@@ -25,6 +30,15 @@ const ProfilePageLinks = styled(NavLink)`
     margin-left: 1rem;
   }
 `;
+
+const variants = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+  },
+}
 
 const ProfilePage = () => {
   //const params = useParams();
