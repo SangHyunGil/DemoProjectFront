@@ -7,7 +7,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /var/jenkins_home/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - koner
     
