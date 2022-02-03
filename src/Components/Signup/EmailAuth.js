@@ -8,8 +8,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import styled from 'styled-components';
+import ChangePasswordPage from '../../pages/ChangePasswordPage';
 
-const AuthContainer = styled.div`
+export const AuthContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -33,9 +34,11 @@ const AuthContainer = styled.div`
         justify-content: center;
         color: white;
         padding: 0.5rem 1rem;
-        
+        transition: all 0.3s linear;
         &:hover {
             cursor: pointer;
+            background-color: #0049AF;
+            transition: all 0.3s linear;
         }
     }
 `;
@@ -50,20 +53,21 @@ function EmailAuth() {
     let [searchParams, setSearchParams] = useSearchParams();
     const email = searchParams.get("email");
     const authCode = searchParams.get("authCode");
+    const redisKey = searchParams.get("redisKey");
 
     useEffect(() => {
         dispatch(
             emailAuthRequest({
                 email : email,
                 authCode : authCode,
-                redisKey : "VERIFY"
+                redisKey : redisKey
             })
         );
       }, []);
 
     const reSend = () => {
-        axios.post("/sign/email", {email : email, redisKey : "VERIFY"})
-        navigate("/", {replace: true});
+        axios.post("/sign/email", {email : email, redisKey});
+        navigate("/signup/complete");
     }
 
     if (!emailAuthSuccess) {
@@ -75,7 +79,7 @@ function EmailAuth() {
             </AuthContainer>
         ) 
     } else {
-        return (
+        return redisKey === 'VERIFY' ? (
             <AuthContainer>
                 <img src="/AuthImg/cheers.png" alt="success" />
                 <p>인증이 완료되었습니다.</p>
@@ -83,7 +87,9 @@ function EmailAuth() {
                     <button>로그인하러 가기</button>
                 </Link>
             </AuthContainer>
-        )
+        ) : (
+            <ChangePasswordPage email={email} />
+        );
     }
 }
 
