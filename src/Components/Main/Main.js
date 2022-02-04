@@ -308,11 +308,6 @@ const TextChattingItemVariants = {
   }
 };
 
-const Footer = styled.footer`
-  height: 40vh;
-  background: #202020;
-`;
-
 const MainComp = () => {
   const animation = useAnimation();
   const ImgAnimation = useAnimation();
@@ -430,9 +425,6 @@ const MainComp = () => {
           </div>
         </ImgInfoWrapper>
       </ImgInfoSection>
-      <Footer>
-
-      </Footer>
     </React.Fragment>
   );
 };

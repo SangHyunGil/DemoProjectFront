@@ -81,6 +81,7 @@ const LinkWrapper = styled(motion.div)`
   align-items: center;
   margin: 0 auto;
   padding: 0 1rem;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.6);
   span {
     font-family: 'SEBANG_Gothic_Bold' ,sans-serif;
     font-size: 1rem;

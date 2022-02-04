@@ -10,6 +10,7 @@ import CardMedia from '@mui/material/CardMedia';
 import { motion } from 'framer-motion/dist/framer-motion';
 import CardActions from '@mui/material/CardActions';
 import Avatar from "@mui/material/Avatar";
+import StudyStatus from "../Components/Study/StudyStatus";
 
 const StudyCardContainer = styled.div`
     width: 90vw;
@@ -25,9 +26,19 @@ const StudyCardContainer = styled.div`
 const StudySubInfo = styled(motion.div)`
   display: none;
   p {
+    color: white;
+    font-family: "SEBANG_Gothic_Bold", sans-serif;
+    font-size: .8rem;
     &:first-child {
       margin-right: 5px;
+      margin-bottom: 5px;
+      background-color: #9f9ef4;
     }
+    &:last-child {
+      background-color: #e97d87;
+    }
+    padding: .3rem .5rem;
+    border-radius: 5px;
   }
 `;
 
@@ -42,12 +53,13 @@ const StudyProceedStatus = styled.span`
   top: 0;
   right: 0;
   z-index: 2;
-  background-color: #9fffe5;
-  color: #047d37;
+  background-color: #d0fae4;
+  color: #339667;
   padding: 5px 10px;
   margin-right: 5px;
   margin-top: 10px;
   border-radius: 5px;
+  font-family: "SEBANG_Gothic_Bold", sans-serif;
 `;
 
 const StudyCard = styled(Card)`
@@ -70,16 +82,18 @@ const TagWrapper = styled.ul`
   list-style: none;
   padding: 0;
   margin: 5px 0;
+  flex-wrap: wrap;
 `;
 
 const Tag = styled.li`
   display: flex;
   align-items: center;
-  background-color: #047d37;
+  background-color: #6495ED;
   border-radius: 5px;
-  padding: 2px 5px;
+  padding: .3rem .5rem;
+  margin: 5px 0; 
   color: white;
-  font-size: 12px;
+  font-size: .8rem;
   & + & {
     margin-left: 5px;
   } 
@@ -108,6 +122,8 @@ const StudyWrapperVariants = {
     },
     visible: {
       display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
     },
   };
 
@@ -129,7 +145,6 @@ const NotFoundStudyStyle = styled.div`
         }
     }
 `;
-
 
 function AllDepartmentStudy() {
     const { department } = useParams();
@@ -181,7 +196,7 @@ function AllDepartmentStudy() {
                                     layoutId={`Detail${board.studyId}`}
                                     ref={idx === page?.data?.data?.data?.length-1 ? ref : null}
                                   >
-                                    <StudyProceedStatus>{board.recruitState}</StudyProceedStatus>
+                                    <StudyProceedStatus><StudyStatus title="recruit" content={board.recruitState}/></StudyProceedStatus>
                                     <StudyCard>
                                       <CardMedia 
                                         component="img"
@@ -197,7 +212,7 @@ function AllDepartmentStudy() {
                                           ))}
                                         </TagWrapper>
                                         <StudySubInfo variants={StudyCardSubInfoVariants}>
-                                            <p>{board.studyMethod}</p>
+                                            <StudyStatus title="method" content={board.studyMethod} />
                                             <p>{board.startDate}~{board.endDate}</p>
                                         </StudySubInfo>
                                       </StudyCardContent>

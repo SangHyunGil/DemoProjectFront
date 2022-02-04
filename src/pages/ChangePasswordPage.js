@@ -71,7 +71,7 @@ const ChangePasswordPageStyle = styled.form`
   }
 `;
 
-const ChangePasswordPage = () => {
+const ChangePasswordPage = ({email}) => {
   const {
     register,
     handleSubmit,
@@ -90,16 +90,15 @@ const ChangePasswordPage = () => {
     (data) => changepassword(data, getCookie("accessToken")),
     {
       onSuccess: () => {
-        navigate("/logout");
+        navigate("/password/reset");
       },
     }
   );
 
   const onSubmit = (data) => {
     if (window.confirm("변경하시겠습니까?")) {
-      console.log(data);
       changePasswordMutation.mutate({
-        email: myInfoData.data.data.email,
+        email: !!email ? email : myInfoData.data.data.email,
         password: data.newPassword,
       });
       setValue("newPassword", "");

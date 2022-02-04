@@ -90,6 +90,7 @@ function StudyCalendar() {
     },
   ]);
   const { register, handleSubmit, setValue } = useForm();
+  const { register:ChangeRegister, handleSubmit:ChangeHandleSubmit, setValue:ChangeSetValue } = useForm();
   const [draggedEvent, setDraggedEvent] = useState(null);
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [isNewContent, setIsNewContent] = useState(false);
@@ -152,27 +153,25 @@ function StudyCalendar() {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
-    if(isNewContent)  {
-      setEvents((e) => [...e, { start:newDate?.start, end: newDate?.end, title: data.newEvent, id: events.length }]);
-      setValue("newEvent", "")
-    }
-    else {
-      const nextEvents = events.map((existingEvent) => {
-        return existingEvent.id === currentDate.id
-          ? { ...existingEvent, title: data.defaultEvent }
-          : existingEvent;
-      });
-      setEvents(nextEvents);
-      setValue("defaultEvent", "");
-    }
+    setEvents((e) => [...e, { start:newDate?.start, end: newDate?.end, title: data.newEvent, id: events.length }]);
+    setValue("newEvent", "")
+  };
+
+  const onChangeSubmit = (data) => {
+    const nextEvents = events.map((existingEvent) => {
+      return existingEvent.id === currentDate.id
+        ? { ...existingEvent, title: data.defaultEvent }
+        : existingEvent;
+    });
+    setEvents(nextEvents);
+    ChangeSetValue("changeEvent", "");
   };
 
   const onEventClickHanlder = (event) => {
-    console.log(event);
+    //console.log(event);
     const {title, id} = event;
     setIsNewContent(false);
-    setValue("defaultEvent", title);
+    ChangeSetValue("defaultEvent", title);
     setIsCreateModalOpen(true);
     setCurrentDate({id})
   };
@@ -199,7 +198,7 @@ function StudyCalendar() {
         }}
       />
       <MuiDialog open={isCreateModalOpen} title={isNewContent? '새로운 일정 입력': '기존 일정' } setOpen={setIsCreateModalOpen} >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={isNewContent ?  handleSubmit(onSubmit) : ChangeHandleSubmit(onChangeSubmit)}>
           <DialogContent>
             <DialogContentText>{isNewContent ? '새로운 일정을 입력해 주세요!' : '기존 일정입니다'}</DialogContentText>
             {isNewContent ? <TextField 
@@ -210,7 +209,7 @@ function StudyCalendar() {
               label="일정 입력"
               variant="standard"
             /> : <TextField 
-              {...register('defaultEvent',{required:'수정할 일정을 입력해 주세요!'})}
+              {...ChangeRegister('defaultEvent',{required:'수정할 일정을 입력해 주세요!'})}
               fullWidth
               autoFocus
               margin="dense"

@@ -28,6 +28,7 @@ const LoginFormWrapper = styled.div`
   padding: 4rem 2rem;
   @media (max-width: 560px) {
       box-shadow: none;
+      width: 80vw;
   }
 `;
 
@@ -89,7 +90,7 @@ function Login() {
           <p>원활한 활동을 위해서는 로그인이 필요합니다!</p>
         </LoginFormHeader>
         <LoginformStyle onSubmit={handleSubmit(handleLogin)}>
-          <FormControl sx={{ width: "50ch", m: 1 }}>
+          <FormControl sx={{ width: "50ch", maxWidth:'80vw', m: 1 }}>
             <InputLabel htmlFor="component-outlined">Email</InputLabel>
             <OutlinedInput
               id="component-outlined"
@@ -101,7 +102,7 @@ function Login() {
             />
             <FormHelperText sx={{color:'red'}}>{errors?.email?.message}</FormHelperText>
           </FormControl>
-          <FormControl sx={{ width: "50ch", m: 1 }}>
+          <FormControl sx={{ width: "50ch",maxWidth:'80vw', m: 1 }}>
             <InputLabel htmlFor="component-outlined">비밀번호</InputLabel>
             <OutlinedInput
               id="component-outlined"
@@ -120,7 +121,7 @@ function Login() {
             <LoginButton
               type="submit"
               variant="contained"
-              sx={{width: "55ch",m:1}}
+              sx={{width: "55ch",maxWidth:'80vw',m:1}}
               startIcon={<LoginIcon />}
             >
               로그인
