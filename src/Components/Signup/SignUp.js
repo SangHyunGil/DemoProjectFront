@@ -99,14 +99,14 @@ function SignUp() {
   };
 
   const Depart = [
-    { id: 0, val: "기계공학부" },
-    { id: 1, val: "전기전자통신공학부" },
-    { id: 2, val: "디자인,건축공학부" },
-    { id: 3, val: "메카트로닉스공학부" },
-    { id: 4, val: "산업경영학부" },
-    { id: 5, val: "에너지신소재화학공학부" },
-    { id: 6, val: "컴퓨터공학부" },
-    {id: 7, val: "고용서비스정책학부"}
+    { id: 0, val: "기계공학부", headTo: 'me' },
+    { id: 1, val: "전기전자통신공학부", headTo: 'ece' },
+    { id: 2, val: "디자인,건축공학부", headTo: 'dea' },
+    { id: 3, val: "메카트로닉스공학부", headTo: 'mce' },
+    { id: 4, val: "산업경영학부", headTo: 'im'},
+    { id: 5, val: "에너지신소재화학공학부",headTo: 'emce'},
+    { id: 6, val: "컴퓨터공학부",headTo: 'cse' },
+    {id: 7, val: "고용서비스정책학부",headTo: 'esp'}
   ];
 
   const handleDepartMent = (e) => {
@@ -178,7 +178,7 @@ function SignUp() {
             name="radio-buttons-group"
           >
             {Depart.map(x=>(
-                <FormControlLabel key={x.id} value={x.val} onChange={handleDepartMent} control={<Radio />} label={x.val} />
+                <FormControlLabel key={x.id} value={x.headTo} onChange={handleDepartMent} control={<Radio />} label={x.val} />
             ))}
           </RadioGroup>
         </SignUpInputWrapper>
