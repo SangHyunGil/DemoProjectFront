@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
-import {
-  findBoard,
-  join,
-  getBoardCategory,
-} from "../../Api/Api";
+import { findBoard, join, getBoardCategory } from "../../Api/Api";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { useQuery , useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { getCookie } from "../../utils/cookie";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import ModalUnstyled from '@mui/base/ModalUnstyled';
-import { Box } from '@mui/system';
-import { TextareaAutosize } from '@mui/base';
+import ModalUnstyled from "@mui/base/ModalUnstyled";
+import { Box } from "@mui/system";
+import { TextareaAutosize } from "@mui/base";
 import styled from "styled-components";
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 
-const defaultProfileImgUrl = 'https://koner-bucket.s3.ap-northeast-2.amazonaws.com/profileImg/koryong1.jpg';
+const defaultProfileImgUrl =
+  "https://koner-bucket.s3.ap-northeast-2.amazonaws.com/profileImg/koryong1.jpg";
 
 const MainHeaderWrapper = styled.header`
   display: flex;
@@ -29,7 +26,7 @@ const MainHeaderWrapper = styled.header`
   font-size: 2rem;
   padding-top: 20px;
   background: white;
-  background-image: url(${props => props.backgroundImg});
+  background-image: url(${(props) => props.backgroundImg});
   background-position: center;
   background-repeat: no-repeat;
   height: 10vh;
@@ -38,8 +35,8 @@ const MainHeaderWrapper = styled.header`
 const MainWrapper = styled.section`
   display: grid;
   grid-template-columns: repeat(2, minmax(300px, 1fr));
-  grid-tmpate-rows: repeat(4,1fr);
-  grid-auto-rows:1fr;
+  grid-tmpate-rows: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
   row-gap: 20px;
   column-gap: 10px;
   padding: 0 20px;
@@ -64,7 +61,7 @@ const MainWrapper = styled.section`
 `;
 
 const DetailCard = styled(Card)`
-  .Stitle{
+  .Stitle {
     ul {
       list-style: none;
       padding: 0;
@@ -92,8 +89,9 @@ const DetailCard = styled(Card)`
     grid-area: 4 / 1 / span 1 / -1;
     justify-self: center;
   }
-  @media (min-width:861px) and (max-width: 1350px) {
-    &:first-child, &:last-child {
+  @media (min-width: 861px) and (max-width: 1350px) {
+    &:first-child,
+    &:last-child {
       width: calc(80vw + 10px) !important;
     }
     width: 40vw !important;
@@ -142,23 +140,24 @@ export const Backdrop = styled.div`
 
 export const Boxstyle = {
   width: 400,
-  bgcolor: 'white',
+  bgcolor: "white",
   p: 2,
   px: 4,
   pb: 3,
-  borderRadius: '10px',
+  borderRadius: "10px",
 };
 
 const StudyStatusWrapper = styled.span`
-  background :rgb(209, 250, 229);
+  background: #d0fae4;
   padding: 5px;
   border-radius: 5px;
-  color: black;
+  color: #339667;
   margin-right: 10px;
   margin-top: 5px;
   &:last-child {
     margin-right: 0;
   }
+  font-family: "SEBANG_Gothic_Bold", sans-serif;
 `;
 
 const StyledTextarea = styled(TextareaAutosize)`
@@ -166,21 +165,80 @@ const StyledTextarea = styled(TextareaAutosize)`
 `;
 
 const DirectButton = styled.button`
-  background-color: #4caf50;
+  background-color: #0049af;
   color: white;
   border: none;
   border-radius: 10px;
   padding: 5px 20px;
   cursor: pointer;
-  font-size: 3rem;
+  font-size: 1.8rem;
+  font-family: "SEBANG_Gothic_Bold", sans-serif;
+  transition: all 0.3s linear;
+  &:hover {
+    background-color: #ffbe58;
+    transition: all 0.3s linear;
+  }
 `;
 
+const TagsWrapper = styled.ul`
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15%, auto));
+  grid-gap: 10px;
+  margin: 0;
+  padding: 0;
+  justify-content: start;
+  li {
+    background: #6495ed;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: "SEBANG_Gothic_Bold", sans-serif;
+    }
+  }
+`;
 
-function BoardDetail({boardId}) {
+const StatusWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  p {
+    align-self: flex-start;
+    padding: 0.3rem 0.5rem;
+    border-radius: 5px;
+    font-family: "SEBANG_Gothic_Bold", sans-serif;
+    &:first-child {
+      background-color: #9f9ef4;
+      color: white;
+      margin-bottom: 10px;
+    }
+    &:last-child {
+      background-color: #e97d87;
+      color: white;
+    }
+  }
+`;
+
+const CurrentMemberWrapper = styled.div`
+  p {
+    font-family: "SEBANG_Gothic_Bold", sans-serif;
+    font-size: 2rem;
+  }
+`;
+
+function BoardDetail({ boardId }) {
   const navigate = useNavigate();
   const params = useParams();
-  const { isChecked, isLogin, id, nickname } =
-    useSelector((state) => state.users);
+  const { isChecked, isLogin, id, nickname } = useSelector(
+    (state) => state.users
+  );
   const [IsAlreadyJoined, setIsAlreadyJoined] = useState(false);
   const [isClosed, setisClosed] = useState(false);
   const [isApply, setIsApply] = useState(false);
@@ -200,12 +258,13 @@ function BoardDetail({boardId}) {
   );
   const applyMutation = useMutation(
     ["apply", params.boardId],
-    (applyContent)=> join(params.boardId, id, applyContent, getCookie("accessToken")),
+    (applyContent) =>
+      join(params.boardId, id, applyContent, getCookie("accessToken")),
     {
       onSuccess: () => {
         setIsApply(true);
         queryClient.invalidateQueries(["board", params.boardId]);
-      }
+      },
     }
   );
 
@@ -222,7 +281,7 @@ function BoardDetail({boardId}) {
   );
 
   useEffect(() => {
-    if(BoardContent){
+    if (BoardContent) {
       let a = BoardContent?.joinCount;
       BoardContent?.studyMembers?.forEach((member) => {
         const { nickname: Nick, studyRole } = member;
@@ -235,18 +294,16 @@ function BoardDetail({boardId}) {
             setIsAlreadyJoined(true);
             setIsApply(false);
           }
-        }
-        else if (studyRole === "APPLY") {
+        } else if (studyRole === "APPLY") {
           a -= 1;
         }
       });
-      Number(BoardContent?.headCount) === a &&
-      !IsAlreadyJoined
+      Number(BoardContent?.headCount) === a && !IsAlreadyJoined
         ? setisClosed(true)
         : setisClosed(false);
       setJoinCnt(a);
     }
-  },[BoardContent, nickname, IsAlreadyJoined]);
+  }, [BoardContent, nickname, IsAlreadyJoined]);
 
   const BoardDetailHandler = (e) => {
     if (isChecked && isLogin) {
@@ -263,7 +320,7 @@ function BoardDetail({boardId}) {
   const onApplySubmit = (data) => {
     applyMutation.mutate(data.applyContent);
     setisApplyModalUp(false);
-  }
+  };
 
   const StudyStatus = {
     study: {
@@ -293,7 +350,11 @@ function BoardDetail({boardId}) {
               <li>
                 <Avatar
                   alt={BoardContent?.creator?.nickname}
-                  src={BoardContent?.creator?.profileImgUrl === '디폴트이미지 경로' ? defaultProfileImgUrl : BoardContent?.creator?.profileImgUrl}
+                  src={
+                    BoardContent?.creator?.profileImgUrl === "디폴트이미지 경로"
+                      ? defaultProfileImgUrl
+                      : BoardContent?.creator?.profileImgUrl
+                  }
                 />
               </li>
               <li style={{ paddingTop: "10px" }}>
@@ -311,29 +372,34 @@ function BoardDetail({boardId}) {
         <DetailCard sx={{ width: "50ch" }} className="jend">
           <CardContent>
             <h3>주제</h3>
-            <p>{BoardContent?.tags}</p>
+            <TagsWrapper>
+              {BoardContent?.tags?.map((tag, index) => (
+                <li key={index}>
+                  <p>{tag}</p>
+                </li>
+              ))}
+            </TagsWrapper>
           </CardContent>
         </DetailCard>
         <DetailCard sx={{ width: "50ch" }}>
           <CardContent>
-            <h3>현인원/총인원</h3>
-            <p>
-              {JoinCnt}/{BoardContent?.headCount}
-            </p>
+            <CurrentMemberWrapper>
+              <h3>현인원/총인원</h3>
+              <p>
+                {JoinCnt}/{BoardContent?.headCount}
+              </p>
+            </CurrentMemberWrapper>
           </CardContent>
         </DetailCard>
         <DetailCard sx={{ width: "50ch" }} className="jend">
           <CardContent>
-            <h3>진행상태</h3>
-            <p>
-              스터디 모집 방법: {StudyStatus.method[BoardContent?.studyMethod]}
-            </p>
-            <p>
-              스터디 시작일: {BoardContent?.startDate}
-            </p>
-            <p>
-              스터디 종료일: {BoardContent?.endDate}
-            </p>
+            <h3>상태</h3>
+            <StatusWrapper>
+              <p>{StudyStatus.method[BoardContent?.studyMethod]}</p>
+              <p>
+                {BoardContent?.startDate} ~ {BoardContent?.endDate}
+              </p>
+            </StatusWrapper>
           </CardContent>
         </DetailCard>
         <DetailCard sx={{ width: "50ch" }}>
@@ -348,7 +414,11 @@ function BoardDetail({boardId}) {
                 <AvatarWrapper key={Nick}>
                   <Avatar
                     alt={Nick}
-                    src={profileImgUrl === '디폴트이미지 경로' ? defaultProfileImgUrl : profileImgUrl}
+                    src={
+                      profileImgUrl === "디폴트이미지 경로"
+                        ? defaultProfileImgUrl
+                        : profileImgUrl
+                    }
                   />
                   <span>{Nick}</span>
                 </AvatarWrapper>
@@ -359,7 +429,7 @@ function BoardDetail({boardId}) {
         <DetailCard sx={{ width: "calc(100ch + 10px)", marginBottom: "20px" }}>
           <CardContent>
             <h3>내용</h3>
-            <h4>{BoardContent?.content}</h4>
+            <h4 style={{whiteSpace: 'pre'}}>{BoardContent?.content}</h4>
           </CardContent>
         </DetailCard>
       </MainWrapper>
@@ -375,7 +445,12 @@ function BoardDetail({boardId}) {
           ) : isApply ? (
             <h3>스터디 신청중입니다!</h3>
           ) : (
-            <button onClick={()=>{setisApplyModalUp(true)}} name="Join">
+            <button
+              onClick={() => {
+                setisApplyModalUp(true);
+              }}
+              name="Join"
+            >
               신청하기
             </button>
           )
@@ -384,21 +459,26 @@ function BoardDetail({boardId}) {
         )}
       </ButtonWrapper>
       <StyledModal
-      aria-labelledby="styled-modal-title"
-      aria-describedby="styled-modal-description"
-      open={isApplyModalUp}
-      onClose={()=>{setisApplyModalUp(false)}}
-      BackdropComponent={Backdrop}
+        aria-labelledby="styled-modal-title"
+        aria-describedby="styled-modal-description"
+        open={isApplyModalUp}
+        onClose={() => {
+          setisApplyModalUp(false);
+        }}
+        BackdropComponent={Backdrop}
       >
         <Box sx={Boxstyle}>
           <h2 id="styled-modal-title">지원서 작성하기</h2>
-          <p id="styled-modal-description">스터디에 입장하기 위해 지원서를 쓰고 대기해 주세요!</p> 
+          <p id="styled-modal-description">
+            스터디에 입장하기 위해 지원서를 쓰고 대기해 주세요!
+          </p>
           <form onSubmit={handleSubmit(onApplySubmit)}>
-            <StyledTextarea {...register("applyContent")}
+            <StyledTextarea
+              {...register("applyContent")}
               aria-label="minimum height"
               minRows={10}
               placeholder="지원서 작성하기"
-              style={{ width: '80%' }}
+              style={{ width: "80%" }}
             />
             <button type="submit">지원하기</button>
           </form>

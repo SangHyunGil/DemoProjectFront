@@ -51,7 +51,8 @@ function UpdateStudy() {
     const navigate = useNavigate();
     const {data:BoardData} = useQuery(['findBoard', params.studyId], () => findBoard(params.studyId),{
         select: (data) => data.data.data,
-        onSuccess: (x) => {
+        onSuccess: async (x) => {
+            console.log(x)
             setValue('title', x.title);
             setValue('content', x.content);
             setValue('headCount', x.headCount);
@@ -61,15 +62,20 @@ function UpdateStudy() {
             });
             setstartDay(x.startDate);
             setendDay(x.endDate);
+            setPreviewImg(x.profileImg);
+            //const filename = x.profileImg.split('/').pop();
+            //const blob = new Blob([x.profile],{type : `image/${filename.split('.').pop()}`});
+            //const file = new File([x.profileImg], filename, {type : `image/${filename.split('.').pop()}`});
+            //setThumbnail(file);
+            //console.log(file)
         },
-        staleTime: Infinity
     });
     const [startDay, setstartDay] = useState(null);
     const [endDay, setendDay] = useState(null);
     const { register, handleSubmit, formState: {errors}, setValue } = useForm();
     const UpdateBoard = useMutation(['updateBoard', params.studyId], (data) => updateBoard(data,params.studyId,getCookie('accessToken')),{
         onSuccess: () => {
-            navigate('/study');
+            navigate('/study/depart/cse');
         },
         onError: (err) => {
             console.log(err);
@@ -96,6 +102,7 @@ function UpdateStudy() {
 
     const handleUpload = (e) => {
         const { files } = e.target;
+        console.log(files);
         if (files && files[0]) {
             const reader = new FileReader();
             reader.onload = (e) => {

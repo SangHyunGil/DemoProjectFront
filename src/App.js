@@ -36,6 +36,7 @@ import AllDepartmentStudy from './pages/AllDepartmentStudy';
 import { useQuery } from 'react-query';
 import StudyCalendar from './Components/Study/StudyCalendar';
 import PasswordChangeCompletePage from './pages/PasswordChangeCompletePage';
+import ProfileEditPage from './pages/ProfileEditPage';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -73,6 +74,7 @@ const App = () => {
               <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} >
                 <Route path="accountInfo" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="mystudy" element={<PrivateRoute><MyStudy /></PrivateRoute>} />
+                <Route path="edit" element={<ProfileEditPage />} />
                 <Route path="mycallvan" element={<PrivateRoute><h1>마이 콜밴 페이지</h1></PrivateRoute>} />
                 <Route path="mymarket" element={<PrivateRoute><h1>마이 마켓 페이지</h1></PrivateRoute>} />
               </Route>
