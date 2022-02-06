@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
 import MuiModal from "../Modal/MuiModal";
-import { useQuery, useMutation, useQueryClient} from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   getBoardCategory,
@@ -21,7 +21,7 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
 import { StyledModal, Backdrop, Boxstyle } from "./BoardDetail";
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { FormControl } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -68,15 +68,63 @@ const ApplicantStyle = styled.span`
 
 const BoardCatergoryWrapper = styled.li`
   &:hover {
-    cursor:pointer;
+    cursor: pointer;
+  }
+`;
+
+const ApplyerBox = styled(Box)`
+  width: 40vw;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  background-color: white;
+  gap: 1rem;
+  border: 0;
+  p{
+    white-space: pre-line;
+  }
+  div {
+    &:last-child {
+      align-self: flex-end;
+      display: flex;
+      gap: 10px;
+      button {
+        &:hover {
+          cursor: pointer;
+        }
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        color: white;
+        border: 0;
+        &:first-child {
+          background-color: #0049AF;
+          transition: 0.3s all linear;
+          &:hover {
+            background-color: #FFC107;
+            transition: 0.3s all linear;
+          }
+        }
+        &:last-child {
+          background-color: #d63031;
+          transition: 0.3s all linear;
+          &:hover {
+            background-color: #ff7675;
+            transition: 0.3s all linear;
+          }
+        }
+      }
+    }
   }
 `;
 
 function StudyManage() {
   const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
   const [isBoardCategoryModalUp, setIsBoardCategoryModalUp] = useState(false);
-  const [boardCategoryName, setBoardCategoryName] = useState('');
-  const [boardCategoryId,setBoardCategoryId] = useState(0);
+  const [boardCategoryName, setBoardCategoryName] = useState("");
+  const [boardCategoryId, setBoardCategoryId] = useState(0);
   const { studyId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -97,9 +145,9 @@ function StudyManage() {
   });
 
   const {
-    register:register2,
-    handleSubmit:handleSubmit2,
-    formState: { errors:errors2 },
+    register: register2,
+    handleSubmit: handleSubmit2,
+    formState: { errors: errors2 },
   } = useForm();
 
   const { data: Members } = useQuery(
@@ -129,11 +177,14 @@ function StudyManage() {
     }
   );
 
-  const deleteBoardMutation = useMutation( () => deleteBoard(studyId, getCookie("accessToken")), {
-    onSuccess: () => {
-      navigate("/study");
+  const deleteBoardMutation = useMutation(
+    () => deleteBoard(studyId, getCookie("accessToken")),
+    {
+      onSuccess: () => {
+        navigate("/study");
+      },
     }
-  });
+  );
 
   const { data: board } = useQuery(
     ["boardManage", studyId],
@@ -154,19 +205,27 @@ function StudyManage() {
     }
   );
 
-  const updateBoardCategoryMutation = useMutation(({newTitle,boardId})=> updateBoardCategory(studyId,boardId,newTitle,getCookie("accessToken")), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["boardManage", studyId]);
-      queryClient.invalidateQueries(["getBoardCategory", studyId]);
+  const updateBoardCategoryMutation = useMutation(
+    ({ newTitle, boardId }) =>
+      updateBoardCategory(studyId, boardId, newTitle, getCookie("accessToken")),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["boardManage", studyId]);
+        queryClient.invalidateQueries(["getBoardCategory", studyId]);
+      },
     }
-  });
+  );
 
-  const deleteBoardCategoryMutation = useMutation(()=> deleteBoardCategory(studyId,boardCategoryId,getCookie("accessToken")), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["boardManage", studyId]);
-      queryClient.invalidateQueries(["getBoardCategory", studyId]);
+  const deleteBoardCategoryMutation = useMutation(
+    () =>
+      deleteBoardCategory(studyId, boardCategoryId, getCookie("accessToken")),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["boardManage", studyId]);
+        queryClient.invalidateQueries(["getBoardCategory", studyId]);
+      },
     }
-  });
+  );
 
   const ModalUpHandler = () => {
     //모달 핸들러
@@ -186,7 +245,10 @@ function StudyManage() {
   };
 
   const updateStudyBoardCategoryHandler = (data) => {
-    updateBoardCategoryMutation.mutate({newTitle:data.newBoardCategory,boardId:boardCategoryId});
+    updateBoardCategoryMutation.mutate({
+      newTitle: data.newBoardCategory,
+      boardId: boardCategoryId,
+    });
     setIsBoardCategoryModalUp(false);
   };
 
@@ -270,9 +332,7 @@ function StudyManage() {
                     })}
                   />
                   <ErrorMessage>{errors?.BoardTitle?.message}</ErrorMessage>
-                  <Button type="submit">
-                    게시판 추가
-                  </Button>
+                  <Button type="submit">게시판 추가</Button>
                 </form>
               </div>
             </Modal>
@@ -282,11 +342,16 @@ function StudyManage() {
           <h2>게시판 관리</h2>
           <ul>
             {board?.map((b) => (
-              <BoardCatergoryWrapper onClick={()=>{
-                setIsBoardCategoryModalUp(true);
-                setBoardCategoryName(b.title);
-                setBoardCategoryId(b.studyBoardId);
-              }} key={b.studyBoardId}>{b.title}</BoardCatergoryWrapper>
+              <BoardCatergoryWrapper
+                onClick={() => {
+                  setIsBoardCategoryModalUp(true);
+                  setBoardCategoryName(b.title);
+                  setBoardCategoryId(b.studyBoardId);
+                }}
+                key={b.studyBoardId}
+              >
+                {b.title}
+              </BoardCatergoryWrapper>
             ))}
           </ul>
           <Button variant="contained" onClick={ModalUpHandler}>
@@ -295,10 +360,16 @@ function StudyManage() {
         </StudyBoardManageContainer>
         <StudyControlContainer>
           <h2>스터디 관리</h2>
-          <Button variant="contained" color="secondary" onClick={updateStudyHandler} >
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={updateStudyHandler}
+          >
             스터디 수정
           </Button>
-          <Button variant="contained" color="error" 
+          <Button
+            variant="contained"
+            color="error"
             onClick={() => {
               if (window.confirm("정말 삭제하시겠습니까?")) {
                 deleteBoardMutation.mutate();
@@ -318,43 +389,57 @@ function StudyManage() {
         }}
         BackdropComponent={Backdrop}
       >
-        <Box sx={Boxstyle}>
-          <h2 id="styled-modal-title">지원서</h2>
-          <p id="styled-modal-description">작성한 지원서</p>
-          <hr />
-          <p>
-            {ApplyInfo?.applyContent === '' ? '지원서 내용을 작성해주시지 않았어요 ㅠㅠ.' : ApplyInfo?.applyContent}
-          </p>
-          <button
-            onClick={() => {
-              window.confirm("승인하시겠습니까?") &&
-                grantUserMutation.mutate(ApplyInfo?.memberId);
-              setisApplyModalUp(false);
-            }}
-          >
-            승인
-          </button>
-          <button
-            onClick={() => {
-              window.confirm("거절하시겠습니까?") &&
-                rejectUserMutation.mutate(ApplyInfo?.memberId);
-              setisApplyModalUp(false);
-            }}
-          >
-            거절
-          </button>
-        </Box>
+        <ApplyerBox>
+          <div>
+            <h2 id="styled-modal-title">지원서</h2>
+            <p id="styled-modal-description">작성한 지원서</p>
+          </div>
+          <div>
+            <p>
+              {ApplyInfo?.applyContent === ""
+                ? "지원서 내용을 작성해주시지 않았어요 ㅠㅠ."
+                : ApplyInfo?.applyContent}
+            </p>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                window.confirm("승인하시겠습니까?") &&
+                  grantUserMutation.mutate(ApplyInfo?.memberId);
+                setisApplyModalUp(false);
+              }}
+            >
+              승인
+            </button>
+            <button
+              onClick={() => {
+                window.confirm("거절하시겠습니까?") &&
+                  rejectUserMutation.mutate(ApplyInfo?.memberId);
+                setisApplyModalUp(false);
+              }}
+            >
+              거절
+            </button>
+          </div>
+        </ApplyerBox>
       </StyledModal>
-      <MuiModal open={isBoardCategoryModalUp} setOpen={setIsBoardCategoryModalUp}>
+      <MuiModal
+        open={isBoardCategoryModalUp}
+        setOpen={setIsBoardCategoryModalUp}
+      >
         <span>{boardCategoryName}</span>
-        <ArrowCircleRightIcon/>
+        <ArrowCircleRightIcon />
         <form onSubmit={handleSubmit2(updateStudyBoardCategoryHandler)}>
           <FormControl>
-            <InputLabel id="new-board-categories">새로운 게시판 이름</InputLabel>
+            <InputLabel id="new-board-categories">
+              새로운 게시판 이름
+            </InputLabel>
             <OutlinedInput
               label="새로운 게시판 이름"
               id="new-board-categories"
-              {...register2("newBoardCategory",{required: "한글자라도 입력해주세요!"})}
+              {...register2("newBoardCategory", {
+                required: "한글자라도 입력해주세요!",
+              })}
             />
           </FormControl>
           <button>수정</button>

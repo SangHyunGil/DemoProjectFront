@@ -79,7 +79,7 @@ const ProfileFormHeader = styled.header`
       gap: 10px;
       a {
         text-decoration: none;
-        color: black;
+        color: #1976d2;
         &:hover {
           font-weight: bolder;
         }

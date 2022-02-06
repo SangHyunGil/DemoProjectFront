@@ -109,6 +109,8 @@ const ArticleCard = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 1rem;
+  flex: 1;
+  align-self: center;
 `;
 
 const ViewBoxBlock = styled.div`
@@ -120,6 +122,9 @@ const ViewBoxBlock = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    p {
+      text-align: center;
+    }
   }
   justify-self: flex-end;
 `;
@@ -256,7 +261,7 @@ function BoardArticles() {
                     </ArticleCard>
                     <ViewBoxBlock>
                         <div className="viewBox">
-                          <p>{article.views}회 조회</p>
+                          <p>{article.views}<br />조회</p>
                         </div>
                     </ViewBoxBlock>
                   </div>

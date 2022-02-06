@@ -14,6 +14,12 @@ const CategoryWrapper = styled.div`
   align-items: center;
   padding: 1rem;
   border-bottom: 2px solid #e6e6e6;
+  .StudyList {
+    font-size: 1.5rem;
+  }
+  .MenuIcon {
+    font-size: 2rem;
+  }
 `;
 
 const DrawerWrapper = styled(Box)`
@@ -21,6 +27,7 @@ const DrawerWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
   a {
     margin: 0 !important;
   }
@@ -83,10 +90,10 @@ function StudyBoard() {
     <>
       <CategoryWrapper>
         <IconButton onClick={() => setDrawerState(true)}>
-          <MenuIcon  />
+          <MenuIcon className="MenuIcon" />
         </IconButton>
-        <div>
-          <p>스터디 게시판 목록</p>
+        <div className="StudyList">
+          <p style={{fontFamily:'SEBANG_Gothic_Bold, sans-serif'}}>스터디 게시판 목록</p>
         </div>
         <SwipeableDrawer
           anchor="left"

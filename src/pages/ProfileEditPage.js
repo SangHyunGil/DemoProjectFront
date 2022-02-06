@@ -30,7 +30,7 @@ const ProfileEditWrapper = styled.div`
       justify-content: space-between;
       a {
         text-decoration: none;
-        color: black;
+        color: #1976d2;
         &:hover {
           font-weight: bolder;
         }

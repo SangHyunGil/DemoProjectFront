@@ -129,7 +129,8 @@ const ArticleWrapper = styled.div`
         }
         .Comment-content {
           padding: 1rem 0;
-          white-space: pre;
+          white-space: pre-line;
+          font-family: 'NEXON Lv2 Gothic', sans-serif;
         }
         .Comment-reply {
           .CommentReplyAccordion {
@@ -189,6 +190,12 @@ const CommentsReplyContentStyle = styled.div`
       display: flex;
       align-items: center;
       font-weight: bolder;
+    }
+    .CommentReplyContentMain {
+      p {
+        font-family: 'Galmuri9', sans-serif;
+        white-space: pre-line;
+      }
     }
     .CommentReplyContentAction {
       align-self: flex-end;
@@ -415,7 +422,6 @@ function BoardArticlesPost() {
           {comments?.map((comment) => {
             return (
               <div className="Comment" key={comment.commentId}>
-                {comment.content ? (
                   <React.Fragment>
                     <div className="CommentHeader">
                       <div className="CommentTitle">
@@ -425,8 +431,8 @@ function BoardArticlesPost() {
                         />
                         <span>{comment.memberProfile.nickname}</span>
                       </div>
-                      <div className="CommentAction">
-                        {comment?.memberProfile?.nickname === nickname && (
+                      <div className="CommentAction" >
+                        {(comment?.memberProfile?.nickname === nickname && comment?.content !== null) && (
                           <React.Fragment>
                             <Button
                               variant="outlined"
@@ -437,6 +443,7 @@ function BoardArticlesPost() {
                                   variant: "update",
                                 }));
                               }}
+                              style={{fontFamily: 'SEBANG_Gothic_Bold, sans-serif'}}
                             >
                               댓글 수정
                             </Button>
@@ -446,6 +453,7 @@ function BoardArticlesPost() {
                               onClick={() =>
                                 deleteCommentHandler(comment.commentId)
                               }
+                              style={{fontFamily: 'SEBANG_Gothic_Bold, sans-serif'}}
                             >
                               댓글삭제
                             </Button>
@@ -454,7 +462,7 @@ function BoardArticlesPost() {
                       </div>
                     </div>
                     <div className="Comment-content">
-                      <p>{comment.content}</p>
+                      <p>{comment.content === null ? <span style={{color:'red'}}>삭제된 댓글입니다!</span> : comment.content}</p>
                     </div>
                     <div className="Comment-reply">
                       <Accordion className="CommentReplyAccordion">
@@ -595,9 +603,6 @@ function BoardArticlesPost() {
                       </Accordion>
                     </div>
                   </React.Fragment>
-                ) : (
-                  <span style={{ color: "red" }}>삭제된 댓글입니다!</span>
-                )}
               </div>
             );
           })}

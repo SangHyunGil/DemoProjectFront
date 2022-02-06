@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 import { getCookie } from '../../utils/cookie';
 import styled from 'styled-components';
 import StudyStatus from './StudyStatus';
+import { TagsWrapper,StatusWrapper } from './BoardDetail';
 
 const StudyCardContainer = styled.div`
     width: 90vw;
@@ -22,8 +23,13 @@ const StudyCardContainer = styled.div`
 `;
 
 const MyStudyCard = styled(Card)`
+    position: relative;
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: column;
     div {
         &:last-child {
+            align-self: flex-end;
             button {
                 a {
                     text-decoration: none;
@@ -36,14 +42,28 @@ const MyStudyCard = styled(Card)`
 `;
 
 const StudyStatusBlock = styled.div`
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem 2rem 0 0;
     display: flex;
+    flex-direction: column;
+    gap: 10px;
     flex-wrap: wrap;
+    color: #339667;
     p {
         padding: 5px 10px;
-        background-color: #55efc4;
+        background-color: #d0fae4;
         border-radius: 5px;
-        margin-left: 10px;
-        &:first-child {
+    }
+    @media (max-width: 460px) {
+        position: relative;
+        display: flex;
+        gap: 1rem;
+        padding: 0;
+        align-items: flex-start;
+        margin-top: 1rem;
+        p {
             margin-left: 0;
         }
     }
@@ -53,7 +73,6 @@ function MyStudy() {
     const {data:studyInfos} = useQuery(["myStudyInfos"],()=>getMyStudyInfo(getCookie('accessToken')),{
         select: (data) => data.data.data,
         retry: false,
-        staleTime: Infinity,
     });
 
     return (
@@ -66,14 +85,16 @@ function MyStudy() {
                        <StudyStatusBlock>
                            <StudyStatus title="recruit" content={c.recruitState} />
                            <StudyStatus title="study" content={c.studyState} />
-                           <StudyStatus title="method" content={c.studyMethod} />
                        </StudyStatusBlock>  
-                       <p>{c.startDate}~{c.endDate}</p>
-                        <p>
+                        <TagsWrapper>
                             {c.tags?.map((tag,index)=>(
-                                <span key={index}>{tag}</span>
+                                <li key={index}>{tag}</li>
                             ))}
-                        </p>
+                        </TagsWrapper>
+                        <StatusWrapper>
+                            <StudyStatus title="method" content={c.studyMethod} />
+                            <p>{c.startDate}~{c.endDate}</p>
+                        </StatusWrapper>
                     </div>
                     <CardActions>
                         <Button size='small'><Link to={`/study/${c.studyId}/edit`}>수정하기</Link></Button>

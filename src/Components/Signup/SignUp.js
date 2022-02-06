@@ -18,12 +18,16 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Button from '@mui/material/Button';
 import {motion} from "framer-motion/dist/framer-motion";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
+
 
 const SignUpformStyle = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
+    width: 50vw;
     margin: 0 auto;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
@@ -52,6 +56,20 @@ const SignUpThumbnailInput = styled.input`
     display: none;
 `;
 
+const ErrorSnackBar = styled(Snackbar)`
+    align-items: center;
+    top: 12% !important;
+    left: auto;
+`;
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+function TransitionLeft(props) {
+  return <Slide {...props} direction="left" />;
+}
+
 function SignUp() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
@@ -60,6 +78,7 @@ function SignUp() {
   const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
+  const [isRegisterErrorUp, setIsRegisterErrorUp] = useState(false);
   const { register, handleSubmit, formState: {errors}, setValue } = useForm();
 
   const { id, email, registerDone, registerError, registerLoading } =
@@ -71,6 +90,10 @@ function SignUp() {
     navigate("/signup/complete", { replace: false });
     dispatch(clearRegisterState());
   }, [registerDone]);
+
+  useEffect(() => {
+    registerError === "" ? setIsRegisterErrorUp(false) : setIsRegisterErrorUp(true);
+  },[registerError]);
 
   const handleUpload = (e) => {
     const { files } = e.target;
@@ -113,9 +136,16 @@ function SignUp() {
     setDepartment(e.target.value);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setIsRegisterErrorUp(false);
+  };
+
   return (
     <div style={{margin:'5% 10%'}}>
-      {registerError === "" ? null : <p> {registerError} </p>}
       <SignUpformStyle
         encType="multipart/form-data"
         onSubmit={handleSubmit(handleSignUp)}
@@ -194,6 +224,9 @@ function SignUp() {
         ) : (
           <SignUpButton whileHover={{scale:1.1,cursor:'pointer'}} type="submit">회원가입</SignUpButton>
         )}
+        <ErrorSnackBar open={isRegisterErrorUp} autoHideDuration={6000} onClose={handleClose} TransitionComponent={TransitionLeft} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}><p> {registerError} </p></Alert>
+        </ErrorSnackBar>
       </SignUpformStyle>
     </div>
   );

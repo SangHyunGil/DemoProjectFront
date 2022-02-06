@@ -15,10 +15,8 @@ import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 
 const Images = [
   "/MainImg/001.png",
-  "https://cdn.pixabay.com/photo/2019/10/11/16/56/cat-4542301_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2015/09/05/20/02/coding-924920_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2017/10/31/19/05/web-design-2906159_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2021/09/12/18/07/robin-6619184_960_720.jpg",
+  "/MainImg/002.png",
+  "/MainImg/003.png",
 ];
 
 const Header = styled(motion.section)`
@@ -39,7 +37,7 @@ const HeaderSlider = styled(Swiper)`
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: fill;
       border-radius: 10px;
     }
   }
@@ -50,6 +48,13 @@ const HeaderSlider = styled(Swiper)`
   .swiper-button-next {
     color: white;
     right: 11%;
+  }
+  @media (max-width: 860px) {
+    .swiper-slide {
+      img {
+        object-fit: cover;
+      }
+    }
   }
 `;
 

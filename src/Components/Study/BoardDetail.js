@@ -103,6 +103,7 @@ const DetailCard = styled(Card)`
 `;
 
 const AvatarWrapper = styled.div`
+  margin-top: 1rem;
   display: inline-flex;
   span {
     display: flex;
@@ -145,6 +146,11 @@ export const Boxstyle = {
   px: 4,
   pb: 3,
   borderRadius: "10px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
+  justifyContent: "center",
+  gap: "1rem",
 };
 
 const StudyStatusWrapper = styled.span`
@@ -178,14 +184,15 @@ const DirectButton = styled.button`
     background-color: #ffbe58;
     transition: all 0.3s linear;
   }
+  margin-bottom: 2rem;
 `;
 
-const TagsWrapper = styled.ul`
+export const TagsWrapper = styled.ul`
+  margin-top: 1rem;
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15%, auto));
   grid-gap: 10px;
-  margin: 0;
   padding: 0;
   justify-content: start;
   li {
@@ -206,7 +213,8 @@ const TagsWrapper = styled.ul`
   }
 `;
 
-const StatusWrapper = styled.div`
+export const StatusWrapper = styled.div`
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   p {
@@ -230,6 +238,17 @@ const CurrentMemberWrapper = styled.div`
   p {
     font-family: "SEBANG_Gothic_Bold", sans-serif;
     font-size: 2rem;
+    margin-top: 1rem;
+  }
+`;
+
+const ApplyForm = styled.form`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  button {
+    align-self: flex-end;
   }
 `;
 
@@ -429,7 +448,9 @@ function BoardDetail({ boardId }) {
         <DetailCard sx={{ width: "calc(100ch + 10px)", marginBottom: "20px" }}>
           <CardContent>
             <h3>내용</h3>
-            <h4 style={{whiteSpace: 'pre'}}>{BoardContent?.content}</h4>
+            <h4 style={{ marginTop: "1rem", whiteSpace: "pre-line" }}>
+              {BoardContent?.content}
+            </h4>
           </CardContent>
         </DetailCard>
       </MainWrapper>
@@ -445,14 +466,14 @@ function BoardDetail({ boardId }) {
           ) : isApply ? (
             <h3>스터디 신청중입니다!</h3>
           ) : (
-            <button
+            <DirectButton
               onClick={() => {
                 setisApplyModalUp(true);
               }}
               name="Join"
             >
               신청하기
-            </button>
+            </DirectButton>
           )
         ) : (
           <h3>로그인 해주세요!</h3>
@@ -468,20 +489,22 @@ function BoardDetail({ boardId }) {
         BackdropComponent={Backdrop}
       >
         <Box sx={Boxstyle}>
-          <h2 id="styled-modal-title">지원서 작성하기</h2>
-          <p id="styled-modal-description">
-            스터디에 입장하기 위해 지원서를 쓰고 대기해 주세요!
-          </p>
-          <form onSubmit={handleSubmit(onApplySubmit)}>
+          <div>
+            <h2 id="styled-modal-title">지원서 작성하기</h2>
+            <p id="styled-modal-description">
+              스터디에 입장하기 위해 지원서를 쓰고 대기해 주세요!
+            </p>
+          </div>
+          <ApplyForm onSubmit={handleSubmit(onApplySubmit)}>
             <StyledTextarea
               {...register("applyContent")}
               aria-label="minimum height"
               minRows={10}
               placeholder="지원서 작성하기"
-              style={{ width: "80%" }}
+              style={{ width: "100%" }}
             />
-            <button type="submit">지원하기</button>
-          </form>
+            <DirectButton type="submit">지원하기</DirectButton>
+          </ApplyForm>
         </Box>
       </StyledModal>
     </>

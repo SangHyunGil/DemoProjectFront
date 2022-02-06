@@ -5,12 +5,13 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import moment from "moment";
 import styled from "styled-components";
-import { Button, TextField } from '@mui/material';
+import { Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import MuiDialog from "../Modal/MuiDialog";
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import MuiTimePicker from "../MuiPicker/MuiTimePicker";
 
 moment.locale("ko-KR");
 const localizer = momentLocalizer(moment); // or globalizeLocalizer
@@ -23,21 +24,32 @@ const CalendarWrapper = styled.div`
     flex-direction: column;
     font-family: "OTWelcomeBA", sans-serif;
     .rbc-toolbar-label-wrapper {
-        display: flex;
-        justify-content: center;
-        margin: 10px 0;
-        .rbc-toolbar-label {
-            font-size: 2rem;
-        }
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+      .rbc-toolbar-label {
+        font-size: 2rem;
+      }
     }
     .rbc-toolbar-button-wrapper {
-        display: flex;
-        button {
-            &:nth-child(2) {
-                margin: 0 10px;
-            }
+      display: flex;
+      button {
+        &:nth-child(2) {
+          margin: 0 10px;
         }
+      }
     }
+  }
+`;
+
+const TimePickerWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  @media (max-width: 330px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
   }
 `;
 
@@ -72,6 +84,13 @@ const Toolbar = (props) => {
   );
 };
 
+const MonthEvent = ({ event }) => {
+  console.log(event);
+  return (
+      <div>{event.title}, {`${(event.startTime?.getHours()+'').padStart(2,'0')}:${(event.startTime?.getMinutes()+'').padStart(2,'0')}`}~{`${(event.endTime?.getHours()+'').padStart(2,'0')}:${(event.endTime?.getMinutes()+'').padStart(2,'0')}`}</div>
+  );
+};
+
 function StudyCalendar() {
   const [events, setEvents] = useState([
     {
@@ -80,6 +99,8 @@ function StudyCalendar() {
       end: moment().add(1, "days").toDate(),
       title: "스터디 하기",
       allDay: false,
+      startTime: new Date(),
+      endTime: new Date(),
     },
     {
       id: 1,
@@ -87,16 +108,32 @@ function StudyCalendar() {
       end: moment().add(2, "days").toDate(),
       title: "백엔드 스터디",
       allDay: false,
+      startTime: new Date(),
+      endTime: new Date(),
     },
   ]);
-  const { register, handleSubmit, setValue } = useForm();
-  const { register:ChangeRegister, handleSubmit:ChangeHandleSubmit, setValue:ChangeSetValue } = useForm();
+  const { register, handleSubmit, setValue, control } = useForm({
+    defaultValues: {
+      startTime: new Date(),
+      endTime: new Date(),
+    },
+  });
+  const {
+    register: ChangeRegister,
+    handleSubmit: ChangeHandleSubmit,
+    setValue: ChangeSetValue,
+    control: ChangeControl,
+  } = useForm();
   const [draggedEvent, setDraggedEvent] = useState(null);
   const [displayDragItemInCell, setDisplayDragItemInCell] = useState(true);
   const [isNewContent, setIsNewContent] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newDate, setNewDate] = useState({});
-  const [currentDate, setCurrentDate] = useState({ id:0 });
+  const [currentDate, setCurrentDate] = useState({ id: 0 });
+  const [currentTime, setCurrentTime] = useState({
+    startTime: '',
+    endTime: '',
+  });
 
   const onEventResize = (data) => {
     const { event, start, end } = data;
@@ -122,7 +159,6 @@ function StudyCalendar() {
       setEvents((e) => [...e, { start, end, title }]);
     }*/
   };
-
   const onDropFromOutside = ({ start, end, allDay }) => {
     const event = {
       id: draggedEvent.id,
@@ -153,14 +189,31 @@ function StudyCalendar() {
   };
 
   const onSubmit = (data) => {
-    setEvents((e) => [...e, { start:newDate?.start, end: newDate?.end, title: data.newEvent, id: events.length }]);
-    setValue("newEvent", "")
+    console.log(data);
+    setEvents((e) => [
+      ...e,
+      {
+        start: newDate?.start,
+        end: newDate?.end,
+        title: data.newEvent,
+        id: events.length,
+        allDay: false,
+        startTime: data.startTime,
+        endTime: data.endTime,
+      },
+    ]);
+    setValue("newEvent", "");
   };
 
   const onChangeSubmit = (data) => {
     const nextEvents = events.map((existingEvent) => {
       return existingEvent.id === currentDate.id
-        ? { ...existingEvent, title: data.defaultEvent }
+        ? {
+            ...existingEvent,
+            title: data.defaultEvent,
+            startTime: data.startTime,
+            endTime: data.endTime,
+          }
         : existingEvent;
     });
     setEvents(nextEvents);
@@ -168,12 +221,14 @@ function StudyCalendar() {
   };
 
   const onEventClickHanlder = (event) => {
-    //console.log(event);
-    const {title, id} = event;
+    console.log(event);
+    const { title, id } = event;
     setIsNewContent(false);
     ChangeSetValue("defaultEvent", title);
     setIsCreateModalOpen(true);
-    setCurrentDate({id})
+    setCurrentDate({ id });
+    ChangeSetValue("startTime", event.startTime);
+    ChangeSetValue("endTime", event.endTime);
   };
 
   return (
@@ -181,6 +236,7 @@ function StudyCalendar() {
       <DnDCalendar
         defaultDate={moment().toDate()}
         defaultView="month"
+        views={["month"]}
         localizer={localizer}
         onEventDrop={moveEvent}
         events={events}
@@ -195,34 +251,81 @@ function StudyCalendar() {
         handleDragStart={handleDragStart}
         components={{
           toolbar: Toolbar,
+          month: {
+            event: MonthEvent,
+          },
         }}
       />
-      <MuiDialog open={isCreateModalOpen} title={isNewContent? '새로운 일정 입력': '기존 일정' } setOpen={setIsCreateModalOpen} >
-        <form onSubmit={isNewContent ?  handleSubmit(onSubmit) : ChangeHandleSubmit(onChangeSubmit)}>
+      <MuiDialog
+        open={isCreateModalOpen}
+        title={isNewContent ? "새로운 일정 입력" : "기존 일정"}
+        setOpen={setIsCreateModalOpen}
+      >
+        <form
+          onSubmit={
+            isNewContent
+              ? handleSubmit(onSubmit)
+              : ChangeHandleSubmit(onChangeSubmit)
+          }
+        >
           <DialogContent>
-            <DialogContentText>{isNewContent ? '새로운 일정을 입력해 주세요!' : '기존 일정입니다'}</DialogContentText>
-            {isNewContent ? <TextField 
-              {...register('newEvent',{required:'일정을 입력해 주세요!'})}
-              fullWidth
-              autoFocus
-              margin="dense"
-              label="일정 입력"
-              variant="standard"
-            /> : <TextField 
-              {...ChangeRegister('defaultEvent',{required:'수정할 일정을 입력해 주세요!'})}
-              fullWidth
-              autoFocus
-              margin="dense"
-              label="기존 일정"
-              variant="standard"
-            />}
+            <DialogContentText>
+              {isNewContent
+                ? "새로운 일정을 입력해 주세요!"
+                : "기존 일정입니다"}
+            </DialogContentText>
+            {isNewContent ? (
+              <TextField
+                {...register("newEvent", { required: "일정을 입력해 주세요!" })}
+                fullWidth
+                autoFocus
+                margin="dense"
+                label="일정 입력"
+                variant="standard"
+              />
+            ) : (
+              <TextField
+                {...ChangeRegister("defaultEvent", {
+                  required: "수정할 일정을 입력해 주세요!",
+                })}
+                fullWidth
+                autoFocus
+                margin="dense"
+                label="기존 일정"
+                variant="standard"
+              />
+            )}
+            <TimePickerWrapper>
+              <MuiTimePicker
+                name="startTime"
+                control={isNewContent ? control : ChangeControl}
+                setValue={isNewContent ? setValue : ChangeSetValue}
+              />
+              <MuiTimePicker
+                name="endTime"
+                control={isNewContent ? control : ChangeControl}
+                setValue={isNewContent ? setValue : ChangeSetValue}
+              />
+            </TimePickerWrapper>
           </DialogContent>
           <DialogActions>
-            <Button type="submit" color="primary" onClick={()=>setIsCreateModalOpen(false)}>확인</Button>
-            <Button type="button" onClick={()=>{
-              setIsCreateModalOpen(false)
-              setValue("newEvent", "");}
-              } color="primary">취소</Button>
+            <Button
+              type="submit"
+              color="primary"
+              onClick={() => setIsCreateModalOpen(false)}
+            >
+              확인
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setIsCreateModalOpen(false);
+                setValue("newEvent", "");
+              }}
+              color="primary"
+            >
+              취소
+            </Button>
           </DialogActions>
         </form>
       </MuiDialog>
