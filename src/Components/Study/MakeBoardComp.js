@@ -8,6 +8,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
@@ -23,26 +24,37 @@ const MakeBoardHeader = styled.header`
     align-items: center;
 `;
 
-const MakeBoardContainer = styled.section`
-    margin: 0 auto;
+export const MakeBoardContainer = styled.section`
+    margin: 2rem auto;
+    padding: 1rem 2rem;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    width: 60vw;
+    border-radius: 10px;
+    @media (max-width: 600px) {
+        width: 80%;
+        box-shadow: none;
+    }
 `;
 
 const MakeBoardForm = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+    .TagsWrapper {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
 `;
 
-const TagsStyle = styled.span`
-    margin-left: 10px;
-    &:first-child {
-        margin-left: 0;
-    }
+export const MakeStudyButton = styled(Button)`
+    background-color: #0049AF;
+    color: white;
+    margin-top: 1rem;
+    width: 100%;
     &:hover {
-        cursor: pointer;
-        background-color: skyblue;
-        padding: 5px 10px;
+        background-color: #FFC107 !important;
     }
 `;
 
@@ -96,6 +108,9 @@ const MakeRoomComp = () => {
     const handleTags = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
+            if (e.target.value === '') {
+                return;
+            }
             const value = e.target.value;
             setTags(prev=>[...prev,{id:prev.length, val:value}]);
             e.target.value = '';
@@ -131,7 +146,7 @@ const MakeRoomComp = () => {
                 <p>스터디를 만들어 볼까요?</p>
             </MakeBoardHeader>
             <MakeBoardForm onSubmit={handleSubmit(onCreateBoard)} >
-                <FormControl sx={{ width: "50ch", m: 1 }}>
+                <FormControl sx={{ width: "100%", m: 1 }}>
                     <InputLabel htmlFor="outlined-study-name">스터디 이름</InputLabel>
                     <OutlinedInput 
                         id="outlined-study-name"
@@ -141,7 +156,7 @@ const MakeRoomComp = () => {
                     />
                     <FormHelperText sx={{color:'red'}}>{errors?.title?.message}</FormHelperText>
                 </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }}>
+                <FormControl sx={{ width: "100%", m: 1 }}>
                     <InputLabel htmlFor="outlined-study-tags">스터디 주제</InputLabel>
                     <OutlinedInput 
                         id="outlined-study-tags"
@@ -149,9 +164,10 @@ const MakeRoomComp = () => {
                         onKeyDown={(e)=>handleTags(e)}
                         {...register('tags')}
                     />
-                    <FormHelperText sx={{color:'blue'}}>{Tags?.map(tag=><TagsStyle onClick={()=>TagsClickHandler(tag.id)} key={tag.id}>{tag.val}</TagsStyle>)}</FormHelperText>
+                    <FormHelperText sx={{color:'#0049AF'}}>내용을 작성하고 엔터를 눌러보세요!</FormHelperText>
+                    <div className="TagsWrapper" sx={{color:'blue'}}>{Tags?.map(tag=><Chip label={tag.val} onDelete={()=>TagsClickHandler(tag.id)} onClick={()=>TagsClickHandler(tag.id)} key={tag.id} />)}</div>
                 </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }}>
+                <FormControl sx={{ width: "100%", m: 1 }}>
                     <InputLabel htmlFor="outlined-study-headCount">스터디 인원</InputLabel>
                     <OutlinedInput 
                         id="outlined-study-headCount"
@@ -162,7 +178,7 @@ const MakeRoomComp = () => {
                     />
                     <FormHelperText sx={{color:'red'}}>{errors?.headCount?.message}</FormHelperText>
                 </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }}> 
+                <FormControl sx={{ width: "100%", m: 1 }}> 
                     <TextField 
                         id="outlined-study-content"
                         label="스터디 내용"
@@ -189,7 +205,7 @@ const MakeRoomComp = () => {
                             const [year,month,day] = [date.getFullYear(),date.getMonth()+1,date.getDate()];
                             setstartDay(`${year}-${month}-${day}`);
                         }}
-                        renderInput={(params) => <TextField sx={{ width: "50ch", m: 1 }} {...params} />}
+                        renderInput={(params) => <TextField sx={{ width: "100%", m: 1 }} {...params} />}
                     />
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={DateAdapter} >
@@ -201,17 +217,17 @@ const MakeRoomComp = () => {
                             const [year,month,day] = [date.getFullYear(),date.getMonth()+1,date.getDate()];
                             setendDay(`${year}-${month}-${day}`);
                         }}
-                        renderInput={(params) => <TextField sx={{ width: "50ch", m: 1 }} {...params} />}
+                        renderInput={(params) => <TextField sx={{ width: "100%", m: 1 }} {...params} />}
                     />
                 </LocalizationProvider>
-                <FormControl sx={{ width: "50ch", m: 1 }}>
+                <FormControl sx={{ width: "100%", m: 1 }}>
                     <select {...register('method')}>
                         <option value="FACE">대면</option>
                         <option value="NONFACE">비대면</option>
                         <option value="UNDEFINED">미정</option>
                     </select>
                 </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }}>
+                <FormControl sx={{ width: "100%", m: 1 }}>
                     <select  {...register('department')}>
                         <option value="cse">컴퓨터공학부</option>
                         <option value="me">기계공학부</option>
@@ -224,15 +240,8 @@ const MakeRoomComp = () => {
                         <option value="other">기타</option>
                     </select>
                 </FormControl>
-                {previewImg === '' ? null : <img src={previewImg} alt="preview" style={{width:'10ch'}}/>}
-                <label htmlFor="contained-button-file">
-                    <input style={{display:'none'}} accept="image/*" id="contained-button-file" name="thumbNailImg" type="file" onChange={handleUpload}/>
-                    <Button variant="contained" component="span" sx={{m:2}}>
-                        썸네일 이미지 선택
-                    </Button>
-                </label>
                 <label htmlFor="studyState">스터디 상태</label>
-                <select {...register('studyState')}>
+                <select {...register('studyState')} style={{width: '100%'}}>
                     {study.map((x) => (
                         <option key={x.id} value={x.val}>{x.val}</option>
                     ))}
@@ -251,8 +260,15 @@ const MakeRoomComp = () => {
                         onChange={()=>{setRecruitState(x.val)}} />
                         <label htmlFor={x.val}>{x.text}</label>
                     </React.Fragment>)}
-                </div> <b />
-                <button type="submit">개설</button>
+                </div>
+                {previewImg === '' ? null : <img src={previewImg} alt="preview" style={{width:'20%'}}/>}
+                <label htmlFor="contained-button-file">
+                    <input style={{display:'none'}} accept="image/*" id="contained-button-file" name="thumbNailImg" type="file" onChange={handleUpload}/>
+                    <Button variant="contained" component="span" sx={{m:2}}>
+                        썸네일 이미지 선택
+                    </Button>
+                </label>
+                <MakeStudyButton variant="contained" type="submit">개설</MakeStudyButton>
             </MakeBoardForm>
         </MakeBoardContainer>
     )

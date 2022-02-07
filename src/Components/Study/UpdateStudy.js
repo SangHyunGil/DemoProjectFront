@@ -14,6 +14,8 @@ import Button from '@mui/material/Button';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
+import Chip from '@mui/material/Chip';
+import { MakeStudyButton, MakeBoardContainer } from './MakeBoardComp';
 
 const TagsStyle = styled.span`
     margin-left: 10px;
@@ -31,6 +33,12 @@ const UpdateFormStyle = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
+    .TagsWrapper {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
 `;
 
 const study = [
@@ -133,19 +141,20 @@ function UpdateStudy() {
     };
 
     return (
-        <>
-            <h1>수정 페이지</h1>
+        <MakeBoardContainer>
+            <h1 style={{textAlign:'center'}}>수정 페이지</h1>
             <UpdateFormStyle onSubmit={handleSubmit(UpdateSubmitHandler)}>
-                <FormControl>
-                    <InputLabel htmlFor="BoardTitle">제목</InputLabel>
-                    <OutlinedInput
-                        id="BoardTitle"
-                        label="제목"
+            <FormControl sx={{ width: "100%", m: 1 }}>
+                    <InputLabel htmlFor="outlined-study-name">스터디 이름</InputLabel>
+                    <OutlinedInput 
+                        id="outlined-study-name"
+                        label="스터디 이름"
                         onKeyDown={(e)=>{CheckKeyDown(e)}}
-                        {...register('title', {value:' '})}
+                        {...register('title',{required:'스터디 이름을 입력해 주세요'})}
                     />
+                    <FormHelperText sx={{color:'red'}}>{errors?.title?.message}</FormHelperText>
                 </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }}>
+                <FormControl sx={{ width: "100%", m: 1 }}>
                     <InputLabel htmlFor="outlined-study-tags">스터디 주제</InputLabel>
                     <OutlinedInput 
                         id="outlined-study-tags"
@@ -153,15 +162,26 @@ function UpdateStudy() {
                         onKeyDown={(e)=>handleTags(e)}
                         {...register('tags')}
                     />
-                    <FormHelperText sx={{color:'blue'}}>{Tags?.map(tag=><TagsStyle onClick={()=>TagsClickHandler(tag.id)} key={tag.id}>{tag.val}</TagsStyle>)}</FormHelperText>
+                    <FormHelperText sx={{color:'#0049AF'}}>내용을 작성하고 엔터를 눌러보세요!</FormHelperText>
+                    <div className="TagsWrapper" sx={{color:'blue'}}>{Tags?.map(tag=><Chip label={tag.val} onDelete={()=>TagsClickHandler(tag.id)} onClick={()=>TagsClickHandler(tag.id)} key={tag.id} />)}</div>
                 </FormControl>
-                <FormControl>
+                <FormControl sx={{ width: "100%", m: 1 }}>
+                    <InputLabel htmlFor="outlined-study-headCount">스터디 인원</InputLabel>
+                    <OutlinedInput 
+                        id="outlined-study-headCount"
+                        label="스터디 인원"
+                        type="number"
+                        onKeyDown={(e)=>{CheckKeyDown(e)}}
+                        {...register('headCount',{required:'스터디 인원을 입력해 주세요',pattern:{value:/^\d*[1-9]\d*$/, message:'0이상의 숫자만 입력해 주세요'}})}
+                    />
+                    <FormHelperText sx={{color:'red'}}>{errors?.headCount?.message}</FormHelperText>
+                </FormControl>
+                <FormControl sx={{ width: "100%", m: 1 }}> 
                     <TextField 
-                        id="BoardContent"
-                        label="내용"
+                        id="outlined-study-content"
+                        label="스터디 내용"
                         multiline
                         fullWidth
-                        rows={5}
                         onKeyDown={(e)=>{
                             if(e.key === 'Enter'){
                                 if (!e.shiftKey){
@@ -169,54 +189,43 @@ function UpdateStudy() {
                                 }
                             }
                         }}
+                        rows={5}
                         {...register('content',{required:'스터디 내용을 입력해 주세요'})}
                     />
-                </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }}>
-                    <InputLabel htmlFor="outlined-study-headCount">스터디 인원</InputLabel>
-                    <OutlinedInput 
-                        id="outlined-study-headCount"
-                        label="스터디 인원"
-                        type="number"
-                        onKeyDown={(e)=>{CheckKeyDown(e)}}
-                        {...register('headCount',{value: ' ',required:'스터디 인원을 입력해 주세요',pattern:{value:/^\d*[1-9]\d*$/, message:'0이상의 숫자만 입력해 주세요'}})}
-                    />
-                    <FormHelperText sx={{color:'red'}}>{errors?.headCount?.message}</FormHelperText>
+                    <FormHelperText sx={{color:'red'}}>{errors?.content?.message}</FormHelperText>
                 </FormControl>
                 <LocalizationProvider dateAdapter={DateAdapter} sx={{m:1}}>
                     <DatePicker
-                        inputFormat="yyyy/MM/dd"
                         label="스터디 시작날짜"
                         value={startDay}
                         onChange={(date)=>{
-                            setstartDay(date);
-                            /*
+                            //setstartDay(date);
                             const [year,month,day] = [date.getFullYear(),date.getMonth()+1,date.getDate()];
-                            setstartDay(`${year}-${month}-${day}`);*/
+                            setstartDay(`${year}-${month}-${day}`);
                         }}
-                        renderInput={(params) => <TextField sx={{ width: "50ch", m: 1 }} {...params} />}
+                        renderInput={(params) => <TextField sx={{ width: "100%", m: 1 }} {...params} />}
                     />
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={DateAdapter} >
                     <DatePicker
-                        inputFormat="yyyy/MM/dd"
+                        
                         label="스터디 종료날짜"
                         value={endDay}
                         onChange={(date)=>{
                             const [year,month,day] = [date.getFullYear(),date.getMonth()+1,date.getDate()];
                             setendDay(`${year}-${month}-${day}`);
                         }}
-                        renderInput={(params) => <TextField sx={{ width: "50ch", m: 1 }} {...params} />}
+                        renderInput={(params) => <TextField sx={{ width: "100%", m: 1 }} {...params} />}
                     />
                 </LocalizationProvider>
-                <FormControl sx={{ width: "50ch", m: 1 }}>
+                <FormControl sx={{ width: "100%", m: 1 }}>
                     <select {...register('method')}>
                         <option value="FACE">대면</option>
                         <option value="NONFACE">비대면</option>
                         <option value="UNDEFINED">미정</option>
                     </select>
                 </FormControl>
-                <FormControl sx={{ width: "50ch", m: 1 }}>
+                <FormControl sx={{ width: "100%", m: 1 }}>
                     <select  {...register('department')}>
                         <option value="cse">컴퓨터공학부</option>
                         <option value="me">기계공학부</option>
@@ -229,37 +238,37 @@ function UpdateStudy() {
                         <option value="other">기타</option>
                     </select>
                 </FormControl>
-                {previewImg === '' ? null : <img src={previewImg} alt="preview" style={{width:'10ch'}}/>}
+                <label htmlFor="studyState">스터디 상태</label>
+                <select {...register('studyState')} style={{width: '100%'}}>
+                    {study.map((x) => (
+                        <option key={x.id} value={x.val}>{x.val}</option>
+                    ))}
+                </select>
+                <label htmlFor="recruitState">모집 상태</label>
+                <div>
+                    {recruit.map((x) =>
+                    <React.Fragment key={x.id}>
+                        <input
+                        id = {x.val}
+                        name={x.val}
+                        type="radio" 
+                        value={x.val} 
+                        {...register('recruitState',{required: '모집 상태를 선택해 주세요!'})}
+                        checked={recruitState===x.val}
+                        onChange={()=>{setRecruitState(x.val)}} />
+                        <label htmlFor={x.val}>{x.text}</label>
+                    </React.Fragment>)}
+                </div>
+                {previewImg === '' ? null : <img src={previewImg} alt="preview" style={{width:'20%'}}/>}
                 <label htmlFor="contained-button-file">
                     <input style={{display:'none'}} accept="image/*" id="contained-button-file" name="thumbNailImg" type="file" onChange={handleUpload}/>
                     <Button variant="contained" component="span" sx={{m:2}}>
                         썸네일 이미지 선택
                     </Button>
                 </label>
-                <label htmlFor="studyState">스터디 상태</label>
-                <select {...register('studyState')}>
-                    {study.map((x) => (
-                        <option key={x.id} value={x.val}>{x.val}</option>
-                    ))}
-                </select>
-                <div>
-                    <label htmlFor="recruitState">모집 상태</label>
-                        {recruit.map((x) =>
-                        <React.Fragment key={x.id}>
-                            <input
-                            id = {x.val}
-                            name={x.val}
-                            type="radio" 
-                            value={x.val} 
-                            {...register('recruitState',{required: '모집 상태를 선택해 주세요!'})}
-                            checked={recruitState===x.val}
-                            onChange={()=>{setRecruitState(x.val)}} />
-                            <label htmlFor={x.val}>{x.text}</label>
-                        </React.Fragment>)}
-                </div>
-                <button type="submit">수정</button>
+                <MakeStudyButton variant="contained" type="submit">수정</MakeStudyButton>
             </UpdateFormStyle>
-        </>
+        </MakeBoardContainer>
     )
 }
 

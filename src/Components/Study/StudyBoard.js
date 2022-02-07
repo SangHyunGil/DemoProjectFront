@@ -15,10 +15,18 @@ const CategoryWrapper = styled.div`
   padding: 1rem;
   border-bottom: 2px solid #e6e6e6;
   .StudyList {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
     font-size: 1.5rem;
   }
   .MenuIcon {
     font-size: 2rem;
+  }
+  @media (max-width: 380px) {
+    .StudyList {
+      flex-direction: column;
+    }
   }
 `;
 
@@ -38,6 +46,7 @@ function StudyBoard() {
   const [IsGranted, setIsGranted] = useState(false);
   const { studyId } = useParams();
   const [DrawerState, setDrawerState] = useState(false);
+  const [currentBoard, setCurrentBoard] = useState('');
 
   const myinfos = queryClient.getQueryData(["loadMyInfo"]);
 
@@ -65,6 +74,9 @@ function StudyBoard() {
     () => getBoardCategory(studyId, getCookie("accessToken")),
     {
       select: (cat) => cat.data.data,
+      onSuccess: (data) => {
+        setCurrentBoard(data[0].title);
+      },
       retry: false,
       staleTime: Infinity,
     }
@@ -93,7 +105,7 @@ function StudyBoard() {
           <MenuIcon className="MenuIcon" />
         </IconButton>
         <div className="StudyList">
-          <p style={{fontFamily:'SEBANG_Gothic_Bold, sans-serif'}}>스터디 게시판 목록</p>
+          <p style={{fontFamily:'SEBANG_Gothic_Bold, sans-serif'}}>스터디 게시판 목록-<span style={{color:'#0049AF'}}>{currentBoard}</span></p>
         </div>
         <SwipeableDrawer
           anchor="left"
@@ -114,19 +126,20 @@ function StudyBoard() {
                 activeclassname="active"
                 to={`/study/${studyId}/board/${cat.studyBoardId}/articles`}
                 key={cat.studyBoardId}
+                onClick={()=>setCurrentBoard(cat.title)}
               >
                 {cat.title}
               </Category>
             ))}
             {IsGranted && (
-              <Category to={`/study/${studyId}/board/manage`}>
+              <Category to={`/study/${studyId}/board/manage`} onClick={()=>setCurrentBoard('게시판 관리')}>
                 게시판 관리
               </Category>
             )}
             <Category to={`/study/${studyId}`} style={{ color: "black" }}>
               게시판 정보
             </Category>
-            <Category to={`/study/${studyId}/board/calendar`}>
+            <Category to={`/study/${studyId}/board/calendar`} onClick={()=>setCurrentBoard('캘린더')}>
               스터디 캘린더
             </Category>
           </DrawerWrapper>
