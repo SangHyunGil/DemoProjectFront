@@ -61,7 +61,8 @@ const StudyMemberContainer = styled.div`
     justify-content: space-between;
     span {
       &:first-child {
-        font-size: 1rem;
+        font-size: 1.2rem;
+        align-self: flex-end;
       }
       &:last-child {
         font-size: 0.8rem;
@@ -578,6 +579,7 @@ function StudyManage() {
                 />
               </FormControl>
             </div>
+            <span style={{color:'red',textAlign:'center'}}>{errors2?.newBoardCategory?.message}</span>
             <div className="Action">
               <button type="submit">수정</button>
               <button type="button" onClick={deleteStudyBoardCategoryHandler}>
@@ -585,7 +587,6 @@ function StudyManage() {
               </button>
             </div>
           </form>
-          {errors2?.newBoardCategory?.message}
         </CategoryChangeModal>
       </MuiDialog>
     </>

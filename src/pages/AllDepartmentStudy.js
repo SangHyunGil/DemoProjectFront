@@ -137,6 +137,11 @@ const NotFoundStudyStyle = styled.div`
         color: white !important;
         padding: 10px 20px;
         background-color: #0049AF;
+        transition: all .3s linear;
+        &:hover {
+          background-color: #FFC107;
+          transition: all .3s linear;
+        }
     }
     margin-bottom: 10%;
     @media (max-width: 400px) {
