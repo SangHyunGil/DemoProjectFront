@@ -434,3 +434,11 @@ export const updateStudySchedule = async (studyId, scheduleId, data, accessToken
     }
   );
 };
+
+export const deleteStudySchedule = async (studyId, scheduleId, accessToken) => {
+  return await axios.delete(`/study/${studyId}/schedule/${scheduleId}`, {
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};

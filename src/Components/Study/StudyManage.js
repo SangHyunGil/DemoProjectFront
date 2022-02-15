@@ -397,7 +397,7 @@ function StudyManage() {
                 const { studyRole } = Member;
                 if (studyRole !== "APPLY") {
                   return (
-                    <StudyMemberContainer key={Member.id}>
+                    <StudyMemberContainer key={Member.nickname}>
                       <div className="StudyMemberWrapper">
                         <span>{Member.name}</span>
                         <span>{Member.studyRole}</span>
@@ -480,9 +480,9 @@ function StudyManage() {
                 onClick={() => {
                   setIsBoardCategoryModalUp(true);
                   setBoardCategoryName(b.title);
-                  setBoardCategoryId(b.studyBoardId);
+                  setBoardCategoryId(b.id);
                 }}
-                key={b.studyBoardId}
+                key={b.id}
               >
                 {b.title}
               </BoardCatergoryWrapper>

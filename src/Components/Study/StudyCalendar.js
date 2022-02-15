@@ -17,6 +17,7 @@ import {
   getStudySchedule,
   createStudySchedule,
   updateStudySchedule,
+  deleteStudySchedule
 } from "../../Api/Api";
 import { useParams } from "react-router-dom";
 import { getCookie } from "../../utils/cookie";
@@ -93,7 +94,7 @@ const Toolbar = (props) => {
 };
 
 const MonthEvent = ({ event }) => {
-  console.log(event);
+  //console.log(event);
   return (
     <React.Fragment>
       <div>{event.title}</div>
@@ -107,24 +108,7 @@ const MonthEvent = ({ event }) => {
 //padstart
 
 function StudyCalendar() {
-  const [events, setEvents] = useState([
-    {
-      id: 0,
-      start: moment().toDate(),
-      end: moment().add(1, "days").toDate(),
-      title: "스터디 하기",
-      startTime: new Date(),
-      endTime: new Date(),
-    },
-    {
-      id: 1,
-      start: moment().toDate(),
-      end: moment().add(2, "days").toDate(),
-      title: "백엔드 스터디",
-      startTime: new Date(),
-      endTime: new Date(),
-    },
-  ]);
+  const [events, setEvents] = useState([]);
 
   const { register, handleSubmit, setValue, control } = useForm({
     defaultValues: {
@@ -180,14 +164,26 @@ function StudyCalendar() {
     }
   );
 
+  const deleteScheduleMutation = useMutation(
+    (scheduleId) => deleteStudySchedule(studyId, scheduleId, getCookie("accessToken")),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(["getStudySchedule", studyId]);
+      },
+    }
+  );
+
   const onEventResize = (data) => {
     const { event, start, end } = data;
-    const nextEvents = events.map((existingEvent) => {
-      return existingEvent.id === event.id
-        ? { ...existingEvent, start, end }
-        : existingEvent;
+    const MovedEvent = events.find((e) => e.id === event.id);
+    updateScheduleMutation.mutate({
+      data: {
+        ...MovedEvent,
+        start: start + "",
+        end: end + "",
+      },
+      scheduleId: event.id,
     });
-    setEvents(nextEvents);
   };
 
   const handleDragStart = (event) => {
@@ -217,13 +213,18 @@ function StudyCalendar() {
 
   const moveEvent = ({ event, start, end }) => {
     //console.log(event);
-    const nextEvents = events.map((existingEvent) => {
-      return existingEvent.id === event.id
-        ? { ...existingEvent, start, end }
-        : existingEvent;
+    console.log('dragged')
+    const MovedEvent = events.find((e) => e.id === event.id);
+    updateScheduleMutation.mutate({
+      data: {
+        ...MovedEvent,
+        start: start + "",
+        end: end + "",
+      },
+      scheduleId: event.id,
     });
     //console.log(nextEvents);
-    setEvents(nextEvents);
+    //setEvents(nextEvents);
   };
 
   const onSubmit = (data) => {
@@ -253,6 +254,7 @@ function StudyCalendar() {
   };
 
   const onChangeSubmit = (data) => {
+    /*
     const nextEvents = events.map((existingEvent) => {
       return existingEvent.id === currentDate.id
         ? {
@@ -262,10 +264,11 @@ function StudyCalendar() {
             endTime: data.endTime + "",
           }
         : existingEvent;
-    });
+    });*/
+    const ChangedEvent = events.find((event) => event.id === currentDate.id);
     updateScheduleMutation.mutate({
       data: {
-        
+        ...ChangedEvent,
         title: data.defaultEvent,
         startTime: data.startTime + "",
         endTime: data.endTime + "",
@@ -285,6 +288,14 @@ function StudyCalendar() {
     setCurrentDate({ id });
     ChangeSetValue("startTime", event.startTime);
     ChangeSetValue("endTime", event.endTime);
+  };
+
+  const onEventDeleteHanlder = () => {
+    //console.log(currentDate);
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      deleteScheduleMutation.mutate(currentDate.id);
+      setIsCreateModalOpen(false);
+    }
   };
 
   return (
@@ -382,6 +393,13 @@ function StudyCalendar() {
             >
               취소
             </Button>
+            {!isNewContent && <Button
+              type="button"
+              color="error"
+              onClick={onEventDeleteHanlder}
+            >
+              삭제
+            </Button>}
           </DialogActions>
         </form>
       </MuiDialog>
