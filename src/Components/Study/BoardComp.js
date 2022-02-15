@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { findAllBoards, findBoard } from "../../Api/Api";
+import React, {useState } from "react";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
 import { Outlet,Link } from "react-router-dom";
@@ -19,36 +18,12 @@ import {useParams} from 'react-router-dom'
 const StudyWrapper = styled.section`
 `;
 
-const CardWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(6, minmax(200px,1fr));
-  grid-auto-rows: 1fr;
-  grid-gap: 10px;
-  margin: 10px 10%;
-  justify-items: center;
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-`;
-
 const AddCircleButton = styled(AddCircleIcon)`
   position: fixed;
   bottom: 10px;
   right: 10px;
   cursor: pointer;
   z-index: 100;
-`;
-
-const StudyCard = styled(Card)`
-  text-decoration: none;
-`;
-
-const TagWrapper = styled.span`
-  background-color: #fd79a8;
-  border-radius: 5px;
-  padding: 0 5px;
-  color: white;
-  font-size: 12px;
 `;
 
 const DepartWrapper = styled(Swiper)`
@@ -118,15 +93,15 @@ const StudyInfoWrapper = styled.section`
 `;
 
 const Depart = [
-  { id: 0, headTo: 'me', val: "기계공학부",ename:'School Of Mechanical Engineering', img: "/department/mech.jpg" },
-  { id: 1, headTo: 'ece', val: "전기전자통신공학부",ename:'School of Electrical, Electronics & Communication Engineering',img: "/department/electro.jpg" },
-  { id: 2, headTo: 'dea', val: "디자인,건축공학부",ename:'School of Industrial Design Engineering & Architectural Engineering',img: "/department/designArch.jpg" },
-  { id: 3, headTo: 'mce', val: "메카트로닉스공학부",ename:'School of Mechatronics Engineering', img: "/department/meca.jpg" },
-  { id: 4, headTo: 'im', val: "산업경영학부",ename:'School of Industrial Management', img: "/department/industiral.jpg" },
-  { id: 5, headTo: 'emce', val: "에너지신소재 화학공학부",ename:'School of Energy Materials and Chemical Engineering', img: "/department/energyChemical.jpg" },
-  { id: 6, headTo: 'cse', val: "컴퓨터공학부",ename:'School of Computer Science and Engineering', img: "/department/cse.jpg" },
-  { id: 7, headTo: 'esp', val: "고용서비스정책학부",ename:'Department of Employment Services Policy', img: "/department/employmentService.jpg"},
-  { id: 8, headTo: 'other', val: "기타",ename:'others', img: "/kut_logo.gif"},
+  { id: 0, headTo: 'ME', val: "기계공학부",ename:'School Of Mechanical Engineering', img: "/department/mech.jpg" },
+  { id: 1, headTo: 'ECE', val: "전기전자통신공학부",ename:'School of Electrical, Electronics & Communication Engineering',img: "/department/electro.jpg" },
+  { id: 2, headTo: 'DEA', val: "디자인,건축공학부",ename:'School of Industrial Design Engineering & Architectural Engineering',img: "/department/designArch.jpg" },
+  { id: 3, headTo: 'MCE', val: "메카트로닉스공학부",ename:'School of Mechatronics Engineering', img: "/department/meca.jpg" },
+  { id: 4, headTo: 'IM', val: "산업경영학부",ename:'School of Industrial Management', img: "/department/industiral.jpg" },
+  { id: 5, headTo: 'EMCE', val: "에너지신소재 화학공학부",ename:'School of Energy Materials and Chemical Engineering', img: "/department/energyChemical.jpg" },
+  { id: 6, headTo: 'CSE', val: "컴퓨터공학부",ename:'School of Computer Science and Engineering', img: "/department/cse.jpg" },
+  { id: 7, headTo: 'ESP', val: "고용서비스정책학부",ename:'Department of Employment Services Policy', img: "/department/employmentService.jpg"},
+  { id: 8, headTo: 'ETC', val: "기타",ename:'others', img: "/kut_logo.gif"},
 ];
 
 const BoardComp = () => {

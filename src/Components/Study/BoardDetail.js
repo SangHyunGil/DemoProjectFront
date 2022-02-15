@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { findBoard, join, getBoardCategory } from "../../Api/Api";
-import { useSelector, useDispatch } from "react-redux";
+import { findBoard, join, getBoardCategory, getStudyMembers } from "../../Api/Api";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
@@ -299,10 +299,14 @@ function BoardDetail({ boardId }) {
     }
   );
 
+  const { data: BoardMember } = useQuery(['loadBoardMembers', params.boardId], () => getStudyMembers(params.boardId,getCookie('accessToken')), {
+    select: (x) => x.data.data,
+  });
+
   useEffect(() => {
     if (BoardContent) {
       let a = BoardContent?.joinCount;
-      BoardContent?.studyMembers?.forEach((member) => {
+      BoardMember?.forEach((member) => {
         const { nickname: Nick, studyRole } = member;
         if (nickname === Nick) {
           if (studyRole === "APPLY") {
@@ -322,7 +326,7 @@ function BoardDetail({ boardId }) {
         : setisClosed(false);
       setJoinCnt(a);
     }
-  }, [BoardContent, nickname, IsAlreadyJoined]);
+  }, [BoardContent, nickname, IsAlreadyJoined, BoardMember]);
 
   const BoardDetailHandler = (e) => {
     if (isChecked && isLogin) {

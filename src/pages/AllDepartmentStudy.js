@@ -160,7 +160,7 @@ function AllDepartmentStudy() {
             if(!hasNext){
                 return undefined;
             }
-            return {studyId:data[data.length-1].studyId,department,size:8};
+            return {studyId:data[data.length-1].id,department,size:8};
         },
         onSuccess: (data)=>{
             console.log(data);
@@ -192,19 +192,20 @@ function AllDepartmentStudy() {
                                 creator: { profileImgUrl },
                               } = board;
                               return (
-                                <Link to={`/study/${board.studyId}`} key={board.studyId}>
+                                <Link to={`/study/${board.id}`} key={board.id}>
                                   <StudyCardWrapper
                                     variants={StudyWrapperVariants}
                                     initial="hidden"
                                     whileHover="visible"
                                     exit="hidden"
-                                    layoutId={`Detail${board.studyId}`}
+                                    layoutId={`Detail${board.id}`}
                                     ref={idx === page?.data?.data?.data?.length-1 ? ref : null}
                                   >
                                     <StudyProceedStatus><StudyStatus title="recruit" content={board.recruitState}/></StudyProceedStatus>
                                     <StudyCard>
                                       <CardMedia 
                                         component="img"
+                                        style={{objectFit: "scale-down"}}
                                         height="200"
                                         alt="Study"
                                         image={profileImg}
