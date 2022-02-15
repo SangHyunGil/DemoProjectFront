@@ -299,13 +299,13 @@ function BoardDetail({ boardId }) {
     }
   );
 
-  const { data: BoardMember } = useQuery(['loadBoardMembers', params.boardId], () => getStudyMembers(params.boardId,getCookie('accessToken')), {
+  const { data: BoardMember } = useQuery(['loadBoardMembers', params.boardId], () => getStudyMembers(params.boardId), {
     select: (x) => x.data.data,
   });
 
   useEffect(() => {
-    if (BoardContent) {
-      let a = BoardContent?.joinCount;
+    if (BoardContent && BoardMember) {
+      let a = BoardMember.length;
       BoardMember?.forEach((member) => {
         const { nickname: Nick, studyRole } = member;
         if (nickname === Nick) {
@@ -332,7 +332,7 @@ function BoardDetail({ boardId }) {
     if (isChecked && isLogin) {
       if (e.target.name === "Direct") {
         navigate(
-          `/study/${params.boardId}/board/${board[0].studyBoardId}/articles`
+          `/study/${params.boardId}/board/${board[0].id}/articles`
         );
         return;
       }
@@ -428,8 +428,8 @@ function BoardDetail({ boardId }) {
         <DetailCard sx={{ width: "50ch" }}>
           <CardContent>
             <h3>스터디 원들</h3>
-            {BoardContent?.studyMembers?.map((m) => {
-              const { nickname: Nick, profileImgUrl, studyRole } = m;
+            {BoardMember?.map((m) => {
+              const { nickname: Nick, profileUrlImg, studyRole } = m;
               if (studyRole === "APPLY") {
                 return null;
               }
@@ -438,9 +438,7 @@ function BoardDetail({ boardId }) {
                   <Avatar
                     alt={Nick}
                     src={
-                      profileImgUrl === "디폴트이미지 경로"
-                        ? defaultProfileImgUrl
-                        : profileImgUrl
+                      profileUrlImg
                     }
                   />
                   <span>{Nick}</span>
@@ -453,7 +451,7 @@ function BoardDetail({ boardId }) {
           <CardContent>
             <h3>내용</h3>
             <h4 style={{ marginTop: "1rem", whiteSpace: "pre-line" }}>
-              {BoardContent?.content}
+              {BoardContent?.description}
             </h4>
           </CardContent>
         </DetailCard>

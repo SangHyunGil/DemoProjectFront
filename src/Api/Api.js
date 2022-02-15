@@ -403,3 +403,34 @@ export const changepassword = async (data,accessToken) => {
     }
   });
 };
+
+export const createStudySchedule = async (studyId, data, accessToken) => {
+  return await axios.post(
+    `/study/${studyId}/schedule`,
+    data,
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
+};
+
+export const getStudySchedule = async (studyId, accessToken) => {
+  return await axios.get(`/study/${studyId}/schedule`, {
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    },
+  });
+};
+
+export const updateStudySchedule = async (studyId, scheduleId, data, accessToken) => {
+  return await axios.put(
+    `/study/${studyId}/schedule/${scheduleId}`,
+    data, {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
+};

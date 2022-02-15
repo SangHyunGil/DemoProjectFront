@@ -280,7 +280,7 @@ function StudyManage() {
 
   const { data: Members } = useQuery(
     ["studyMembers", studyId],
-    () => getStudyMembers(studyId, getCookie("accessToken")),
+    () => getStudyMembers(studyId),
     {
       select: (x) => x.data.data,
     }
@@ -416,7 +416,7 @@ function StudyManage() {
                 const { studyRole } = Member;
                 if (studyRole === "APPLY") {
                   return (
-                    <React.Fragment key={Member.id}>
+                    <React.Fragment key={Member.nickname}>
                       <div>
                         <ApplicantStyle
                           onClick={() => {

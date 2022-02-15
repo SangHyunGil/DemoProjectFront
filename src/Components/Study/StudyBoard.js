@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
-import { getBoardCategory, findBoard } from "../../Api/Api";
+import { getBoardCategory, findBoard, getStudyMembers } from "../../Api/Api";
 import { useQuery, useQueryClient } from "react-query";
 import { getCookie } from "../../utils/cookie";
 import { Category } from "../Categories/Categories";
@@ -52,9 +52,9 @@ function StudyBoard() {
 
   const { data: studyInfos } = useQuery(
     [`studyInfos`, studyId],
-    () => findBoard(studyId),
+    () => getStudyMembers(studyId),
     {
-      select: (data) => data.data.data.studyMembers,
+      select: (data) => data.data.data,
       onSuccess: (data) => {
         const myInfo = data.find(
           (info) => info.nickname === myinfos?.data?.data?.nickname
@@ -124,8 +124,8 @@ function StudyBoard() {
             {category?.map((cat) => (
               <Category
                 activeclassname="active"
-                to={`/study/${studyId}/board/${cat.studyBoardId}/articles`}
-                key={cat.studyBoardId}
+                to={`/study/${studyId}/board/${cat.id}/articles`}
+                key={cat.id}
                 onClick={()=>setCurrentBoard(cat.title)}
               >
                 {cat.title}

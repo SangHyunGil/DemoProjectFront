@@ -12,6 +12,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import MuiTimePicker from "../MuiPicker/MuiTimePicker";
+import { useQueryClient, useMutation, useQuery } from "react-query";
+import {
+  getStudySchedule,
+  createStudySchedule,
+  updateStudySchedule,
+} from "../../Api/Api";
+import { useParams } from "react-router-dom";
+import { getCookie } from "../../utils/cookie";
 
 moment.locale("ko-KR");
 const localizer = momentLocalizer(moment); // or globalizeLocalizer
@@ -87,9 +95,16 @@ const Toolbar = (props) => {
 const MonthEvent = ({ event }) => {
   console.log(event);
   return (
-      <div>{event.title}, {`${(event.startTime?.getHours()+'').padStart(2,'0')}:${(event.startTime?.getMinutes()+'').padStart(2,'0')}`}~{`${(event.endTime?.getHours()+'').padStart(2,'0')}:${(event.endTime?.getMinutes()+'').padStart(2,'0')}`}</div>
+    <React.Fragment>
+      <div>{event.title}</div>
+      <div>
+        {moment(event?.startTime).format("hh:mm a")}~
+        {moment(event?.endTime).format("hh:mm a")}
+      </div>
+    </React.Fragment>
   );
 };
+//padstart
 
 function StudyCalendar() {
   const [events, setEvents] = useState([
@@ -98,7 +113,6 @@ function StudyCalendar() {
       start: moment().toDate(),
       end: moment().add(1, "days").toDate(),
       title: "스터디 하기",
-      allDay: false,
       startTime: new Date(),
       endTime: new Date(),
     },
@@ -107,11 +121,11 @@ function StudyCalendar() {
       start: moment().toDate(),
       end: moment().add(2, "days").toDate(),
       title: "백엔드 스터디",
-      allDay: false,
       startTime: new Date(),
       endTime: new Date(),
     },
   ]);
+
   const { register, handleSubmit, setValue, control } = useForm({
     defaultValues: {
       startTime: new Date(),
@@ -131,9 +145,40 @@ function StudyCalendar() {
   const [newDate, setNewDate] = useState({});
   const [currentDate, setCurrentDate] = useState({ id: 0 });
   const [currentTime, setCurrentTime] = useState({
-    startTime: '',
-    endTime: '',
+    startTime: "",
+    endTime: "",
   });
+  const queryClient = useQueryClient();
+  const { studyId } = useParams();
+  const { data: studySchedule } = useQuery(
+    ["getStudySchedule", studyId],
+    () => getStudySchedule(studyId, getCookie("accessToken")),
+    {
+      select: (data) => data.data.data,
+      onSuccess: (data) => {
+        setEvents(data);
+      },
+    }
+  );
+
+  const CreateScheduleMutation = useMutation(
+    (data) => createStudySchedule(studyId, data, getCookie("accessToken")),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(["getStudySchedule", studyId]);
+      },
+    }
+  );
+
+  const updateScheduleMutation = useMutation(
+    ({ data, scheduleId }) =>
+      updateStudySchedule(studyId, scheduleId, data, getCookie("accessToken")),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(["getStudySchedule", studyId]);
+      },
+    }
+  );
 
   const onEventResize = (data) => {
     const { event, start, end } = data;
@@ -159,29 +204,22 @@ function StudyCalendar() {
       setEvents((e) => [...e, { start, end, title }]);
     }*/
   };
-  const onDropFromOutside = ({ start, end, allDay }) => {
+  const onDropFromOutside = ({ start, end }) => {
     const event = {
       id: draggedEvent.id,
       title: draggedEvent.title,
       start,
       end,
-      allDay: allDay,
     };
     setDraggedEvent(null);
     moveEvent({ event, start, end });
   };
 
-  const moveEvent = ({ event, start, end, isAllDay: droppedOnAllDaySlot }) => {
-    let allDay = event.allDay;
-    if (!event.allDay && droppedOnAllDaySlot) {
-      allDay = true;
-    } else if (event.allDay && !droppedOnAllDaySlot) {
-      allDay = false;
-    }
+  const moveEvent = ({ event, start, end }) => {
     //console.log(event);
     const nextEvents = events.map((existingEvent) => {
       return existingEvent.id === event.id
-        ? { ...existingEvent, start, end, allDay }
+        ? { ...existingEvent, start, end }
         : existingEvent;
     });
     //console.log(nextEvents);
@@ -190,6 +228,7 @@ function StudyCalendar() {
 
   const onSubmit = (data) => {
     console.log(data);
+    /*
     setEvents((e) => [
       ...e,
       {
@@ -201,7 +240,15 @@ function StudyCalendar() {
         startTime: data.startTime,
         endTime: data.endTime,
       },
-    ]);
+    ]);*/
+    CreateScheduleMutation.mutate({
+      start: newDate?.start + "",
+      end: newDate?.end + "",
+      title: data.newEvent,
+      id: events.length,
+      startTime: data.startTime + "",
+      endTime: data.endTime + "",
+    });
     setValue("newEvent", "");
   };
 
@@ -211,12 +258,21 @@ function StudyCalendar() {
         ? {
             ...existingEvent,
             title: data.defaultEvent,
-            startTime: data.startTime,
-            endTime: data.endTime,
+            startTime: data.startTime + "",
+            endTime: data.endTime + "",
           }
         : existingEvent;
     });
-    setEvents(nextEvents);
+    updateScheduleMutation.mutate({
+      data: {
+        
+        title: data.defaultEvent,
+        startTime: data.startTime + "",
+        endTime: data.endTime + "",
+      },
+      scheduleId: currentDate.id,
+    });
+    //setEvents(nextEvents);
     ChangeSetValue("changeEvent", "");
   };
 
@@ -259,7 +315,7 @@ function StudyCalendar() {
       <MuiDialog
         open={isCreateModalOpen}
         title={isNewContent ? "새로운 일정 입력" : "기존 일정"}
-        setOpen={setIsCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
       >
         <form
           onSubmit={

@@ -9,6 +9,7 @@ import {
   createComment,
   deleteComment,
   updateComment,
+  getStudyMembers
 } from "../../Api/Api";
 import { getCookie } from "../../utils/cookie";
 import TextField from "@mui/material/TextField";
@@ -220,6 +221,7 @@ function BoardArticlesPost() {
     replyFormVisible: false,
     variant: "reply",
   });
+  const [myInfo, setMyInfo] = useState(null);
   const { studyId, boardId, articleId } = useParams();
   const navigate = useNavigate();
   const { register, handleSubmit, setValue } = useForm();
@@ -235,12 +237,13 @@ function BoardArticlesPost() {
   } = useForm();
   const queryClient = useQueryClient();
   const { id, nickname } = useSelector((state) => state.users);
-  const {
-    data: {
-      data: { studyMembers },
-    },
-  } = queryClient.getQueryData(["MembersOfStudy", studyId]);
-  const myInfo = studyMembers.find((member) => member.nickname === nickname);
+  const {data:studyMembers} = useQuery(['getStudyMembers',studyId,boardId,articleId],()=>getStudyMembers(studyId),{
+    select: (data) => data.data.data,
+    onSuccess: (data) => {
+      setMyInfo(data.find((member) => member.nickname === nickname));
+    }
+  });
+  //const myInfo = studyMembers.find((member) => member.nickname === nickname);
   const { data: article } = useQuery(
     ["Post", studyId, boardId, articleId],
     () => getArticlePost(studyId, boardId, articleId, getCookie("accessToken")),
@@ -385,8 +388,8 @@ function BoardArticlesPost() {
         <header>
           <div className="ArticleTitle">
             <h1>{article?.title}</h1>
-            {(myInfo.studyRole === "ADMIN" ||
-              myInfo.studyRole === "CREATOR" ||
+            {(myInfo?.studyRole === "ADMIN" ||
+              myInfo?.studyRole === "CREATOR" ||
               userInfo?.nickname === article?.memberName) && (
               <div className="ArticleAction">
                 <Link to="edit">수정</Link>

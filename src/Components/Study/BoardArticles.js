@@ -256,9 +256,9 @@ function BoardArticles() {
         ) : (
           <ArticleList>
             {BoardArticle?.data?.map((article) => (
-              <li key={article.articleId}>
+              <li key={article.id}>
                 <ArticleLink
-                  to={`/study/${studyId}/board/${boardId}/article/${article.articleId}`}
+                  to={`/study/${studyId}/board/${boardId}/article/${article?.id}`}
                 >
                   <div className="ArticleWrapper">
                     <ArticleCard>
