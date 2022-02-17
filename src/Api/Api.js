@@ -462,6 +462,10 @@ export const findVideoRooms = async (studyId,accessToken) => {
   });
 };
 
-export const destroyVideoRoom = async (studyId,roomId) => {
-  return await axios.delete(`${spring_server}/study/${studyId}/videoroom/${roomId}`);
+export const destroyVideoRoom = async (studyId,roomId,accessToken) => {
+  return await axios.delete(`${spring_server}/study/${studyId}/videoroom/${roomId}`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
 };

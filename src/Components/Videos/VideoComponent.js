@@ -25,6 +25,7 @@ import { server } from "../../utils/config";
 import { useNavigate, useParams } from "react-router-dom";
 import { destroyVideoRoom } from "../../Api/Api";
 import styled from "styled-components";
+import { getCookie } from "../../utils/cookie";
 
 let storePlugin = null;
 let username = null;
@@ -171,7 +172,7 @@ const VideoComponent = () => {
   } = useSelector((state) => state.roomReducer);
   const params = new URLSearchParams(window.location.search);
   let pin = params.get("pin");
-  let { roomId } = useParams();
+  let { roomId, studyId } = useParams();
   username = params.get("username");
   roomId = Number(roomId);
 
@@ -779,7 +780,7 @@ const VideoComponent = () => {
   };
 
   const destroyRoomHandler = () => {
-    destroyVideoRoom(roomId)
+    destroyVideoRoom(studyId,roomId,getCookie('accessToken'))
       .then((response) => Janus.log("destroyed Room!"))
       .catch((error) => Janus.log(error));
   };
