@@ -37,6 +37,9 @@ import { useQuery } from 'react-query';
 import StudyCalendar from './Components/Study/StudyCalendar';
 import PasswordChangeCompletePage from './pages/PasswordChangeCompletePage';
 import ProfileEditPage from './pages/ProfileEditPage';
+import FindRoomPage  from './pages/FindRoomPage';
+import CreateRoomPage from './pages/CreateRoomPage';
+import VideoPage from './pages/VideoPage';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -97,6 +100,9 @@ const App = () => {
                 <Route path=":boardId/article/:articleId/edit" element={<PrivateRoute><BoardArticlePostEdit /></PrivateRoute>} />
                 <Route path="manage" element={<PrivateRoute><StudyManage /></PrivateRoute>} />
                 <Route path="calendar" element={<StudyCalendar />} />
+                <Route path="create" element={<CreateRoomPage />} />
+                <Route path="rooms" element={<FindRoomPage />} />
+                <Route path="rooms/:roomId" element={<VideoPage />} />
               </Route>
               <Route path="*" element={<div>Not Found</div>} />
             </Routes>

@@ -399,7 +399,7 @@ function StudyManage() {
                   return (
                     <StudyMemberContainer key={Member.nickname}>
                       <div className="StudyMemberWrapper">
-                        <span>{Member.name}</span>
+                        <span>{Member.nickname}</span>
                         <span>{Member.studyRole}</span>
                       </div>
                     </StudyMemberContainer>
@@ -427,7 +427,7 @@ function StudyManage() {
                             });
                           }}
                         >
-                          <div>{Member.name}</div>
+                          <div>{Member.nickname}</div>
                         </ApplicantStyle>
                       </div>
                     </React.Fragment>

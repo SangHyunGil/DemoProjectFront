@@ -1,6 +1,7 @@
 import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
 import users from "./users";
+import roomReducer from "./roomReducer";
 
 const rootReducer = (state, action) => {
   switch (action.type) {
@@ -8,7 +9,8 @@ const rootReducer = (state, action) => {
       return action.payload;
     default: {
       const combinedReducer = combineReducers({
-        users
+        users,
+        roomReducer
       })
       return combinedReducer(state, action);
     }

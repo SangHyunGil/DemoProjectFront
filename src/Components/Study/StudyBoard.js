@@ -142,6 +142,9 @@ function StudyBoard() {
             <Category to={`/study/${studyId}/board/calendar`} onClick={()=>setCurrentBoard('캘린더')}>
               스터디 캘린더
             </Category>
+            <Category to={`/study/${studyId}/board/rooms`}>
+              스터디 화상채팅
+            </Category>
           </DrawerWrapper>
         </SwipeableDrawer>
       </CategoryWrapper>
