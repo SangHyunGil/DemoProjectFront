@@ -111,14 +111,14 @@ function ProfileEditPage() {
         </FormControl>
         <FormControl sx={{ m: 2 }} fullWidth>
           <Select value={myInfo?.department} {...register("department")}>
-            <MenuItem value="cse">컴퓨터공학부</MenuItem>
-            <MenuItem value="me">기계공학부</MenuItem>
-            <MenuItem value="eca">전기전자통신공학부</MenuItem>
-            <MenuItem value="dea">디자인,건축공학부</MenuItem>
-            <MenuItem value="mce">메카트로닉스공학부</MenuItem>
-            <MenuItem value="im">산업경영학부</MenuItem>
-            <MenuItem value="emce">에너지신소재화학공학부</MenuItem>
-            <MenuItem value="esp">고용서비스정책학부</MenuItem>
+            <MenuItem value="CSE">컴퓨터공학부</MenuItem>
+            <MenuItem value="ME">기계공학부</MenuItem>
+            <MenuItem value="ECA">전기전자통신공학부</MenuItem>
+            <MenuItem value="DEA">디자인,건축공학부</MenuItem>
+            <MenuItem value="MCE">메카트로닉스공학부</MenuItem>
+            <MenuItem value="IM">산업경영학부</MenuItem>
+            <MenuItem value="EMCE">에너지신소재화학공학부</MenuItem>
+            <MenuItem value="ESP">고용서비스정책학부</MenuItem>
           </Select>
         </FormControl>
         <ProfileEditFormButton fullWidth variant="contained">

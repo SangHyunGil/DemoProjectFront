@@ -87,7 +87,7 @@ const MakeRoomComp = () => {
 
     const onCreateBoard = (data) => {
         const formData = new FormData();
-        formData.append('content', data.content);
+        formData.append('description', data.content);
         formData.append('headCount', data.headCount);
         formData.append('memberId',id);
         if (thumbnail) {
@@ -229,15 +229,15 @@ const MakeRoomComp = () => {
                 </FormControl>
                 <FormControl sx={{ width: "100%", m: 1 }}>
                     <select  {...register('department')}>
-                        <option value="cse">컴퓨터공학부</option>
-                        <option value="me">기계공학부</option>
-                        <option value="eca">전기전자통신공학부</option>
-                        <option value="dea">디자인,건축공학부</option>
-                        <option value="mce">메카트로닉스공학부</option>
-                        <option value="im">산업경영학부</option>
-                        <option value="emce">에너지신소재화학공학부</option>
-                        <option value="esp">고용서비스정책학부</option>
-                        <option value="other">기타</option>
+                        <option value="CSE">컴퓨터공학부</option>
+                        <option value="ME">기계공학부</option>
+                        <option value="ECA">전기전자통신공학부</option>
+                        <option value="DEA">디자인,건축공학부</option>
+                        <option value="MCE">메카트로닉스공학부</option>
+                        <option value="IM">산업경영학부</option>
+                        <option value="EMCE">에너지신소재화학공학부</option>
+                        <option value="ESP">고용서비스정책학부</option>
+                        <option value="ETC">기타</option>
                     </select>
                 </FormControl>
                 <label htmlFor="studyState">스터디 상태</label>
