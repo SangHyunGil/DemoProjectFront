@@ -92,7 +92,7 @@ function UpdateStudy() {
 
     const UpdateSubmitHandler = (data) => {
         const formData = new FormData();
-        formData.append('content', data.content);
+        formData.append('description', data.content);
         formData.append('headCount', data.headCount);
         if (thumbnail) {
             formData.append("profileImg", thumbnail);

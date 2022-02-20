@@ -87,7 +87,7 @@ const MakeRoomComp = () => {
 
     const onCreateBoard = (data) => {
         const formData = new FormData();
-        formData.append('content', data.content);
+        formData.append('description', data.content);
         formData.append('headCount', data.headCount);
         formData.append('memberId',id);
         if (thumbnail) {
