@@ -18,7 +18,7 @@ yarn install or yarn을 통해 package들을 설치하면 됩니다.
 ### Executing program
 
 local에서 돌리기 위해서는 spring 백엔드 코드가 필요합니다. 
-백엔드 repo 주소는 다음과 같습니다 (https://github.com/SangHyunGil/DemoProject.git, 현재 private)
+백엔드 repo 주소는 다음과 같습니다 (https://github.com/SangHyunGil/KonerBackEnd.git, 현재 private)
 
 ## Help
 
