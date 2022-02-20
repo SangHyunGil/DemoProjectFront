@@ -57,7 +57,7 @@ function StudyBoard() {
       select: (data) => data.data.data,
       onSuccess: (data) => {
         const myInfo = data.find(
-          (info) => info.nickname === myinfos?.data?.data?.nickname
+          (info) => info.member.nickname === myinfos?.data?.data?.nickname
         );
         if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
           setIsGranted(true);
@@ -89,7 +89,7 @@ function StudyBoard() {
           data: { nickname },
         },
       } = myinfos;
-      const myInfo = studyInfos?.find((info) => info.nickname === nickname);
+      const myInfo = studyInfos?.find((info) => info.member.nickname === nickname);
       if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
         setIsGranted(true);
       } else {

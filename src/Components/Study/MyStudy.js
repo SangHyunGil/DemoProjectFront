@@ -88,7 +88,7 @@ function MyStudy() {
     <StudyCardContainer>
       {studyInfos ? (
         studyInfos?.map((c) => (
-          <MyStudyCard key={c.studyId}>
+          <MyStudyCard key={c.id}>
             <div>
               <div className="StudyCardHeader">
                 <div className="MyStudyCardTitle">
@@ -114,10 +114,10 @@ function MyStudy() {
             </div>
             <CardActions>
               <Button size="small">
-                <Link to={`/study/${c.studyId}/edit`}>수정하기</Link>
+                <Link to={`/study/${c.id}/edit`}>수정하기</Link>
               </Button>
               <Button size="small">
-                <Link to={`/study/${c.studyId}`}>보러가기</Link>
+                <Link to={`/study/${c.id}`}>보러가기</Link>
               </Button>
             </CardActions>
           </MyStudyCard>

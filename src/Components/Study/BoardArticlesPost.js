@@ -241,7 +241,7 @@ function BoardArticlesPost() {
   const {data:studyMembers} = useQuery(['getStudyMembers',studyId,boardId,articleId],()=>getStudyMembers(studyId),{
     select: (data) => data.data.data,
     onSuccess: (data) => {
-      setMyInfo(data.find((member) => member.nickname === nickname));
+      setMyInfo(data.find((member) => member.member.nickname === nickname));
     }
   });
   //const myInfo = studyMembers.find((member) => member.nickname === nickname);
@@ -290,7 +290,7 @@ function BoardArticlesPost() {
         studyId,
         boardId,
         articleId,
-        { content, memberId: id, parentCommentId: replyComments.id },
+        { content, memberId: id, parentid: replyComments.id },
         getCookie("accessToken")
       ),
     {
@@ -306,12 +306,12 @@ function BoardArticlesPost() {
   );
 
   const DeleteCommentMutation = useMutation(
-    (commentId) =>
+    (id) =>
       deleteComment(
         studyId,
         boardId,
         articleId,
-        commentId,
+        id,
         getCookie("accessToken")
       ),
     {
@@ -327,12 +327,12 @@ function BoardArticlesPost() {
   );
 
   const UpdateCommentMutation = useMutation(
-    ({ commentId, content }) =>
+    ({ id, content }) =>
       updateComment(
         studyId,
         boardId,
         articleId,
-        commentId,
+        id,
         content,
         getCookie("accessToken")
       ),
@@ -363,7 +363,7 @@ function BoardArticlesPost() {
     replyComments.variant === "reply"
       ? CommentMutation.mutate(data.commentReply)
       : UpdateCommentMutation.mutate({
-          commentId: replyComments.id,
+          id: replyComments.id,
           content: data.commentReply,
         });
     secondSetValue("commentReply", "");
@@ -372,15 +372,15 @@ function BoardArticlesPost() {
 
   const commentReplyUpdateHandler = (data) => {
     UpdateCommentMutation.mutate({
-      commentId: replyComments.id,
+      id: replyComments.id,
       content: data.commentReplyUpdate,
     });
     updateSetValue("commentReplyUpdate", "");
     setreplyComments((prev) => ({ ...prev, replyFormVisible: false }));
   };
 
-  const deleteCommentHandler = (commentId) => {
-    DeleteCommentMutation.mutate(commentId);
+  const deleteCommentHandler = (id) => {
+    DeleteCommentMutation.mutate(id);
   };
 
   return (
@@ -391,7 +391,7 @@ function BoardArticlesPost() {
             <h1>{article?.title}</h1>
             {(myInfo?.studyRole === "ADMIN" ||
               myInfo?.studyRole === "CREATOR" ||
-              userInfo?.nickname === article?.memberName) && (
+              userInfo?.member.nickname === article?.memberName) && (
               <div className="ArticleAction">
                 <Link to="edit">수정</Link>
                 <button onClick={deleteArticlePostHandler} type="button">
@@ -425,24 +425,24 @@ function BoardArticlesPost() {
           {comments?.length === 0 && <p>댓글이 없습니다.</p>}
           {comments?.map((comment) => {
             return (
-              <div className="Comment" key={comment.commentId}>
+              <div className="Comment" key={comment.id}>
                   <React.Fragment>
                     <div className="CommentHeader">
                       <div className="CommentTitle">
                         <Avatar
-                          alt={comment.memberProfile.nickname}
-                          src={comment.memberProfile.profileImgUrl}
+                          alt={comment.creator.nickname}
+                          src={comment.creator.profileImgUrl}
                         />
-                        <span>{comment.memberProfile.nickname}</span>
+                        <span>{comment.creator.nickname}</span>
                       </div>
                       <div className="CommentAction" >
-                        {(comment?.memberProfile?.nickname === nickname && comment?.content !== null) && (
+                        {(comment?.creator?.nickname === nickname && comment?.content !== null) && (
                           <React.Fragment>
                             <Button
                               variant="outlined"
                               onClick={() => {
                                 setreplyComments((prev) => ({
-                                  id: comment.commentId,
+                                  id: comment.id,
                                   replyFormVisible: !prev.replyFormVisible,
                                   variant: "update",
                                 }));
@@ -455,7 +455,7 @@ function BoardArticlesPost() {
                               variant="outlined"
                               color="error"
                               onClick={() =>
-                                deleteCommentHandler(comment.commentId)
+                                deleteCommentHandler(comment.id)
                               }
                               style={{fontFamily: 'SEBANG_Gothic_Bold, sans-serif'}}
                             >
@@ -482,27 +482,27 @@ function BoardArticlesPost() {
                             <div>
                               {comment?.children?.map((child) => (
                                 <CommentsReplyContentStyle
-                                  key={child.commentId}
+                                  key={child.id}
                                 >
                                   <div className="CommentReplyContentWrapper">
                                     <div className="CommentReplyContentHeader">
                                       <Avatar
-                                        alt={child.memberProfile.nickname}
-                                        src={child.memberProfile.profileImgUrl}
+                                        alt={child.creator.nickname}
+                                        src={child.creator.profileImgUrl}
                                       />
-                                      <p>{child.memberProfile.nickname}</p>
+                                      <p>{child.creator.nickname}</p>
                                     </div>
                                     <div className="CommentReplyContentMain">
                                       <p>{child.content}</p>
                                     </div>
                                     <div className="CommentReplyContentAction">
-                                      {child?.memberProfile?.nickname ===
+                                      {child?.creator?.nickname ===
                                         nickname && (
                                         <React.Fragment>
                                           <button
                                             onClick={() =>
                                               deleteCommentHandler(
-                                                child.commentId
+                                                child.id
                                               )
                                             }
                                           >
@@ -511,7 +511,7 @@ function BoardArticlesPost() {
                                           <button
                                             onClick={() => {
                                               setreplyComments((prev) => ({
-                                                id: child.commentId,
+                                                id: child.id,
                                                 replyFormVisible:
                                                   !prev.replyFormVisible,
                                                 variant: "update",
@@ -524,7 +524,7 @@ function BoardArticlesPost() {
                                       )}
                                     </div>
                                   </div>
-                                  {replyComments.id === child.commentId &&
+                                  {replyComments.id === child.id &&
                                     replyComments.replyFormVisible && (
                                       <CommentsReplyStyle
                                         onSubmit={updateHandleSubmit(
@@ -556,12 +556,12 @@ function BoardArticlesPost() {
                               onClick={() => {
                                 replyComments.variant === "reply"
                                   ? setreplyComments((prev) => ({
-                                      id: comment.commentId,
+                                      id: comment.id,
                                       replyFormVisible: !prev.replyFormVisible,
                                       variant: "reply",
                                     }))
                                   : setreplyComments((prev) => ({
-                                      id: comment.commentId,
+                                      id: comment.id,
                                       replyFormVisible: prev.replyFormVisible,
                                       variant: "reply",
                                     }));
@@ -574,7 +574,7 @@ function BoardArticlesPost() {
                                 <div className="FormOpen">▼답글 열기</div>
                               )}
                             </button>
-                            {replyComments.id === comment.commentId &&
+                            {replyComments.id === comment.id &&
                               replyComments.replyFormVisible && (
                                 <CommentsReplyStyle
                                   onSubmit={secondHandleSubmit(
