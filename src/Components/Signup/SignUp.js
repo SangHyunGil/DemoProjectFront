@@ -74,7 +74,7 @@ function SignUp() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [Department, setDepartment] = useState("컴퓨터공학부");
+  const [Department, setDepartment] = useState("CSE");
   const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
@@ -122,14 +122,14 @@ function SignUp() {
   };
 
   const Depart = [
-    { id: 0, val: "기계공학부", headTo: 'me' },
-    { id: 1, val: "전기전자통신공학부", headTo: 'ece' },
-    { id: 2, val: "디자인,건축공학부", headTo: 'dea' },
-    { id: 3, val: "메카트로닉스공학부", headTo: 'mce' },
-    { id: 4, val: "산업경영학부", headTo: 'im'},
-    { id: 5, val: "에너지신소재화학공학부",headTo: 'emce'},
-    { id: 6, val: "컴퓨터공학부",headTo: 'cse' },
-    {id: 7, val: "고용서비스정책학부",headTo: 'esp'}
+    { id: 0, val: "기계공학부", headTo: 'ME' },
+    { id: 1, val: "전기전자통신공학부", headTo: 'ECE' },
+    { id: 2, val: "디자인,건축공학부", headTo: 'DEA' },
+    { id: 3, val: "메카트로닉스공학부", headTo: 'MCE' },
+    { id: 4, val: "산업경영학부", headTo: 'IM'},
+    { id: 5, val: "에너지신소재화학공학부",headTo: 'EMCE'},
+    { id: 6, val: "컴퓨터공학부",headTo: 'CSE' },
+    {id: 7, val: "고용서비스정책학부",headTo: 'ESP'}
   ];
 
   const handleDepartMent = (e) => {
@@ -204,7 +204,7 @@ function SignUp() {
           <RadioGroup
             row
             aria-label="학부"
-            defaultValue="컴퓨터공학부"
+            defaultValue="CSE"
             name="radio-buttons-group"
           >
             {Depart.map(x=>(
