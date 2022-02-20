@@ -11,9 +11,8 @@ import HomeIcon from '@mui/icons-material/Home';
 
 const category = [
   { name: "all", title: "메인" },
-  { name: "callvan", title: "콜밴" },
+  { name: "callvan", title: "사용법" },
   { name: "study/depart/CSE", title: "스터디" },
-  { name: "market", title: "장터" },
 ];
 
 export const CategoryWrapper = styled.nav`
