@@ -237,6 +237,7 @@ function BoardArticlesPost() {
   } = useForm();
   const queryClient = useQueryClient();
   const { id, nickname } = useSelector((state) => state.users);
+  //console.log(id);
   const {data:studyMembers} = useQuery(['getStudyMembers',studyId,boardId,articleId],()=>getStudyMembers(studyId),{
     select: (data) => data.data.data,
     onSuccess: (data) => {

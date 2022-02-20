@@ -78,12 +78,9 @@ const App = () => {
                 <Route path="accountInfo" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="mystudy" element={<PrivateRoute><MyStudy /></PrivateRoute>} />
                 <Route path="edit" element={<ProfileEditPage />} />
-                <Route path="mycallvan" element={<PrivateRoute><h1>마이 콜밴 페이지</h1></PrivateRoute>} />
-                <Route path="mymarket" element={<PrivateRoute><h1>마이 마켓 페이지</h1></PrivateRoute>} />
               </Route>
               <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
               <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
-              <Route path="/callvan/:id" element={<PrivateRoute><h1>하위 페이지!</h1></PrivateRoute>} />
               <Route path="/signup/complete" element={<SignUpCompletePage />} />
               <Route path="/password/reset" element={<PasswordChangeCompletePage />} />
               <Route path="/logout" element={<Logout />} />

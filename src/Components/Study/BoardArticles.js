@@ -303,7 +303,7 @@ function BoardArticles() {
       {IsModalUp && (
         <MuiDialog
           open={IsModalUp}
-          setOpen={setIsModalUp}
+          onClose={()=>setIsModalUp(false)} 
         >
           <h2 style={{textAlign:'center'}}>게시글 작성</h2>
           <CreateArticleForm onSubmit={createArticleHandler}>
