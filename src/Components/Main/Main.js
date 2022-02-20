@@ -123,6 +123,7 @@ const SubInfo = styled.div`
   display: flex;
   width: 70%;
   flex-grow: 1;
+  justify-content: center;
   @media (max-width: 480px) {
     flex-direction: column;
     div {
@@ -151,7 +152,9 @@ const SubInfoBlockStyle = styled.div`
 const TodaysStudySection = styled(motion.section)`
   height: 50vh;
   background: #dfe7e9;
-  align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   h1 {
     text-align: center;
   }
