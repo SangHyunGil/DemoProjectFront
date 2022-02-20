@@ -135,6 +135,7 @@ const SubInfoBlockStyle = styled.div`
   display: flex;
   flex-direction: column;
   font-family: sans-serif;
+  align: center;
   svg {
     font-size: 3rem;
     color: #2980b9;
@@ -150,6 +151,7 @@ const SubInfoBlockStyle = styled.div`
 const TodaysStudySection = styled(motion.section)`
   height: 50vh;
   background: #dfe7e9;
+  align: center;
   h1 {
     text-align: center;
   }
@@ -357,11 +359,10 @@ const MainComp = () => {
           <div>
             <h3>한기대만의, 한기대를 위한 스터디 골목</h3>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              pharetra aliquet mi, ac semper orci egestas eget. Duis convallis
-              leo efficitur lectus hendrerit faucibus. In hac habitasse platea
-              dictumst. Suspendisse potenti. Pellentesque dapibus, dolor at
-              finibus fringilla, purus nisi mollis magna
+              <br/>
+              지금까지 스터디 구하느라 힘드셨죠? <br/>
+              스터디는 코너에서 함께하세요! <br/>
+              스터디를 원하는 누구나 코너에서 스터디를 구하고 공부해봐요 <br/>
             </p>
           </div>
         </MainInfo>
@@ -370,20 +371,17 @@ const MainComp = () => {
           <SubInfoBlock
             Icon={<InsertEmoticonIcon />}
             Subtitle="스터디 골목"
-            SubContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            pharetra aliquet mi, ac semper orci egestas eget."
+            SubContent="우리만의 스터디 골목으로 놀러오세요."
           />
           <SubInfoBlock
             Icon={<ThumbUpOffAltIcon />}
             Subtitle="편리함"
-            SubContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            pharetra aliquet mi, ac semper orci egestas eget."
+            SubContent="스터디 관리를 편하게 진행해보세요."
           />
           <SubInfoBlock
             Icon={<AccessibilityNewIcon />}
             Subtitle="공부하기 편안함"
-            SubContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            pharetra aliquet mi, ac semper orci egestas eget."
+            SubContent="편하게 공부하면서 학습해봐요."
           />
         </SubInfo>
       </Main>
@@ -415,9 +413,8 @@ const MainComp = () => {
       <ImgInfoSection>
         <ImgInfoWrapper>
           <div className="text-wrapper">
-            <h2>Lorem Ipsum!</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-                pharetra aliquet mi, ac semper orci egestas eget.</p>
+            <h2>우리 스터디할래?</h2>
+            <p>현재 사람들이 올려놓은 스터디들을 보러가보실까요? 쉽게 참여하고 쉽게 공부하면서 같이 성장해가요.</p>
             <button className="study-button" onClick={()=>navigate("/study/depart/cse")}>스터디 보러가기</button>
           </div>
           <div className="img-wrapper">
