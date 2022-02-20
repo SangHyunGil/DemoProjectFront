@@ -18,12 +18,16 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Button from '@mui/material/Button';
 import {motion} from "framer-motion/dist/framer-motion";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
+
 
 const SignUpformStyle = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
+    width: 50vw;
     margin: 0 auto;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
@@ -52,6 +56,20 @@ const SignUpThumbnailInput = styled.input`
     display: none;
 `;
 
+const ErrorSnackBar = styled(Snackbar)`
+    align-items: center;
+    top: 12% !important;
+    left: auto;
+`;
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+function TransitionLeft(props) {
+  return <Slide {...props} direction="left" />;
+}
+
 function SignUp() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
@@ -60,6 +78,7 @@ function SignUp() {
   const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
+  const [isRegisterErrorUp, setIsRegisterErrorUp] = useState(false);
   const { register, handleSubmit, formState: {errors}, setValue } = useForm();
 
   const { id, email, registerDone, registerError, registerLoading } =
@@ -71,6 +90,10 @@ function SignUp() {
     navigate("/signup/complete", { replace: false });
     dispatch(clearRegisterState());
   }, [registerDone]);
+
+  useEffect(() => {
+    registerError === "" ? setIsRegisterErrorUp(false) : setIsRegisterErrorUp(true);
+  },[registerError]);
 
   const handleUpload = (e) => {
     const { files } = e.target;
@@ -99,23 +122,30 @@ function SignUp() {
   };
 
   const Depart = [
-    { id: 0, val: "기계공학부" },
-    { id: 1, val: "전기전자통신공학부" },
-    { id: 2, val: "디자인,건축공학부" },
-    { id: 3, val: "메카트로닉스공학부" },
-    { id: 4, val: "산업경영학부" },
-    { id: 5, val: "에너지신소재화학공학부" },
-    { id: 6, val: "컴퓨터공학부" },
-    {id: 7, val: "고용서비스정책학부"}
+    { id: 0, val: "기계공학부", headTo: 'me' },
+    { id: 1, val: "전기전자통신공학부", headTo: 'ece' },
+    { id: 2, val: "디자인,건축공학부", headTo: 'dea' },
+    { id: 3, val: "메카트로닉스공학부", headTo: 'mce' },
+    { id: 4, val: "산업경영학부", headTo: 'im'},
+    { id: 5, val: "에너지신소재화학공학부",headTo: 'emce'},
+    { id: 6, val: "컴퓨터공학부",headTo: 'cse' },
+    {id: 7, val: "고용서비스정책학부",headTo: 'esp'}
   ];
 
   const handleDepartMent = (e) => {
     setDepartment(e.target.value);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setIsRegisterErrorUp(false);
+  };
+
   return (
     <div style={{margin:'5% 10%'}}>
-      {registerError === "" ? null : <p> {registerError} </p>}
       <SignUpformStyle
         encType="multipart/form-data"
         onSubmit={handleSubmit(handleSignUp)}
@@ -178,7 +208,7 @@ function SignUp() {
             name="radio-buttons-group"
           >
             {Depart.map(x=>(
-                <FormControlLabel key={x.id} value={x.val} onChange={handleDepartMent} control={<Radio />} label={x.val} />
+                <FormControlLabel key={x.id} value={x.headTo} onChange={handleDepartMent} control={<Radio />} label={x.val} />
             ))}
           </RadioGroup>
         </SignUpInputWrapper>
@@ -194,6 +224,9 @@ function SignUp() {
         ) : (
           <SignUpButton whileHover={{scale:1.1,cursor:'pointer'}} type="submit">회원가입</SignUpButton>
         )}
+        <ErrorSnackBar open={isRegisterErrorUp} autoHideDuration={6000} onClose={handleClose} TransitionComponent={TransitionLeft} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}><p> {registerError} </p></Alert>
+        </ErrorSnackBar>
       </SignUpformStyle>
     </div>
   );

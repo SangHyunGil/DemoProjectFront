@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { findAllBoardArticles, createBoardArticle } from "../../Api/Api";
 import useInput from "../../hooks/useInput";
 //import Card from "../Card/Card";
-import Modal from "../Modal/Modal";
+import MuiDialog from "../Modal/MuiDialog";
 import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getCookie } from "../../utils/cookie";
@@ -68,6 +68,21 @@ const CreateArticleForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 2rem;
+  button {
+    background-color: #0049AF;
+    transition: all 0.3s linear;
+    border: 0;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    color: white;
+    &:hover {
+      background-color: #FFC107;
+      transition: all 0.3s linear;
+      cursor: pointer;
+
+    }
+  }
 `;
 
 const ArticleList = styled.ul`
@@ -79,7 +94,7 @@ const ArticleList = styled.ul`
   justify-content: center;
   align-items: center;
   li {
-    width: 70ch;
+    width: 60vw;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     margin: 1rem 0;
@@ -109,6 +124,8 @@ const ArticleCard = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 1rem;
+  flex: 1;
+  align-self: center;
 `;
 
 const ViewBoxBlock = styled.div`
@@ -120,6 +137,9 @@ const ViewBoxBlock = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    p {
+      text-align: center;
+    }
   }
   justify-self: flex-end;
 `;
@@ -236,9 +256,9 @@ function BoardArticles() {
         ) : (
           <ArticleList>
             {BoardArticle?.data?.map((article) => (
-              <li key={article.articleId}>
+              <li key={article.id}>
                 <ArticleLink
-                  to={`/study/${studyId}/board/${boardId}/article/${article.articleId}`}
+                  to={`/study/${studyId}/board/${boardId}/article/${article?.id}`}
                 >
                   <div className="ArticleWrapper">
                     <ArticleCard>
@@ -256,7 +276,7 @@ function BoardArticles() {
                     </ArticleCard>
                     <ViewBoxBlock>
                         <div className="viewBox">
-                          <p>{article.views}회 조회</p>
+                          <p>{article.views}<br />조회</p>
                         </div>
                     </ViewBoxBlock>
                   </div>
@@ -281,10 +301,9 @@ function BoardArticles() {
         />
       </PaginationWrapper>
       {IsModalUp && (
-        <Modal
-          ModalHandler={() => {
-            setIsModalUp(false);
-          }}
+        <MuiDialog
+          open={IsModalUp}
+          onClose={()=>setIsModalUp(false)} 
         >
           <h2 style={{textAlign:'center'}}>게시글 작성</h2>
           <CreateArticleForm onSubmit={createArticleHandler}>
@@ -302,7 +321,7 @@ function BoardArticles() {
                 id="article-content"
                 label="내용"
                 multiline
-                rows={4}
+                rows={10}
                 variant="outlined"
                 value={articleContent}
                 onChange={onChangeArticleContent}
@@ -310,7 +329,7 @@ function BoardArticles() {
             </FormControl>
             <button type="submit">만들기</button>
           </CreateArticleForm>
-        </Modal>
+        </MuiDialog>
       )}
       <AddArticleButton sx={{fontSize:60}} onClick={createArticleModalHandler}>
         게시글 추가

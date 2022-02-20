@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
-import { getBoardCategory, findBoard } from "../../Api/Api";
+import { getBoardCategory, findBoard, getStudyMembers } from "../../Api/Api";
 import { useQuery, useQueryClient } from "react-query";
 import { getCookie } from "../../utils/cookie";
 import { Category } from "../Categories/Categories";
@@ -14,6 +14,20 @@ const CategoryWrapper = styled.div`
   align-items: center;
   padding: 1rem;
   border-bottom: 2px solid #e6e6e6;
+  .StudyList {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+  }
+  .MenuIcon {
+    font-size: 2rem;
+  }
+  @media (max-width: 380px) {
+    .StudyList {
+      flex-direction: column;
+    }
+  }
 `;
 
 const DrawerWrapper = styled(Box)`
@@ -21,6 +35,7 @@ const DrawerWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
   a {
     margin: 0 !important;
   }
@@ -31,14 +46,15 @@ function StudyBoard() {
   const [IsGranted, setIsGranted] = useState(false);
   const { studyId } = useParams();
   const [DrawerState, setDrawerState] = useState(false);
+  const [currentBoard, setCurrentBoard] = useState('');
 
   const myinfos = queryClient.getQueryData(["loadMyInfo"]);
 
   const { data: studyInfos } = useQuery(
     [`studyInfos`, studyId],
-    () => findBoard(studyId),
+    () => getStudyMembers(studyId),
     {
-      select: (data) => data.data.data.studyMembers,
+      select: (data) => data.data.data,
       onSuccess: (data) => {
         const myInfo = data.find(
           (info) => info.nickname === myinfos?.data?.data?.nickname
@@ -58,6 +74,9 @@ function StudyBoard() {
     () => getBoardCategory(studyId, getCookie("accessToken")),
     {
       select: (cat) => cat.data.data,
+      onSuccess: (data) => {
+        setCurrentBoard(data[0].title);
+      },
       retry: false,
       staleTime: Infinity,
     }
@@ -83,10 +102,10 @@ function StudyBoard() {
     <>
       <CategoryWrapper>
         <IconButton onClick={() => setDrawerState(true)}>
-          <MenuIcon  />
+          <MenuIcon className="MenuIcon" />
         </IconButton>
-        <div>
-          <p>스터디 게시판 목록</p>
+        <div className="StudyList">
+          <p style={{fontFamily:'SEBANG_Gothic_Bold, sans-serif'}}>스터디 게시판 목록-<span style={{color:'#0049AF'}}>{currentBoard}</span></p>
         </div>
         <SwipeableDrawer
           anchor="left"
@@ -105,22 +124,26 @@ function StudyBoard() {
             {category?.map((cat) => (
               <Category
                 activeclassname="active"
-                to={`/study/${studyId}/board/${cat.studyBoardId}/articles`}
-                key={cat.studyBoardId}
+                to={`/study/${studyId}/board/${cat.id}/articles`}
+                key={cat.id}
+                onClick={()=>setCurrentBoard(cat.title)}
               >
                 {cat.title}
               </Category>
             ))}
             {IsGranted && (
-              <Category to={`/study/${studyId}/board/manage`}>
+              <Category to={`/study/${studyId}/board/manage`} onClick={()=>setCurrentBoard('게시판 관리')}>
                 게시판 관리
               </Category>
             )}
             <Category to={`/study/${studyId}`} style={{ color: "black" }}>
               게시판 정보
             </Category>
-            <Category to={`/study/${studyId}/board/calendar`}>
+            <Category to={`/study/${studyId}/board/calendar`} onClick={()=>setCurrentBoard('캘린더')}>
               스터디 캘린더
+            </Category>
+            <Category to={`/study/${studyId}/board/rooms`}>
+              스터디 화상채팅
             </Category>
           </DrawerWrapper>
         </SwipeableDrawer>

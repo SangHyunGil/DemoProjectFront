@@ -45,7 +45,6 @@ function* login(action) {
         
         const result = yield call(loginAPI, action.payload);
         const body = result.data.data;
-
         setCookie('accessToken', body.accessToken, {path: "/", expires: JWT_EXPIRE_TIME});
         setCookie('refreshToken', body.refreshToken, {path: "/", expires: RFT_EXPIRE_TIME});
         yield put(loginSuccess({...body}));

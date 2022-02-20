@@ -15,10 +15,8 @@ import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 
 const Images = [
   "/MainImg/001.png",
-  "https://cdn.pixabay.com/photo/2019/10/11/16/56/cat-4542301_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2015/09/05/20/02/coding-924920_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2017/10/31/19/05/web-design-2906159_960_720.jpg",
-  "https://cdn.pixabay.com/photo/2021/09/12/18/07/robin-6619184_960_720.jpg",
+  "/MainImg/002.png",
+  "/MainImg/003.png",
 ];
 
 const Header = styled(motion.section)`
@@ -39,7 +37,7 @@ const HeaderSlider = styled(Swiper)`
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: fill;
       border-radius: 10px;
     }
   }
@@ -50,6 +48,13 @@ const HeaderSlider = styled(Swiper)`
   .swiper-button-next {
     color: white;
     right: 11%;
+  }
+  @media (max-width: 860px) {
+    .swiper-slide {
+      img {
+        object-fit: cover;
+      }
+    }
   }
 `;
 
@@ -118,6 +123,7 @@ const SubInfo = styled.div`
   display: flex;
   width: 70%;
   flex-grow: 1;
+  justify-content: center;
   @media (max-width: 480px) {
     flex-direction: column;
     div {
@@ -130,6 +136,7 @@ const SubInfoBlockStyle = styled.div`
   display: flex;
   flex-direction: column;
   font-family: sans-serif;
+  align: center;
   svg {
     font-size: 3rem;
     color: #2980b9;
@@ -145,6 +152,9 @@ const SubInfoBlockStyle = styled.div`
 const TodaysStudySection = styled(motion.section)`
   height: 50vh;
   background: #dfe7e9;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   h1 {
     text-align: center;
   }
@@ -352,11 +362,10 @@ const MainComp = () => {
           <div>
             <h3>한기대만의, 한기대를 위한 스터디 골목</h3>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              pharetra aliquet mi, ac semper orci egestas eget. Duis convallis
-              leo efficitur lectus hendrerit faucibus. In hac habitasse platea
-              dictumst. Suspendisse potenti. Pellentesque dapibus, dolor at
-              finibus fringilla, purus nisi mollis magna
+              <br/>
+              지금까지 스터디 구하느라 힘드셨죠? <br/>
+              스터디는 코너에서 함께하세요! <br/>
+              스터디를 원하는 누구나 코너에서 스터디를 구하고 공부해봐요 <br/>
             </p>
           </div>
         </MainInfo>
@@ -365,20 +374,17 @@ const MainComp = () => {
           <SubInfoBlock
             Icon={<InsertEmoticonIcon />}
             Subtitle="스터디 골목"
-            SubContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            pharetra aliquet mi, ac semper orci egestas eget."
+            SubContent="우리만의 스터디 골목으로 놀러오세요."
           />
           <SubInfoBlock
             Icon={<ThumbUpOffAltIcon />}
             Subtitle="편리함"
-            SubContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            pharetra aliquet mi, ac semper orci egestas eget."
+            SubContent="스터디 관리를 편하게 진행해보세요."
           />
           <SubInfoBlock
             Icon={<AccessibilityNewIcon />}
             Subtitle="공부하기 편안함"
-            SubContent="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-            pharetra aliquet mi, ac semper orci egestas eget."
+            SubContent="편하게 공부하면서 학습해봐요."
           />
         </SubInfo>
       </Main>
@@ -410,9 +416,8 @@ const MainComp = () => {
       <ImgInfoSection>
         <ImgInfoWrapper>
           <div className="text-wrapper">
-            <h2>Lorem Ipsum!</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-                pharetra aliquet mi, ac semper orci egestas eget.</p>
+            <h2>우리 스터디할래?</h2>
+            <p>현재 사람들이 올려놓은 스터디들을 보러가보실까요? 쉽게 참여하고 쉽게 공부하면서 같이 성장해가요.</p>
             <button className="study-button" onClick={()=>navigate("/study/depart/cse")}>스터디 보러가기</button>
           </div>
           <div className="img-wrapper">

@@ -9,7 +9,7 @@ import { configStore } from "./utils/configStore";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { createGlobalStyle } from "styled-components";
 import { normalize } from "styled-normalize";
-import './Assets/css/fonts.css';
+import "./Assets/css/fonts.css";
 
 const GlobalStyle = createGlobalStyle`
     @font-face {
@@ -37,6 +37,12 @@ const GlobalStyle = createGlobalStyle`
         font-weight: normal;
         font-style: normal;
       }
+      @font-face {
+        font-family: 'Galmuri9';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/Galmuri9.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
   ${normalize}
   body,html {
     padding:0;
@@ -51,7 +57,11 @@ const GlobalStyle = createGlobalStyle`
       #main-content {
         flex: 1;
         position: relative;
+        p {
+          font-family: 'Galmuri9', sans-serif;
+        }
       }
+      font-family: 'SEBANG_Gothic_Bold', sans-serif;
     }
   }
   h1,h2,h3,h4,h5,h6,p {

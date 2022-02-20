@@ -36,6 +36,10 @@ import AllDepartmentStudy from './pages/AllDepartmentStudy';
 import { useQuery } from 'react-query';
 import StudyCalendar from './Components/Study/StudyCalendar';
 import PasswordChangeCompletePage from './pages/PasswordChangeCompletePage';
+import ProfileEditPage from './pages/ProfileEditPage';
+import FindRoomPage  from './pages/FindRoomPage';
+import CreateRoomPage from './pages/CreateRoomPage';
+import VideoPage from './pages/VideoPage';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -73,12 +77,10 @@ const App = () => {
               <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} >
                 <Route path="accountInfo" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="mystudy" element={<PrivateRoute><MyStudy /></PrivateRoute>} />
-                <Route path="mycallvan" element={<PrivateRoute><h1>마이 콜밴 페이지</h1></PrivateRoute>} />
-                <Route path="mymarket" element={<PrivateRoute><h1>마이 마켓 페이지</h1></PrivateRoute>} />
+                <Route path="edit" element={<ProfileEditPage />} />
               </Route>
               <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
               <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
-              <Route path="/callvan/:id" element={<PrivateRoute><h1>하위 페이지!</h1></PrivateRoute>} />
               <Route path="/signup/complete" element={<SignUpCompletePage />} />
               <Route path="/password/reset" element={<PasswordChangeCompletePage />} />
               <Route path="/logout" element={<Logout />} />
@@ -95,6 +97,9 @@ const App = () => {
                 <Route path=":boardId/article/:articleId/edit" element={<PrivateRoute><BoardArticlePostEdit /></PrivateRoute>} />
                 <Route path="manage" element={<PrivateRoute><StudyManage /></PrivateRoute>} />
                 <Route path="calendar" element={<StudyCalendar />} />
+                <Route path="create" element={<CreateRoomPage />} />
+                <Route path="rooms" element={<FindRoomPage />} />
+                <Route path="rooms/:roomId" element={<VideoPage />} />
               </Route>
               <Route path="*" element={<div>Not Found</div>} />
             </Routes>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getCookie } from "../utils/cookie";
+import { spring_server } from "../utils/config";
 
 export const findAllRooms = async () => {
   return await axios.get("/room");
@@ -398,6 +399,71 @@ export const deleteBoardCategory = async (studyId, boardId,accessToken) => {
 
 export const changepassword = async (data,accessToken) => {
   return await axios.post(`/sign/password`,data,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const createStudySchedule = async (studyId, data, accessToken) => {
+  return await axios.post(
+    `/study/${studyId}/schedule`,
+    data,
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
+};
+
+export const getStudySchedule = async (studyId, accessToken) => {
+  return await axios.get(`/study/${studyId}/schedule`, {
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    },
+  });
+};
+
+export const updateStudySchedule = async (studyId, scheduleId, data, accessToken) => {
+  return await axios.put(
+    `/study/${studyId}/schedule/${scheduleId}`,
+    data, {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
+};
+
+export const deleteStudySchedule = async (studyId, scheduleId, accessToken) => {
+  return await axios.delete(`/study/${studyId}/schedule/${scheduleId}`, {
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const createVideoRoom = async (studyId, request,accessToken) => {
+  return await axios.post(`${spring_server}/study/${studyId}/videoroom`, 
+      request,{
+        headers: {
+          "X-AUTH-TOKEN": accessToken,
+        },
+      }
+  );
+};
+
+export const findVideoRooms = async (studyId,accessToken) => {
+  return await axios.get(`${spring_server}/study/${studyId}/videoroom`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const destroyVideoRoom = async (studyId,roomId,accessToken) => {
+  return await axios.delete(`${spring_server}/study/${studyId}/videoroom/${roomId}`,{
     headers: {
       "X-AUTH-TOKEN": accessToken,
     }

@@ -28,7 +28,7 @@ export const AuthContainer = styled.div`
         margin-top: 1rem;
         border: 0;
         border-radius: 5px;
-        background-color: #ffc107;
+        background-color: #0049AF;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -37,7 +37,7 @@ export const AuthContainer = styled.div`
         transition: all 0.3s linear;
         &:hover {
             cursor: pointer;
-            background-color: #0049AF;
+            background-color: #ffc107;
             transition: all 0.3s linear;
         }
     }
