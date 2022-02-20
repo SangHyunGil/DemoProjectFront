@@ -374,17 +374,17 @@ const MainComp = () => {
           <SubInfoBlock
             Icon={<InsertEmoticonIcon />}
             Subtitle="스터디 골목"
-            SubContent="우리만의 스터디 골목으로 놀러오세요."
+            SubContent="우리만의 스터디 골목으로 놀러오세요. 편하고 쉽게 스터디를 생성하고 일원이 될 수 있어요!"
           />
           <SubInfoBlock
             Icon={<ThumbUpOffAltIcon />}
             Subtitle="편리함"
-            SubContent="스터디 관리를 편하게 진행해보세요."
+            SubContent="누구나 쉽게 스터디를 관리하고 운영할 수 있어요! 당장 스터디를 시작해보세요."
           />
           <SubInfoBlock
             Icon={<AccessibilityNewIcon />}
             Subtitle="공부하기 편안함"
-            SubContent="편하게 공부하면서 학습해봐요."
+            SubContent="편하게 공부하면서 학습하기 위한 공간을 마련했어요! 다들 한 번씩 가입해서 이용해봐요."
           />
         </SubInfo>
       </Main>
