@@ -324,7 +324,7 @@ const VideoComponent = () => {
                   } else if (event === "destroyed") {
                     // 방 삭제
                     Janus.warn("The room has been destroyed!");
-                    navigate("/create");
+                    navigate(`/study/${studyId}/board/create`);
                   } else if (event === "event") {
                     // 새로운 Publisher 접속시
                     if (msg["publishers"]) {
