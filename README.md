@@ -11,6 +11,10 @@ Koner(코너)
 
 package.json을 참고해 주시면 감사하겠습니다.
 
+### 기술 스택
+
+React, react-query, redux 등...
+
 ### Installing
 
 yarn install or yarn을 통해 package들을 설치하면 됩니다.
