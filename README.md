@@ -9,8 +9,6 @@ Koner(코너)
 
 한기대생을 위한 스터디 플랫폼
 
-## Getting Started
-
 ### Dependencies
 
 package.json을 참고해 주시면 감사하겠습니다.
