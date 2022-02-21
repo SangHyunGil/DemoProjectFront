@@ -33,11 +33,15 @@ const UpdateFormStyle = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
     .TagsWrapper {
         display: flex;
         gap: 10px;
         margin-top: 10px;
         flex-wrap: wrap;
+    }
+    .als {
+        align-self: flex-start;
     }
 `;
 
@@ -238,14 +242,14 @@ function UpdateStudy() {
                         <option value="other">기타</option>
                     </select>
                 </FormControl>
-                <label htmlFor="studyState">스터디 상태</label>
+                <label htmlFor="studyState" className="als">스터디 상태</label>
                 <select {...register('studyState')} style={{width: '100%'}}>
                     {study.map((x) => (
                         <option key={x.id} value={x.val}>{x.val}</option>
                     ))}
                 </select>
-                <label htmlFor="recruitState">모집 상태</label>
-                <div>
+                <label htmlFor="recruitState" className="als">모집 상태</label>
+                <div className='als'>
                     {recruit.map((x) =>
                     <React.Fragment key={x.id}>
                         <input

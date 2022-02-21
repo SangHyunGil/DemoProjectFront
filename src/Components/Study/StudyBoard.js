@@ -131,20 +131,20 @@ function StudyBoard() {
                 {cat.title}
               </Category>
             ))}
+            <Category activeclassname="active" to={`/study/${studyId}/board/calendar`} onClick={()=>setCurrentBoard('캘린더')}>
+              스터디 캘린더
+            </Category>
+            <Category activeclassname="active" to={`/study/${studyId}/board/rooms`}>
+              스터디 화상채팅
+            </Category>
+            <Category activeclassname="active" to={`/study/${studyId}`}>
+              게시판 정보
+            </Category>
             {IsGranted && (
-              <Category to={`/study/${studyId}/board/manage`} onClick={()=>setCurrentBoard('게시판 관리')}>
+              <Category activeclassname="active" to={`/study/${studyId}/board/manage`} onClick={()=>setCurrentBoard('게시판 관리')}>
                 게시판 관리
               </Category>
             )}
-            <Category to={`/study/${studyId}`} style={{ color: "black" }}>
-              게시판 정보
-            </Category>
-            <Category to={`/study/${studyId}/board/calendar`} onClick={()=>setCurrentBoard('캘린더')}>
-              스터디 캘린더
-            </Category>
-            <Category to={`/study/${studyId}/board/rooms`}>
-              스터디 화상채팅
-            </Category>
           </DrawerWrapper>
         </SwipeableDrawer>
       </CategoryWrapper>

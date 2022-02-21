@@ -307,8 +307,8 @@ function BoardDetail({ boardId }) {
     if (BoardContent && BoardMember) {
       let a = BoardMember.length;
       BoardMember?.forEach((member) => {
-        const { nickname: Nick, studyRole } = member;
-        if (nickname === Nick) {
+        const { member:{nickname: Nick, memberId}, studyRole } = member;
+        if (id === memberId) {
           if (studyRole === "APPLY") {
             a -= 1;
             setIsApply(true);
@@ -429,16 +429,16 @@ function BoardDetail({ boardId }) {
           <CardContent>
             <h3>스터디 원들</h3>
             {BoardMember?.map((m) => {
-              const { nickname: Nick, profileUrlImg, studyRole } = m;
+              const { member: { nickname: Nick,profileImgUrl,memberId},studyRole } = m;
               if (studyRole === "APPLY") {
                 return null;
               }
               return (
-                <AvatarWrapper key={Nick}>
+                <AvatarWrapper key={memberId}>
                   <Avatar
                     alt={Nick}
                     src={
-                      profileUrlImg
+                      profileImgUrl
                     }
                   />
                   <span>{Nick}</span>
