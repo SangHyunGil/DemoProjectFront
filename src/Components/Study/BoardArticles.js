@@ -79,6 +79,11 @@ const CreateArticleForm = styled.form`
   flex-direction: column;
   align-items: center;
   padding-bottom: 2rem;
+  .quill {
+    display: flex;
+    flex-direction: column;
+    height: 50vh;
+  }
   button {
     background-color: #0049af;
     transition: all 0.3s linear;
@@ -352,7 +357,10 @@ function BoardArticles() {
         />
       </PaginationWrapper>
       {IsModalUp && (
-        <MuiDialog open={IsModalUp} onClose={() => setIsModalUp(false)}>
+        <MuiDialog open={IsModalUp} onClose={() => setIsModalUp(false)}
+          fullWidth
+          maxWidth="lg"
+        >
           <h2 style={{ textAlign: "center" }}>게시글 작성</h2>
           <CreateArticleForm onSubmit={createArticleHandler}>
             <FormControl sx={{ m: 1, width: "60%" }}>

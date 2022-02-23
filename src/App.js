@@ -40,6 +40,7 @@ import ProfileEditPage from './pages/ProfileEditPage';
 import FindRoomPage  from './pages/FindRoomPage';
 import CreateRoomPage from './pages/CreateRoomPage';
 import VideoPage from './pages/VideoPage';
+import AboutUsPage from './pages/AboutUsPage';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -101,6 +102,7 @@ const App = () => {
                 <Route path="rooms" element={<FindRoomPage />} />
                 <Route path="rooms/:roomId" element={<VideoPage />} />
               </Route>
+              <Route path='/aboutus' element={<AboutUsPage />} />
               <Route path="*" element={<div>Not Found</div>} />
             </Routes>
           </div>

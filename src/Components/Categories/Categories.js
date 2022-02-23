@@ -11,6 +11,7 @@ import HomeIcon from '@mui/icons-material/Home';
 
 const category = [
   { name: "all", title: "메인" },
+  {name: 'aboutus', title: '소개'},
   { name: "study/depart/CSE", title: "스터디" },
 ];
 
