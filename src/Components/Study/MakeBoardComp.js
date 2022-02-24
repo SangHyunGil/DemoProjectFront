@@ -34,6 +34,7 @@ export const MakeBoardContainer = styled.section`
         width: 80%;
         box-shadow: none;
     }
+    
 `;
 
 const MakeBoardForm = styled.form`

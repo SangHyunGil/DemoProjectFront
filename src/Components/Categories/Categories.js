@@ -8,10 +8,11 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
 
 const category = [
   { name: "all", title: "메인" },
-  {name: 'aboutus', title: '소개'},
+  { name: 'aboutus', title: '소개'},
   { name: "study/depart/CSE", title: "스터디" },
 ];
 
@@ -214,17 +215,18 @@ function Categories(props) {
         </CategoryMiddleWrapper>
       </CategoryWrapper>
       {props.children}
-      <BottomNavBar elevation={2}>
+      <BottomNavBar elevation={3}>
           <BottomNavigation
             showLabels={true}
             value={IsSelected}
-            onChange={(newValue) => {
-              newValue = newValue === 0 ? 'all' : 'study';
+            onChange={(event,newValue) => {
+              console.log(newValue);
               setIsSelected(newValue);
             }}
           >
             <BottomNavBarAction label="메인" value='all' onClick={()=>navigate('/')} icon={<HomeIcon />} />
-            <BottomNavBarAction label="스터디" value='study' onClick={()=>navigate('/study/depart/cse')} icon={<BorderColorIcon />} />
+            <BottomNavBarAction label="소개" value='aboutus' onClick={()=>navigate('/aboutus')} icon={<InfoIcon />} />
+            <BottomNavBarAction label="스터디" value='study' onClick={()=>navigate('/study/depart/CSE')} icon={<BorderColorIcon />} />
           </BottomNavigation>
       </BottomNavBar>
     </>
