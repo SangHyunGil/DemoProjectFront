@@ -75,11 +75,110 @@ const AboutUSMain = styled.main`
             flex-direction: column;
         }
     }
-    .MainContentAction {
-        margin-top: 1rem;
+`;
+
+const AboutUsQuote = styled.section`
+    height: 50vh;
+    max-height: 500px;
+    background-image: url('https://cdn.pixabay.com/photo/2015/01/09/11/09/meeting-594091_960_720.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: rgba(0,0,0,0.2);
+    background-blend-mode: multiply;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    gap: 1rem;
+    text-align: center;
+    h2 {
+        font-size: 3rem;
+    }
+    .StudyAction {
+        button {
+            border: none;
+            background-color: #0049af;
+            padding: 1rem 2rem;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s linear;
+            border-radius: 5px;
+            &:hover {
+                background-color: #ffc107;
+                transition: all 0.3s linear;
+            }
+
+        }
+    }
+`;
+
+const AboutUsFooter = styled.footer`
+    max-height: 500px;
+    .footerName {
         display: flex;
         justify-content: center;
         align-items: center;
+        h2 {
+            font-size: 2rem;
+        }
+        margin: 1rem;
+    }
+    .footerMain {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+        .card {
+            display: flex;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+            width: 30ch;
+            .cardImg {
+                padding: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                img {
+                    width: 100px;
+                    height: 100px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+            }
+            .cardContent {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 1rem;
+                hr {
+                    width: 100%;
+                    border: 0;
+                    border-top: 1px solid black;
+                }
+            }
+            &:first-child {
+                .cardImg {
+                    background-color: #EA746A;
+                }
+            }
+            &:last-child { 
+                .cardImg {
+                    background-color: #92BBA6;
+                }
+            }
+        }
+    }
+    @media (max-width: 390px) {
+        margin-bottom: 6rem;
+        .footerMain {
+            .card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
     }
 `;
 
@@ -159,10 +258,42 @@ function AboutUsPage() {
             <div className="MainContentContainer">
                 {InfoAry.map(info => <InfoBlock key={info.id} imgUrl={info.imgUrl} title={info.title} content={info.content} />)}
             </div>
-            <div className="MainContentAction">
+        </AboutUSMain>
+        <AboutUsQuote>
+            <h2>Let's Study Together!</h2>
+            <div className="StudyAction">
                 <button>스터디 보러 가기</button>
             </div>
-        </AboutUSMain>
+        </AboutUsQuote>
+        <AboutUsFooter>
+            <div className="footerName">
+               <h2>Contact Us</h2> 
+            </div>
+            <div className="footerMain">
+                <div className='card'>
+                    <div className="cardImg">
+                        <img src='https://cdn.pixabay.com/photo/2017/04/01/21/06/portrait-2194457_960_720.jpg' alt='cardImg' />
+                    </div>
+                    <div className="cardContent">
+                        <h3 className='name'>유승범</h3>
+                        <p className='title'>FrontEnd Developer</p>
+                        <hr />
+                        <p className="email">syu9710@gmail.com</p>
+                    </div>
+                </div>
+                <div className='card'>
+                    <div className="cardImg">
+                        <img src='https://cdn.pixabay.com/photo/2017/04/01/21/06/portrait-2194457_960_720.jpg' alt='cardImg' />
+                    </div>
+                    <div className="cardContent">
+                        <h3 className='name'>길상현</h3>
+                        <p className='title'>BackEnd Developer</p>
+                        <hr />
+                        <p className="email">zizon5941@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+        </AboutUsFooter>
     </>
   )
 }
