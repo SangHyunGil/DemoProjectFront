@@ -269,12 +269,14 @@ const reducer = (state = initialState, action) =>
                 break;
 
             case LOGIN_SUCCESS:
+                console.log(action.payload);
                 draft.id = action.payload.id;
                 draft.email = action.payload.email;
                 draft.nickname = action.payload.nickname;
                 draft.department = action.payload.department;
                 draft.accessToken = action.payload.accessToken;
                 draft.studyIds = action.payload.studyIds;
+                draft.password = action.payload.password;
                 draft.loginLoading = false;
                 draft.loginDone = true;
                 draft.isLogin = true;

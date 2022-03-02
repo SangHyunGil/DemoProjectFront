@@ -37,12 +37,6 @@ const GlobalStyle = createGlobalStyle`
         font-weight: normal;
         font-style: normal;
       }
-      @font-face {
-        font-family: 'Galmuri9';
-        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/Galmuri9.woff') format('woff');
-        font-weight: normal;
-        font-style: normal;
-      }
   ${normalize}
   body,html {
     padding:0;

@@ -12,6 +12,7 @@ import { getRoomInfo } from "../../reducers/roomReducer";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from 'react-query';
 import { getCookie } from "../../utils/cookie";
+import { Avatar } from '@mui/material';
 
 const CardWrapper = styled(motion.div)`
   width: 90vw;
@@ -19,7 +20,7 @@ const CardWrapper = styled(motion.div)`
   grid-template-columns: repeat(auto-fill, minmax(200px, auto));
   grid-gap: 10px;
   justify-items: center;
-  margin: 0 auto;
+  margin: 2rem auto;
   & > div {
     tex-decoration: none;
     width: 100%;
@@ -33,6 +34,10 @@ const RoomCard = styled(Card)`
   text-decoration: none;
   &:hover {
     background-color: rgb(203 227 251);
+  }
+  .nameWrapper {
+    display: flex;
+    align-items: center;
   }
 `;
 
@@ -110,7 +115,10 @@ const FindRoom = () => {
                 <RoomCard>
                   <CardContent>
                     <h2>{room.title}</h2>
-                    <p>{room.creator.nickname}</p>
+                    <div className="nameWrapper">
+                      <Avatar alt={room?.creator?.nickname} src={room?.creator?.profileImgUrl} />
+                      <p>{room?.creator?.nickname}</p>
+                    </div>
                   </CardContent>
                 </RoomCard>
               </div>

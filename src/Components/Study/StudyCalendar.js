@@ -96,13 +96,10 @@ const Toolbar = (props) => {
 const MonthEvent = ({ event }) => {
   //console.log(event);
   return (
-    <React.Fragment>
-      <div>{event.title}</div>
-      <div>
-        {moment(event?.startTime).format("hh:mm a")}~
-        {moment(event?.endTime).format("hh:mm a")}
-      </div>
-    </React.Fragment>
+    <>
+      <p>{`${event.title} ${moment(event?.startTime).format("hh:mm a")}~
+        ${moment(event?.endTime).format("hh:mm a")}`}</p>
+    </>
   );
 };
 //padstart

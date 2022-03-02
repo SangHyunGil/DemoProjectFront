@@ -469,3 +469,11 @@ export const destroyVideoRoom = async (studyId,roomId,accessToken) => {
     }
   });
 };
+
+export const getMailMember = async (accessToken) => {
+  return await axios.get(`/messages`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};

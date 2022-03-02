@@ -3,7 +3,7 @@ import { findBoard, join, getBoardCategory, getStudyMembers } from "../../Api/Ap
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { getCookie } from "../../utils/cookie";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
@@ -105,7 +105,7 @@ const DetailCard = styled(Card)`
 const AvatarWrapper = styled.div`
   margin-top: 1rem;
   display: inline-flex;
-  span {
+  a {
     display: flex;
     align-items: center;
   }
@@ -252,6 +252,16 @@ const ApplyForm = styled.form`
   }
 `;
 
+const MemberLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  padding: 3px 5px;
+  &:hover {
+    background-color: rgba(116, 185, 255,.8);
+    border-radius: 5px;
+  }
+`;
+
 function BoardDetail({ boardId }) {
   const navigate = useNavigate();
   const params = useParams();
@@ -307,9 +317,8 @@ function BoardDetail({ boardId }) {
     if (BoardContent && BoardMember) {
       let a = BoardMember.length;
       BoardMember?.forEach((member) => {
-        const { nickname: Nick } = member.member;
-        const { studyRole } = member;
-        if (nickname === Nick) {
+        const { member:{nickname: Nick, memberId}, studyRole } = member;
+        if (id === memberId) {
           if (studyRole === "APPLY") {
             a -= 1;
             setIsApply(true);
@@ -382,7 +391,7 @@ function BoardDetail({ boardId }) {
                 />
               </li>
               <li style={{ paddingTop: "10px" }}>
-                {BoardContent?.creator?.nickname}
+                <MemberLink to={`/userinfo/${BoardContent?.creator?.memberId}`}>{BoardContent?.creator?.nickname}</MemberLink>
               </li>
             </ul>
             <StudyStatusWrapper>
@@ -430,20 +439,19 @@ function BoardDetail({ boardId }) {
           <CardContent>
             <h3>스터디 원들</h3>
             {BoardMember?.map((m) => {
-              const { nickname: Nick, profileImgUrl: profileUrlImg } = m.member;
-              const { studyRole } = m;
+              const { member: { nickname: Nick,profileImgUrl,memberId},studyRole } = m;
               if (studyRole === "APPLY") {
                 return null;
               }
               return (
-                <AvatarWrapper key={Nick}>
+                <AvatarWrapper key={memberId}>
                   <Avatar
                     alt={Nick}
                     src={
-                      profileUrlImg
+                      profileImgUrl
                     }
                   />
-                  <span>{Nick}</span>
+                  <MemberLink to={`/userinfo/${memberId}`}>{Nick}</MemberLink>
                 </AvatarWrapper>
               );
             })}

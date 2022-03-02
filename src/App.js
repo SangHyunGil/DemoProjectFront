@@ -33,13 +33,16 @@ import BoardArticlePostEdit from './pages/BoardArticlePostEdit';
 import { getCookie } from './utils/cookie';
 import StudyDepartmentComp from './Components/Study/StudyDepartmentComp';
 import AllDepartmentStudy from './pages/AllDepartmentStudy';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import StudyCalendar from './Components/Study/StudyCalendar';
 import PasswordChangeCompletePage from './pages/PasswordChangeCompletePage';
 import ProfileEditPage from './pages/ProfileEditPage';
 import FindRoomPage  from './pages/FindRoomPage';
 import CreateRoomPage from './pages/CreateRoomPage';
 import VideoPage from './pages/VideoPage';
+import AboutUsPage from './pages/AboutUsPage';
+import MailPage from './pages/MailPage';
+import UserInfoPage from './pages/UserInfoPage';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -47,9 +50,13 @@ const App = () => {
   const { isLogin, isChecked } = useSelector(
     (state) => state.users
   );
+  const queryClient = useQueryClient();
 
-  const result = useQuery(['loadMyInfo'],()=>findUserBoard(getCookie('accessToken')),{
+  const _ = useQuery(['loadMyInfo'],()=>findUserBoard(getCookie('accessToken')),{
     enabled: isLogin,
+    onSuccess: (data) => {
+      queryClient.setQueryData('MyInfo', data);
+    } 
   });
 
   useEffect(() => {
@@ -58,7 +65,7 @@ const App = () => {
         checkAccessToken(dispatch);
       }
       //console.log("refresh Page");
-      console.log(isLogin);
+      //console.log(isLogin);
     }
   });
 
@@ -78,12 +85,10 @@ const App = () => {
                 <Route path="accountInfo" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="mystudy" element={<PrivateRoute><MyStudy /></PrivateRoute>} />
                 <Route path="edit" element={<ProfileEditPage />} />
-                <Route path="mycallvan" element={<PrivateRoute><h1>마이 콜밴 페이지</h1></PrivateRoute>} />
-                <Route path="mymarket" element={<PrivateRoute><h1>마이 마켓 페이지</h1></PrivateRoute>} />
               </Route>
+              <Route path='userinfo/:id' element={<UserInfoPage />} />
               <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
               <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
-              <Route path="/callvan/:id" element={<PrivateRoute><h1>하위 페이지!</h1></PrivateRoute>} />
               <Route path="/signup/complete" element={<SignUpCompletePage />} />
               <Route path="/password/reset" element={<PasswordChangeCompletePage />} />
               <Route path="/logout" element={<Logout />} />
@@ -104,6 +109,8 @@ const App = () => {
                 <Route path="rooms" element={<FindRoomPage />} />
                 <Route path="rooms/:roomId" element={<VideoPage />} />
               </Route>
+              <Route path='/aboutus' element={<AboutUsPage />} />
+              <Route path='/mail' element={<MailPage />} /> 
               <Route path="*" element={<div>Not Found</div>} />
             </Routes>
           </div>

@@ -237,6 +237,7 @@ function BoardArticlesPost() {
   } = useForm();
   const queryClient = useQueryClient();
   const { id, nickname } = useSelector((state) => state.users);
+  //console.log(id);
   const {data:studyMembers} = useQuery(['getStudyMembers',studyId,boardId,articleId],()=>getStudyMembers(studyId),{
     select: (data) => data.data.data,
     onSuccess: (data) => {
@@ -390,7 +391,7 @@ function BoardArticlesPost() {
             <h1>{article?.title}</h1>
             {(myInfo?.studyRole === "ADMIN" ||
               myInfo?.studyRole === "CREATOR" ||
-              userInfo?.nickname === article?.memberName) && (
+              userInfo?.member?.nickname === article?.memberName) && (
               <div className="ArticleAction">
                 <Link to="edit">수정</Link>
                 <button onClick={deleteArticlePostHandler} type="button">
@@ -404,7 +405,7 @@ function BoardArticlesPost() {
           </div>
         </header>
         <main>
-          <p>{article?.content}</p>
+          <div dangerouslySetInnerHTML={{__html:article?.content}} />
         </main>
         <div className="Reply">
           <form onSubmit={handleSubmit(replyHandler)}>
@@ -424,24 +425,24 @@ function BoardArticlesPost() {
           {comments?.length === 0 && <p>댓글이 없습니다.</p>}
           {comments?.map((comment) => {
             return (
-              <div className="Comment" key={comment.commentId}>
+              <div className="Comment" key={comment?.id}>
                   <React.Fragment>
                     <div className="CommentHeader">
                       <div className="CommentTitle">
                         <Avatar
-                          alt={comment.memberProfile.nickname}
-                          src={comment.memberProfile.profileImgUrl}
+                          alt={comment?.creator?.nickname}
+                          src={comment.creator?.profileImgUrl}
                         />
-                        <span>{comment.memberProfile.nickname}</span>
+                        <span>{comment?.creator?.nickname}</span>
                       </div>
                       <div className="CommentAction" >
-                        {(comment?.memberProfile?.nickname === nickname && comment?.content !== null) && (
+                        {(comment?.creator?.nickname === nickname && comment?.content !== null) && (
                           <React.Fragment>
                             <Button
                               variant="outlined"
                               onClick={() => {
                                 setreplyComments((prev) => ({
-                                  id: comment.commentId,
+                                  id: comment.id,
                                   replyFormVisible: !prev.replyFormVisible,
                                   variant: "update",
                                 }));
@@ -454,7 +455,7 @@ function BoardArticlesPost() {
                               variant="outlined"
                               color="error"
                               onClick={() =>
-                                deleteCommentHandler(comment.commentId)
+                                deleteCommentHandler(comment.id)
                               }
                               style={{fontFamily: 'SEBANG_Gothic_Bold, sans-serif'}}
                             >
@@ -481,27 +482,27 @@ function BoardArticlesPost() {
                             <div>
                               {comment?.children?.map((child) => (
                                 <CommentsReplyContentStyle
-                                  key={child.commentId}
+                                  key={child.id}
                                 >
                                   <div className="CommentReplyContentWrapper">
                                     <div className="CommentReplyContentHeader">
                                       <Avatar
-                                        alt={child.memberProfile.nickname}
-                                        src={child.memberProfile.profileImgUrl}
+                                        alt={child?.creator?.nickname}
+                                        src={child?.creator?.profileImgUrl}
                                       />
-                                      <p>{child.memberProfile.nickname}</p>
+                                      <p>{child?.creator?.nickname}</p>
                                     </div>
                                     <div className="CommentReplyContentMain">
                                       <p>{child.content}</p>
                                     </div>
                                     <div className="CommentReplyContentAction">
-                                      {child?.memberProfile?.nickname ===
+                                      {child?.creator?.nickname ===
                                         nickname && (
                                         <React.Fragment>
                                           <button
                                             onClick={() =>
                                               deleteCommentHandler(
-                                                child.commentId
+                                                child.id
                                               )
                                             }
                                           >
@@ -510,7 +511,7 @@ function BoardArticlesPost() {
                                           <button
                                             onClick={() => {
                                               setreplyComments((prev) => ({
-                                                id: child.commentId,
+                                                id: child.id,
                                                 replyFormVisible:
                                                   !prev.replyFormVisible,
                                                 variant: "update",
@@ -523,7 +524,7 @@ function BoardArticlesPost() {
                                       )}
                                     </div>
                                   </div>
-                                  {replyComments.id === child.commentId &&
+                                  {replyComments.id === child.id &&
                                     replyComments.replyFormVisible && (
                                       <CommentsReplyStyle
                                         onSubmit={updateHandleSubmit(
@@ -555,12 +556,12 @@ function BoardArticlesPost() {
                               onClick={() => {
                                 replyComments.variant === "reply"
                                   ? setreplyComments((prev) => ({
-                                      id: comment.commentId,
+                                      id: comment.id,
                                       replyFormVisible: !prev.replyFormVisible,
                                       variant: "reply",
                                     }))
                                   : setreplyComments((prev) => ({
-                                      id: comment.commentId,
+                                      id: comment.id,
                                       replyFormVisible: prev.replyFormVisible,
                                       variant: "reply",
                                     }));
@@ -573,7 +574,7 @@ function BoardArticlesPost() {
                                 <div className="FormOpen">▼답글 열기</div>
                               )}
                             </button>
-                            {replyComments.id === comment.commentId &&
+                            {replyComments.id === comment.id &&
                               replyComments.replyFormVisible && (
                                 <CommentsReplyStyle
                                   onSubmit={secondHandleSubmit(

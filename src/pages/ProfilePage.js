@@ -51,8 +51,6 @@ const ProfilePage = () => {
       <ProfilePageWrapper> 
         <ProfilePageLinks activeclassname="active" to="/profile/accountInfo">Profile</ProfilePageLinks>
         <ProfilePageLinks activeclassname="active" to="/profile/mystudy">내스터디</ProfilePageLinks>
-        <ProfilePageLinks activeclassname="active" to="/profile/mycallvan">내콜밴</ProfilePageLinks>
-        <ProfilePageLinks activeclassname="active" to="/profile/mymarket">내장터</ProfilePageLinks>
       </ProfilePageWrapper>
       <Outlet />
     </>

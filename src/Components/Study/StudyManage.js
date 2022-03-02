@@ -397,9 +397,9 @@ function StudyManage() {
                 const { studyRole } = Member;
                 if (studyRole !== "APPLY") {
                   return (
-                    <StudyMemberContainer key={Member.member.nickname}>
+                    <StudyMemberContainer key={Member?.member?.memberId}>
                       <div className="StudyMemberWrapper">
-                        <span>{Member.member.nickname}</span>
+                        <span>{Member?.member?.nickname}</span>
                         <span>{Member.studyRole}</span>
                       </div>
                     </StudyMemberContainer>
@@ -416,18 +416,18 @@ function StudyManage() {
                 const { studyRole } = Member;
                 if (studyRole === "APPLY") {
                   return (
-                    <React.Fragment key={Member.member.nickname}>
+                    <React.Fragment key={Member?.member?.memberId}>
                       <div>
                         <ApplicantStyle
                           onClick={() => {
                             setisApplyModalUp(true);
                             setApplyInfo({
-                              memberId: Member.member.memberId,
+                              memberId: Member.id,
                               applyContent: Member.applyContent,
                             });
                           }}
                         >
-                          <div>{Member.member.nickname}</div>
+                          <div>{Member?.member?.nickname}</div>
                         </ApplicantStyle>
                       </div>
                     </React.Fragment>

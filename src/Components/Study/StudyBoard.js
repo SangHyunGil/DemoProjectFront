@@ -57,7 +57,7 @@ function StudyBoard() {
       select: (data) => data.data.data,
       onSuccess: (data) => {
         const myInfo = data.find(
-          (info) => info.member.nickname === myinfos?.data?.data?.nickname
+          (info) => info.member?.memberId === myinfos?.data?.data?.id
         );
         if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
           setIsGranted(true);
@@ -84,12 +84,13 @@ function StudyBoard() {
 
   useEffect(() => {
     if (!!myinfos?.data?.data?.nickname && !!studyInfos) {
+      console.log(myinfos);
       const {
         data: {
-          data: { nickname },
+          data: { id },
         },
       } = myinfos;
-      const myInfo = studyInfos?.find((info) => info.member.nickname === nickname);
+      const myInfo = studyInfos?.find((info) => info.member?.memberId === id);
       if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
         setIsGranted(true);
       } else {
@@ -131,20 +132,20 @@ function StudyBoard() {
                 {cat.title}
               </Category>
             ))}
+            <Category activeclassname="active" to={`/study/${studyId}/board/calendar`} onClick={()=>setCurrentBoard('캘린더')}>
+              스터디 캘린더
+            </Category>
+            <Category activeclassname="active" to={`/study/${studyId}/board/rooms`}>
+              스터디 화상채팅
+            </Category>
+            <Category activeclassname="active" to={`/study/${studyId}`}>
+              게시판 정보
+            </Category>
             {IsGranted && (
-              <Category to={`/study/${studyId}/board/manage`} onClick={()=>setCurrentBoard('게시판 관리')}>
+              <Category activeclassname="active" to={`/study/${studyId}/board/manage`} onClick={()=>setCurrentBoard('게시판 관리')}>
                 게시판 관리
               </Category>
             )}
-            <Category to={`/study/${studyId}`} style={{ color: "black" }}>
-              게시판 정보
-            </Category>
-            <Category to={`/study/${studyId}/board/calendar`} onClick={()=>setCurrentBoard('캘린더')}>
-              스터디 캘린더
-            </Category>
-            <Category to={`/study/${studyId}/board/rooms`}>
-              스터디 화상채팅
-            </Category>
           </DrawerWrapper>
         </SwipeableDrawer>
       </CategoryWrapper>

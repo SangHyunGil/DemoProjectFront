@@ -12,6 +12,8 @@ import MuiAlert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
 import DefaultProfileImg from "../DefaultProfileImg";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import TextField from '@mui/material/TextField';
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -55,6 +57,21 @@ const ProfileFormStyle = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  button {
+    margin-top: 1rem;
+    width: 30%;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #0049AF;
+    transition: all .3s linear;
+    &:hover {
+      background-color: #FFC107;
+      transition: all .3s linear;
+      cursor: pointer;
+    }
+  }
 `;
 
 const ProfileFormHeader = styled.header`
@@ -80,8 +97,9 @@ const ProfileFormHeader = styled.header`
       a {
         text-decoration: none;
         color: #1976d2;
+        padding: 3px 7px;
         &:hover {
-          font-weight: bolder;
+          background: rgba(116, 185, 255,.4);
         }
       }
     }
@@ -118,6 +136,31 @@ const ProfileFormHeader = styled.header`
   }
 `;
 
+export const DepartKrToEng = (depart) => {
+  switch (depart) {
+    case "기계공학부":
+      return "ME";
+    case "전기전자통신공학부":
+      return "ECE";
+    case "컴퓨터공학부":
+      return "CSE";
+    case '디자인, 건축공학부':
+      return 'DEA';
+    case '메카트로닉스공학부':
+      return 'MCE';
+    case "산업경영학부":
+      return 'IM';
+    case '에너지신소재 화학공학부':
+      return "EMCE";
+    case '고용서비스정책학부':
+      return 'ESP';
+    case '기타':
+      return 'ETC';
+    default:
+      return "";
+  }
+};
+
 const ProfileFormMain = styled.main`
   display: flex;
   flex-direction: column;
@@ -125,6 +168,10 @@ const ProfileFormMain = styled.main`
   width: 80%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
+  gap: 1rem;
+  .MainHeader {
+    align-self: flex-start;
+  }
 `;
 
 const Profile = () => {
@@ -132,10 +179,23 @@ const Profile = () => {
     useSelector((state) => state.users);
   let navigate = useNavigate();
   const [backGroundImg, setbackGroundImg] = useState("");
+  const [myInfo, setMyInfo] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
+  const { register, handleSubmit, setValue } = useForm();
 
+  const myInfoData = queryClient.getQueryData(["loadMyInfo"]);
+
+  useEffect(() => {
+    if (myInfoData) {
+      setMyInfo(myInfoData.data.data);
+      setbackGroundImg(myInfoData.data.data.profileImgUrl);
+      setValue('introduce',myInfoData.data.data.introduction);
+    }
+  },[myInfoData,setValue]);
+
+  /*
   const { isLoading, data: myInfo } = useQuery(
     ["loadMyInfo"],
     () => getUserProfileInfo(id, getCookie("accessToken")),
@@ -146,11 +206,11 @@ const Profile = () => {
         setbackGroundImg(data?.profileImgUrl);
       },
     }
-  );
+  );*/
 
   const updateProfileInfoMutation = useMutation(
-    ["updateProfileInfo", id],
-    (data) => updateProfileInfo(data, id, getCookie("accessToken")),
+    ["updateProfileInfo"],
+    ({data,id}) => updateProfileInfo(data, id, getCookie("accessToken")),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["loadMyInfo"]);
@@ -180,16 +240,17 @@ const Profile = () => {
     dispatch(clearChangeUserInfoState());
   }, [changeUserInfoDone]);
 
-  const handleProfile = (e) => {
-    e.preventDefault();
+  const handleProfile = (data) => {
+    //e.preventDefault();
     const formData = new FormData();
     formData.append("nickname", myInfo.nickname);
-    formData.append("department", myInfo.department);
+    formData.append("department", DepartKrToEng(myInfo.department));
     formData.append("email", myInfo.email);
+    formData.append('introduction',data.introduce);
     if (thumbnail) {
       formData.append("profileImg", thumbnail);
     }
-    updateProfileInfoMutation.mutate(formData);
+    updateProfileInfoMutation.mutate({data:formData, id:myInfo.id});
   };
 
   const handleClose = (event, reason) => {
@@ -222,10 +283,10 @@ const Profile = () => {
         onClose={handleClose}
       >
         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          스터디 수정에 성공했습니다!.
+          프로필 변경에 성공했습니다!.
         </Alert>
       </Snackbar>
-      <ProfileFormStyle onSubmit={handleProfile}>
+      <ProfileFormStyle onSubmit={handleSubmit(handleProfile)}>
         <ProfileFormHeader>
           <div className="HeaderTextWrapper">
               <h2>프로필</h2>
@@ -261,6 +322,16 @@ const Profile = () => {
           </div>
         </ProfileFormHeader>
         <ProfileFormMain>
+            <div className="MainHeader">
+                <h2>자기소개</h2>
+            </div>
+            <TextField 
+              multiline
+              rows={10}
+              fullWidth
+              {...register('introduce')}
+              
+            />
         </ProfileFormMain>
         <button type="submit">수정하기</button>
       </ProfileFormStyle>
