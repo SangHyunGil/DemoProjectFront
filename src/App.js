@@ -43,6 +43,7 @@ import VideoPage from './pages/VideoPage';
 import AboutUsPage from './pages/AboutUsPage';
 import MailPage from './pages/MailPage';
 import UserInfoPage from './pages/UserInfoPage';
+import Chat from './Components/Chat/Chat';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -110,7 +111,9 @@ const App = () => {
                 <Route path="rooms/:roomId" element={<VideoPage />} />
               </Route>
               <Route path='/aboutus' element={<AboutUsPage />} />
-              <Route path='/mail' element={<MailPage />} /> 
+              <Route path='/mail' element={<MailPage />} >
+                <Route path="with/:userId" element={<Chat />} />
+              </Route> 
               <Route path="*" element={<div>Not Found</div>} />
             </Routes>
           </div>

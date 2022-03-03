@@ -13,6 +13,7 @@ import { Box } from "@mui/system";
 import { TextareaAutosize } from "@mui/base";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
+import { MemberLink } from "../Style/MemberLink";
 
 const defaultProfileImgUrl =
   "https://koner-bucket.s3.ap-northeast-2.amazonaws.com/profileImg/koryong1.jpg";
@@ -249,16 +250,6 @@ const ApplyForm = styled.form`
   gap: 1rem;
   button {
     align-self: flex-end;
-  }
-`;
-
-const MemberLink = styled(Link)`
-  text-decoration: none;
-  color: black;
-  padding: 3px 5px;
-  &:hover {
-    background-color: rgba(116, 185, 255,.8);
-    border-radius: 5px;
   }
 `;
 

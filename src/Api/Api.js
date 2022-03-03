@@ -477,3 +477,19 @@ export const getMailMember = async (accessToken) => {
     }
   });
 };
+
+export const loadSenderMessage = async (userId,accessToken) => {
+  return await axios.get(`/messages/sender?senderId=${userId}`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const writeMessage = async (data,accessToken) => {
+  return await axios.post(`/messages`,data,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};

@@ -25,6 +25,7 @@ import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { FormControl, Paper } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
+import { MemberLink } from "../Style/MemberLink";
 
 const StudyManageContainer = styled.section`
   width: 80vw;
@@ -399,7 +400,7 @@ function StudyManage() {
                   return (
                     <StudyMemberContainer key={Member?.member?.memberId}>
                       <div className="StudyMemberWrapper">
-                        <span>{Member?.member?.nickname}</span>
+                        <MemberLink to={`/userinfo/${Member?.member?.memberId}`}>{Member?.member?.nickname}</MemberLink>
                         <span>{Member.studyRole}</span>
                       </div>
                     </StudyMemberContainer>
@@ -422,7 +423,7 @@ function StudyManage() {
                           onClick={() => {
                             setisApplyModalUp(true);
                             setApplyInfo({
-                              memberId: Member.id,
+                              memberId: Member?.member?.memberId,
                               applyContent: Member.applyContent,
                             });
                           }}

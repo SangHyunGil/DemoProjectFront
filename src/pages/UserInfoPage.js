@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import { getUserProfileInfo } from '../Api/Api';
 import { getCookie } from '../utils/cookie';
 import styled from 'styled-components';
@@ -60,6 +60,7 @@ const UserInfoWrapper = styled.div`
 function UserInfoPage() {
   const { id } = useParams();
   const [isMyInfo, setIsMyInfo] = useState(false);
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const myData = queryClient.getQueryData('MyInfo');
   const { data: userInfo } = useQuery(['userInfo', id], ()=>getUserProfileInfo(id,getCookie('accessToken')), {
@@ -75,10 +76,13 @@ function UserInfoPage() {
   },[myData, userInfo]);
 
   return (
+    <>
     <UserInfoWrapper>
       <header>
         <h2>프로필</h2>
-        {!isMyInfo && (<Tooltip title="쪽지 보내기" arrow><ForwardToInboxIcon/></Tooltip>)}
+        {!isMyInfo && (<Tooltip title="쪽지 보내기" arrow><ForwardToInboxIcon onClick={
+          () => navigate(`/mail/with/${id}`)
+        }/></Tooltip>)}
       </header>
       <section className="main">
         <div className="imgContainer">
@@ -96,6 +100,7 @@ function UserInfoPage() {
         <p>{userInfo?.introduction}</p>
       </section>
     </UserInfoWrapper>
+    </>
   )
 }
 
