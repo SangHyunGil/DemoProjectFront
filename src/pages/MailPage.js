@@ -81,7 +81,7 @@ function MailPage() {
         {MessageMember?.length > 0 ? <>
           {MessageMember.map((item, index) => (
             <Link key={index} to={myinfo?.id === item.senderId.memberId ? `/mail/with/${item.receiverId.memberId}` : `/mail/with/${item.senderId.memberId}`}>
-              <h3>{item.senderId === myinfo?.id ? item.receiverId.nickname : item.senderId.nickname}</h3>
+              <h3>{item.senderId.memberId === myinfo?.id ? item.receiverId.nickname : item.senderId.nickname}</h3>
               <p>{item.content}</p>
             </Link>        
           ))}

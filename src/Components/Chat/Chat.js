@@ -27,11 +27,16 @@ const MessageInputFormStyle = styled.form`
 `;
 
 const ChatWrapper = styled.div`
+  border-bottom: 1px solid #e6e6e6;
+  padding: 1rem 0;
   .mychat {
     color: skyblue;
   }
   .otherchat {
     color: #ffc107;
+  }
+  .mychat,.otherchat {
+    margin-bottom: 10px;
   }
 `;
 

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { motion } from "framer-motion/dist/framer-motion";
 
 const AboutUsHeader = styled.header`
-    height: 80vh;
-    max-height: 1000px;
+    height: 30vh;
+    max-height: 400px;
     background-color: #FFC107;
     padding: 1%;
     display: flex;
@@ -16,7 +16,7 @@ const AboutUsHeader = styled.header`
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        background-color: rgba(0,0,0,0.2);
+        background-color: rgba(255,255,255,1);
         background-blend-mode: multiply;
         display: flex;
         flex-direction: column;
@@ -34,7 +34,7 @@ const AboutUsHeader = styled.header`
             }
         }
         .QuoteBlock {
-            color: white;
+            color: black;
             width: 80%;
             text-align: center;
         }

@@ -61,7 +61,6 @@ export const Category = styled(NavLink)`
   text-decoration: none;
   position: relative;
   font-size: 1.6rem;
-  font-family: "OTWelcomeBA", sans-serif;
   &:hover {
     color: #ffc107;
   }
@@ -262,7 +261,7 @@ function Categories(props) {
             </Category>
           ))}
         </CategoryMiddleWrapper>
-        <CategoryMiddleWrapper style={{display:'flex'}}>
+        <CategoryMiddleWrapper style={{display:'flex', alignItems:'center'}}>
           {isLogin ? (
             <>
               <Category to="/logout" >
@@ -281,7 +280,7 @@ function Categories(props) {
               </Category>
               <Category to='/mail'>
                 <Badge badgeContent={unreadMessageData} color="secondary">
-                  <MailIcon color="action" />
+                  <MailIcon color="action" style={{fontSize:'2.5rem'}} />
                 </Badge>
               </Category>
               <Badge badgeContent={unreadNotificationData} color="primary">
@@ -291,7 +290,7 @@ function Categories(props) {
                   aria-haspopup="true"
                   aria-expanded={notificationOpen ? 'true' : undefined}
                   onClick={handleClick}
-                  style={{color:notificationColor}}
+                  style={{color:notificationColor, fontSize:'2.5rem',cursor:'pointer'}}
                 />
               </Badge>
               <Menu
