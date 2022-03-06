@@ -40,6 +40,7 @@ function Chat() {
   const queryClient = useQueryClient();
   const myinfo = queryClient.getQueryData("loadMyInfo");
   const { register, handleSubmit, setValue } = useForm();
+
   const { data: SendersMessage, isLoading } = useQuery(
     ["loadSendersMessage", userId],
     () => loadSenderMessage(userId, getCookie("accessToken")),

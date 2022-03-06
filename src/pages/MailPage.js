@@ -80,8 +80,8 @@ function MailPage() {
         <h2>쪽지함</h2>
         {MessageMember?.length > 0 ? <>
           {MessageMember.map((item, index) => (
-            <Link key={index} to={myinfo?.id === item.senderId ? `/mail/with/${item.receiverId}` : `/mail/with/${item.senderId}`}>
-              <h3>{item.senderId === myinfo?.id ? item.receiverId : item.senderId}</h3>
+            <Link key={index} to={myinfo?.id === item.senderId.memberId ? `/mail/with/${item.receiverId.memberId}` : `/mail/with/${item.senderId.memberId}`}>
+              <h3>{item.senderId === myinfo?.id ? item.receiverId.nickname : item.senderId.nickname}</h3>
               <p>{item.content}</p>
             </Link>        
           ))}

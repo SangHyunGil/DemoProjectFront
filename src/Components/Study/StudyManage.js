@@ -13,6 +13,7 @@ import {
   deleteBoard,
   updateBoardCategory,
   deleteBoardCategory,
+  updateStudyMemberAuthority,
 } from "../../Api/Api";
 //import { useSelector } from "react-redux";
 import { getCookie } from "../../utils/cookie";
@@ -22,7 +23,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
 import { StyledModal, Backdrop, Boxstyle } from "./BoardDetail";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
-import { FormControl, Paper } from "@mui/material";
+import { FormControl, Paper, Select, MenuItem } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import { MemberLink } from "../Style/MemberLink";
@@ -250,6 +251,7 @@ const CategoryChangeModal = styled.div`
 `;
 
 function StudyManage() {
+  const [authority, setAuthority] = useState('');
   const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
   const [isBoardCategoryModalUp, setIsBoardCategoryModalUp] = useState(false);
   const [boardCategoryName, setBoardCategoryName] = useState("");
@@ -356,6 +358,12 @@ function StudyManage() {
     }
   );
 
+  const updateAuthorityMutation = useMutation(({memberId,newAuthority})=>updateStudyMemberAuthority(studyId,memberId,newAuthority,getCookie('accessToken')),{
+    onSuccess:()=>{
+      queryClient.invalidateQueries(["studyMembers", studyId]);
+    }
+  });
+
   const ModalUpHandler = () => {
     //모달 핸들러
     setIsBoardModalUp(true);
@@ -386,6 +394,13 @@ function StudyManage() {
     setIsBoardCategoryModalUp(false);
   };
 
+  const handleAuthorityChange = (id,event) => {
+    if (window.confirm("정말로 권한을 변경하시겠습니까?")) {
+      //console.log(id,event.target.value);
+      updateAuthorityMutation.mutate({memberId:id,newAuthority:event.target.value});
+    }
+  };
+
   return (
     <>
       <StudyManageContainer>
@@ -401,7 +416,20 @@ function StudyManage() {
                     <StudyMemberContainer key={Member?.member?.memberId}>
                       <div className="StudyMemberWrapper">
                         <MemberLink to={`/userinfo/${Member?.member?.memberId}`}>{Member?.member?.nickname}</MemberLink>
-                        <span>{Member.studyRole}</span>
+                        {Member?.studyRole === "CREATOR" ? <span>{Member.studyRole}</span> : <FormControl>
+                          <InputLabel id="authority-select-label">권한</InputLabel>
+                          <Select
+                            labelId = "authority-select-label"
+                            id = "authority-select"
+                            value = {Member.studyRole}
+                            onChange = {(e)=>handleAuthorityChange(Member?.member?.memberId,e)}
+                          >
+                            <MenuItem value = "ADMIN">ADMIN</MenuItem>
+                            <MenuItem value = "MEMBER">MEMBER</MenuItem>
+                            
+                          </Select>
+                        </FormControl> }
+                        
                       </div>
                     </StudyMemberContainer>
                   );

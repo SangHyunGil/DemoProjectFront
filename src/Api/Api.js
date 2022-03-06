@@ -525,3 +525,17 @@ export const getUnreadNotification = async (accessToken) => {
     }
   });
 };
+
+export const updateStudyMemberAuthority = async (studyId, memberId, authority, accessToken) => {
+  return await axios.put(
+    `/study/${studyId}/authority/${memberId}`,
+    {
+      studyRole: authority
+    },
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
+};
