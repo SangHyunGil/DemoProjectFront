@@ -4,35 +4,35 @@ import { useQuery, useQueryClient, useMutation } from "react-query";
 import { loadSenderMessage, writeMessage } from "../../Api/Api";
 import { getCookie } from "../../utils/cookie";
 import { useForm } from "react-hook-form";
-import { IconButton } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
+import { IconButton } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 import styled from "styled-components";
 
 const MessageInputFormStyle = styled.form`
-    .inputWrapper {
-        padding: 0.5rem 1rem; 
-        display: inline-block;
-        border-radius: 5px;
-        background-color: #F3F4F6;
-        input {
-            border: 0;
-            background-color: transparent;
-            &:focus {
-                outline: none;
-            }
-        }
+  .inputWrapper {
+    padding: 0.5rem 1rem;
+    display: inline-block;
+    border-radius: 5px;
+    background-color: #f3f4f6;
+    display: flex;
+    input {
+      border: 0;
+      background-color: transparent;
+      &:focus {
+        outline: none;
+      }
+      flex: 1;
     }
+  }
 `;
 
 const ChatWrapper = styled.div`
-    .myChat {
-        display: flex;
-        justify-content: flex-end;
-    }
-    .otherChat {
-        display: flex;
-        justify-content: flex-start;
-    }
+  .mychat {
+    color: skyblue;
+  }
+  .otherchat {
+    color: #ffc107;
+  }
 `;
 
 function Chat() {
@@ -40,45 +40,69 @@ function Chat() {
   const queryClient = useQueryClient();
   const myinfo = queryClient.getQueryData("loadMyInfo");
   const { register, handleSubmit, setValue } = useForm();
-  const { data: SendersMessage,isLoading } = useQuery(
+  const { data: SendersMessage, isLoading } = useQuery(
     ["loadSendersMessage", userId],
-    () =>loadSenderMessage(userId, getCookie("accessToken")),
+    () => loadSenderMessage(userId, getCookie("accessToken")),
     {
-        select: (data) => data.data.data,
-        refetchInterval: 1000,
-    });
+      select: (data) => data.data.data,
+      refetchInterval: 1000,
+    }
+  );
   const writeMessageMutation = useMutation(
     ({ content, receiverId, senderId }) =>
-      writeMessage(
-        { content, receiverId, senderId },
-        getCookie("accessToken")),
-        {
-          onSuccess: () => {
-            queryClient.invalidateQueries(["loadSendersMessage", userId]);
-            queryClient.invalidateQueries(['getMessageMember',myinfo?.data?.data?.id]);
-          },
-        }
+      writeMessage({ content, receiverId, senderId }, getCookie("accessToken")),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["loadSendersMessage", userId]);
+        queryClient.invalidateQueries([
+          "getMessageMember",
+          myinfo?.data?.data?.id,
+        ]);
+      },
+    }
   );
 
   const messageSendHandler = (data) => {
     console.log(data);
-    writeMessageMutation.mutate({content: data.message, receiverId: userId, senderId: myinfo?.data?.data?.id});
+    writeMessageMutation.mutate({
+      content: data.message,
+      receiverId: userId,
+      senderId: myinfo?.data?.data?.id,
+    });
     setValue("message", "");
   };
 
   return (
     <>
-    {!isLoading && SendersMessage?.length > 0 ? SendersMessage?.map((msg,index) => (
+      <div className="items">
+        {!isLoading && SendersMessage?.length > 0 ? (
+          SendersMessage?.map((msg, index) => (
             <ChatWrapper key={index}>
-                <div className={msg.senderId === myinfo?.data.data.id ? 'myChat' : 'otherChat'} >{msg.content}</div>
+              <p
+                className={
+                  msg.senderId === myinfo?.data.data.id ? "mychat" : "otherchat"
+                }
+              >
+                {msg.senderId === myinfo?.data.data.id
+                  ? "보낸 메세지"
+                  : "받은 메세지"}
+              </p>
+              <p>{msg.content}</p>
             </ChatWrapper>
-        )) : <div>아직 내용이 없습니다!</div>}
-      <MessageInputFormStyle onSubmit={handleSubmit(messageSendHandler)} >
+          ))
+        ) : (
+          <div>아직 내용이 없습니다!</div>
+        )}
+      </div>
+      <MessageInputFormStyle onSubmit={handleSubmit(messageSendHandler)}>
         <div className="inputWrapper">
-            <input {...register('message',{required:true})} placeholder="메세지를 입력해 주세요!" />
-            <IconButton type="submit">
-              <SendIcon />  
-            </IconButton>
+          <input
+            {...register("message", { required: true })}
+            placeholder="메세지를 입력해 주세요!"
+          />
+          <IconButton type="submit">
+            <SendIcon />
+          </IconButton>
         </div>
       </MessageInputFormStyle>
     </>

@@ -5,7 +5,7 @@ import {BrowserRouter as Router,
         Route} from 'react-router-dom';
 import Temp from './Components/Temp';
 //import { useNavigate } from 'react-router';
-import { findUserBoard } from './Api/Api';
+import { findUserBoard, subscribe } from './Api/Api';
 import { checkAccessToken } from './utils/jwt'
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
@@ -44,6 +44,7 @@ import AboutUsPage from './pages/AboutUsPage';
 import MailPage from './pages/MailPage';
 import UserInfoPage from './pages/UserInfoPage';
 import Chat from './Components/Chat/Chat';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -59,7 +60,14 @@ const App = () => {
       queryClient.setQueryData('MyInfo', data);
     } 
   });
-
+  /*
+  const source = new EventSourcePolyfill('http://localhost:8080/subscribe',{
+      headers: {
+        "X-AUTH-TOKEN": getCookie('accessToken'),
+      }
+  });
+  source.onmessage = e => console.log(e.data);*/
+  
   useEffect(() => {
     if (!isChecked) {
       if(getCookie('accessToken')){

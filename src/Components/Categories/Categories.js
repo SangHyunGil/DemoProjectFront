@@ -3,13 +3,19 @@ import styled from "styled-components";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion/dist/framer-motion";
-import Paper from '@mui/material/Paper';
+import { Paper, Badge, Menu, MenuItem, Snackbar } from '@mui/material';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import MailIcon from '@mui/icons-material/Mail';
+import { useQuery } from "react-query";
+import { unreadMessage } from '../../Api/Api';
+import { getCookie } from "../../utils/cookie";
+import { EventSourcePolyfill } from 'event-source-polyfill';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import MuiAlert from '@mui/material/Alert';
 
 const category = [
   { name: "all", title: "메인" },
@@ -145,7 +151,15 @@ const LineVariants = {
   },
 };
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 function Categories(props) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [notification, setNotification] = useState([]);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const notificationOpen = Boolean(anchorEl);
   const isLogin = useSelector((state) => state.users.isLogin);
   const location = useLocation();
   const [IsSelected, setIsSelected] = useState(
@@ -157,6 +171,48 @@ function Categories(props) {
     );
   }, [location]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogin) {
+      const source = new EventSourcePolyfill('http://localhost:8080/subscribe',{
+        headers: {
+          "X-AUTH-TOKEN": getCookie('accessToken'),
+        }
+      });
+      source.onmessage = e => {
+        console.log(e);
+        if (e.type === 'message' && e.data.startsWith('{')) {
+          setNotification(prev => [...prev, JSON.parse(e.data)]);
+          setAlertOpen(true);
+        }
+      }
+    }
+  },[isLogin])
+
+  const { data: unreadMessageData } = useQuery(['unreadMessage'], () => unreadMessage(getCookie('accessToken')), {
+    select: (data) => data.data.data,
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    enabled: isLogin,
+  });
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setAlertOpen(false);
+  };
+
   return (
     <>
       <CategoryWrapper>
@@ -185,7 +241,7 @@ function Categories(props) {
             </Category>
           ))}
         </CategoryMiddleWrapper>
-        <CategoryMiddleWrapper>
+        <CategoryMiddleWrapper style={{display:'flex'}}>
           {isLogin ? (
             <>
               <Category to="/logout" >
@@ -203,8 +259,33 @@ function Categories(props) {
                 ) : null}
               </Category>
               <Category to='/mail'>
+                <Badge badgeContent={unreadMessageData} color="secondary">
                   <MailIcon color="action" />
+                </Badge>
               </Category>
+              <NotificationsIcon 
+                id = 'notification'
+                aria-controls={notificationOpen ? 'basic-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={notificationOpen ? 'true' : undefined}
+                onClick={handleClick}
+                
+              />
+              <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={notificationOpen}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'notification',
+                  }}
+                >
+                  {notification.length > 0 && notification.map((n) => (
+                    <MenuItem key={n.notificationId} onClick={() => {navigate(n.url)}}>
+                      {n.content}
+                    </MenuItem>
+                  ))}
+              </Menu>
             </>
           ) : (
             <>
@@ -233,6 +314,11 @@ function Categories(props) {
             <BottomNavBarAction label="스터디" value='study' onClick={()=>navigate('/study/depart/CSE')} icon={<BorderColorIcon />} />
           </BottomNavigation>
       </BottomNavBar>
+      <Snackbar open={alertOpen} autoHideDuration={6000} anchorOrigin={{vertical:'top',horizontal:'right'}} onClose={handleAlertClose}>
+        <Alert onClose={handleAlertClose} severity="success">
+          {notification[notification.length - 1]?.content}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

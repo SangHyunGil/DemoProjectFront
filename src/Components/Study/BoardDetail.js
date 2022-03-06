@@ -253,6 +253,8 @@ const ApplyForm = styled.form`
   }
 `;
 
+
+
 function BoardDetail({ boardId }) {
   const navigate = useNavigate();
   const params = useParams();
@@ -266,6 +268,7 @@ function BoardDetail({ boardId }) {
   const [isApplyModalUp, setisApplyModalUp] = useState(false);
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
+
   const { data: board } = useQuery(
     ["board", params.boardId],
     () => getBoardCategory(params.boardId, getCookie("accessToken")),

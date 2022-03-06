@@ -493,3 +493,19 @@ export const writeMessage = async (data,accessToken) => {
     }
   });
 };
+
+export const unreadMessage = async (accessToken) => {
+  return await axios.get(`/messages/count`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const subscribe = async (accessToken) => {
+  return await axios.get(`/subscribe`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
