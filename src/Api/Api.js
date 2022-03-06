@@ -509,3 +509,19 @@ export const subscribe = async (accessToken) => {
     }
   });
 };
+
+export const getNotification = async (accessToken) => {
+  return await axios.get(`/notification`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const getUnreadNotification = async (accessToken) => {
+  return await axios.get(`/notification/count`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};

@@ -12,8 +12,7 @@ const AboutUsHeader = styled.header`
     align-items: center;
     .HeaderWrapper {
         width: 99%;
-        height: 98%;
-        background-image: url('https://cdn.pixabay.com/photo/2015/07/31/11/45/library-869061_960_720.jpg');
+        padding: 2rem 0;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -57,8 +56,9 @@ const AboutUSMain = styled.main`
         }
     }
     .MainContentContainer {
-        display: flex;
-        gap: 5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-gap: 1rem;
         margin-top: 4rem;
         .infoBlock {
             display: flex;
@@ -210,19 +210,37 @@ const InfoAry = [
     {   
         id : 0,
         imgUrl : 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_960_720.jpg',
-        title : '우리는 어떤 것을 하고 있나요?',
-        content: 'Lorem ipsum!',
+        title : '스터디 사용방법',
+        content: '자세히 보기',
     }
     ,{
         id : 1,
         imgUrl : 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_960_720.jpg',
-        title : '우리는 어떤 것을 하고 있나요?',
+        title : '쪽지 시스템',
         content: 'Lorem ipsum!',
     }
     ,{
         id : 2,
         imgUrl : 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_960_720.jpg',
-        title : '우리는 어떤 것을 하고 있나요?',
+        title : '화상채팅',
+        content: 'Lorem ipsum!',
+    },
+    {   
+        id : 3,
+        imgUrl : 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_960_720.jpg',
+        title : '스케줄 사용하기',
+        content: 'Lorem ipsum!',
+    }
+    ,{
+        id : 4,
+        imgUrl : 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_960_720.jpg',
+        title : '스터디 만들기',
+        content: 'Lorem ipsum!',
+    }
+    ,{
+        id : 5,
+        imgUrl : 'https://cdn.pixabay.com/photo/2015/07/19/10/00/school-work-851328_960_720.jpg',
+        title : '스터디 관리페이지',
         content: 'Lorem ipsum!',
     }
 ];

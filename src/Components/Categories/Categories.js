@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion/dist/framer-motion";
-import { Paper, Badge, Menu, MenuItem, Snackbar } from '@mui/material';
+import { Paper, Badge, Menu, MenuItem, Snackbar, CircularProgress } from '@mui/material';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -11,7 +11,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import MailIcon from '@mui/icons-material/Mail';
 import { useQuery } from "react-query";
-import { unreadMessage } from '../../Api/Api';
+import { unreadMessage, getNotification, getUnreadNotification } from '../../Api/Api';
 import { getCookie } from "../../utils/cookie";
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -158,6 +158,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 function Categories(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [notification, setNotification] = useState([]);
+  const [notificationColor, setNotificationColor] = useState('red');
   const [alertOpen, setAlertOpen] = useState(false);
   const notificationOpen = Boolean(anchorEl);
   const isLogin = useSelector((state) => state.users.isLogin);
@@ -184,6 +185,7 @@ function Categories(props) {
         if (e.type === 'message' && e.data.startsWith('{')) {
           setNotification(prev => [...prev, JSON.parse(e.data)]);
           setAlertOpen(true);
+          unreadRefetch();
         }
       }
     }
@@ -197,7 +199,26 @@ function Categories(props) {
     enabled: isLogin,
   });
 
+  const { data:notifications, refetch, isLoading } = useQuery(['notifications'],()=>getNotification(getCookie('accessToken')),{
+    enabled: false,
+    select: (data) => data.data.data,
+  });
+
+  const { data:unreadNotificationData, refetch:unreadRefetch } = useQuery(['unreadNotification'], () => getUnreadNotification(getCookie('accessToken')), {
+    select: (data) => data.data.data,
+    onSuccess: (data) => {
+      if (data > 0) {
+        setNotificationColor('red');
+      } else {
+        setNotificationColor('black');
+      } 
+    }
+  });
+
   const handleClick = (event) => {
+    refetch();
+    unreadRefetch();
+    setNotificationColor('black');
     setAnchorEl(event.currentTarget);
   };
 
@@ -263,14 +284,16 @@ function Categories(props) {
                   <MailIcon color="action" />
                 </Badge>
               </Category>
-              <NotificationsIcon 
-                id = 'notification'
-                aria-controls={notificationOpen ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={notificationOpen ? 'true' : undefined}
-                onClick={handleClick}
-                
-              />
+              <Badge badgeContent={unreadNotificationData} color="primary">
+                <NotificationsIcon 
+                  id = 'notification'
+                  aria-controls={notificationOpen ? 'basic-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={notificationOpen ? 'true' : undefined}
+                  onClick={handleClick}
+                  style={{color:notificationColor}}
+                />
+              </Badge>
               <Menu
                   id="basic-menu"
                   anchorEl={anchorEl}
@@ -280,11 +303,12 @@ function Categories(props) {
                     'aria-labelledby': 'notification',
                   }}
                 >
-                  {notification.length > 0 && notification.map((n) => (
+                  {isLoading ? <CircularProgress /> : 
+                  (notifications?.map((n) => (
                     <MenuItem key={n.notificationId} onClick={() => {navigate(n.url)}}>
                       {n.content}
                     </MenuItem>
-                  ))}
+                  )))}
               </Menu>
             </>
           ) : (
