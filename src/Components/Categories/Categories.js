@@ -301,6 +301,11 @@ function Categories(props) {
                   MenuListProps={{
                     'aria-labelledby': 'notification',
                   }}
+                  PaperProps = {{
+                    style: {
+                      maxHeight: '20rem'
+                    }
+                  }}
                 >
                   {isLoading ? <CircularProgress /> : 
                   (notifications?.map((n) => (

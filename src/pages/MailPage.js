@@ -3,7 +3,7 @@ import { useQueryClient, useQuery } from "react-query";
 //import { useSelector } from "react-redux";
 import { getMailMember } from "../Api/Api";
 import { getCookie } from "../utils/cookie";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const MailWrapper = styled.div`
@@ -19,6 +19,9 @@ const MailWrapper = styled.div`
     border: 1px solid #ededed;
     border-radius: 5px;
     overflow-y: auto;
+    .active {
+      background-color: #fdf9f3;
+    }
     a {
       display: block;
       text-decoration: none;
@@ -26,6 +29,18 @@ const MailWrapper = styled.div`
       color: black;
       &:hover {
         background-color: #daecf3;
+      }
+    }
+    .messageInfo {
+      display: flex;
+      p {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:first-child {
+          flex: 1;
+        }
       }
     }
   }
@@ -80,10 +95,13 @@ function MailPage() {
         <h2>쪽지함</h2>
         {MessageMember?.length > 0 ? <>
           {MessageMember.map((item, index) => (
-            <Link key={index} to={myinfo?.id === item.senderId.memberId ? `/mail/with/${item.receiverId.memberId}` : `/mail/with/${item.senderId.memberId}`}>
+            <NavLink className={({isActive})=>(isActive ? 'active' : '')} key={index} to={myinfo?.id === item.senderId.memberId ? `/mail/with/${item.receiverId.memberId}` : `/mail/with/${item.senderId.memberId}`}>
               <h3>{item.senderId.memberId === myinfo?.id ? item.receiverId.nickname : item.senderId.nickname}</h3>
-              <p>{item.content}</p>
-            </Link>        
+              <div className="messageInfo">
+                <p>{item.content}</p>
+                <p>{item.unReadCount > 0 && `+${item.unReadCount}`}</p>
+              </div>
+            </NavLink>        
           ))}
         </> : (
           <div>아직 대화상대가 없습니다..!</div>

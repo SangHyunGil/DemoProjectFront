@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
 import MuiDialog from "../Modal/MuiDialog";
@@ -251,7 +251,7 @@ const CategoryChangeModal = styled.div`
 `;
 
 function StudyManage() {
-  const [authority, setAuthority] = useState('');
+  const [isUserCreator, setIsUserCreator] = useState(false);
   const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
   const [isBoardCategoryModalUp, setIsBoardCategoryModalUp] = useState(false);
   const [boardCategoryName, setBoardCategoryName] = useState("");
@@ -259,6 +259,7 @@ function StudyManage() {
   const { studyId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const myinfo = queryClient.getQueryData(['loadMyInfo']);
   const [isApplyModalUp, setisApplyModalUp] = useState(false);
   const [ApplyInfo, setApplyInfo] = useState({
     memberId: "",
@@ -288,6 +289,12 @@ function StudyManage() {
       select: (x) => x.data.data,
     }
   );
+
+  useEffect(() => {
+    if(Members && myinfo) {
+      setIsUserCreator(Members.filter(x => x?.member?.memberId === myinfo?.data?.data?.id && x.studyRole === 'CREATOR').length > 0);
+    }
+  },[Members,myinfo]);
 
   const grantUserMutation = useMutation(
     (memberId) => grantStudyMember(studyId, memberId, getCookie("accessToken")),
@@ -411,12 +418,14 @@ function StudyManage() {
             <div className="MemberList">
               {Members?.map((Member) => {
                 const { studyRole } = Member;
+                const isCreator = studyRole === "CREATOR";
+                //const isUserCreator = studyRole === "CREATOR" && Member?.member?.memberId === myinfo?.data.data.id;
                 if (studyRole !== "APPLY") {
                   return (
                     <StudyMemberContainer key={Member?.member?.memberId}>
                       <div className="StudyMemberWrapper">
                         <MemberLink to={`/userinfo/${Member?.member?.memberId}`}>{Member?.member?.nickname}</MemberLink>
-                        {Member?.studyRole === "CREATOR" ? <span>{Member.studyRole}</span> : <FormControl>
+                        {isCreator ? <span>{studyRole}</span> : isUserCreator ? <FormControl>
                           <InputLabel id="authority-select-label">권한</InputLabel>
                           <Select
                             labelId = "authority-select-label"
@@ -428,8 +437,7 @@ function StudyManage() {
                             <MenuItem value = "MEMBER">MEMBER</MenuItem>
                             
                           </Select>
-                        </FormControl> }
-                        
+                        </FormControl> : <span>{studyRole}</span>}       
                       </div>
                     </StudyMemberContainer>
                   );

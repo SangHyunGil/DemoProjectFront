@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "react-query";
-import { loadSenderMessage, writeMessage } from "../../Api/Api";
+import { loadSenderMessage, writeMessage, getUserProfileInfo } from "../../Api/Api";
 import { getCookie } from "../../utils/cookie";
 import { useForm } from "react-hook-form";
 import { IconButton } from "@mui/material";
@@ -54,6 +54,11 @@ function Chat() {
       refetchInterval: 1000,
     }
   );
+
+  const {data:userData} = useQuery(["getUserProfileInfo",userId],()=>getUserProfileInfo(userId,getCookie("accessToken")),{
+    select: (data) => data.data.data, 
+  }); 
+
   const writeMessageMutation = useMutation(
     ({ content, receiverId, senderId }) =>
       writeMessage({ content, receiverId, senderId }, getCookie("accessToken")),
@@ -80,6 +85,9 @@ function Chat() {
 
   return (
     <>
+      <div>
+        <h1>{userData?.nickname}</h1>
+      </div>
       <div className="items">
         {!isLoading && SendersMessage?.length > 0 ? (
           SendersMessage?.map((msg, index) => (
