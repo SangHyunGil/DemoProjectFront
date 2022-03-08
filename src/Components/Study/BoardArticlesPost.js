@@ -215,11 +215,24 @@ const CommentsReplyContentStyle = styled.div`
   }
 `;
 
+const CommentUpdateForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  div {
+    display: flex;
+    justify-content: flex-end;
+  }
+`;
+
 function BoardArticlesPost() {
   const [replyComments, setreplyComments] = useState({
     id: "",
     replyFormVisible: false,
     variant: "reply",
+  });
+  const [isCommentUpdateForm,setIsCommentUpdateForm] = useState({
+    id: 0,
+    updateFormVisible: false,
   });
   const [myInfo, setMyInfo] = useState(null);
   const { studyId, boardId, articleId } = useParams();
@@ -234,6 +247,11 @@ function BoardArticlesPost() {
     register: updateRegister,
     handleSubmit: updateHandleSubmit,
     setValue: updateSetValue,
+  } = useForm();
+  const {
+    register: updateSecondRegister,
+    handleSubmit: updateSecondHandleSubmit,
+    setValue: updateSecondSetValue,
   } = useForm();
   const queryClient = useQueryClient();
   const { id, nickname } = useSelector((state) => state.users);
@@ -383,6 +401,15 @@ function BoardArticlesPost() {
     DeleteCommentMutation.mutate(commentId);
   };
 
+  const commentUpdateHandler = (data) => {
+    UpdateCommentMutation.mutate({
+      commentId: isCommentUpdateForm.id,
+      content: data.commentUpdate,
+    });
+    updateSecondSetValue("commentUpdate", "");
+    setIsCommentUpdateForm((prev) => ({ ...prev, updateFormVisible: false }));
+  };
+
   return (
     <ArticleWrapper>
       <div className="ArticleContainer">
@@ -401,7 +428,7 @@ function BoardArticlesPost() {
             )}
           </div>
           <div className="ArticleSubInfo">
-            <p>{article?.memberName}</p>
+            <p>{article?.creator?.nickname}</p>
           </div>
         </header>
         <main>
@@ -441,11 +468,11 @@ function BoardArticlesPost() {
                             <Button
                               variant="outlined"
                               onClick={() => {
-                                setreplyComments((prev) => ({
+                                setIsCommentUpdateForm((prev) => ({
                                   id: comment.id,
-                                  replyFormVisible: !prev.replyFormVisible,
-                                  variant: "update",
+                                  updateFormVisible: !prev.updateFormVisible,
                                 }));
+                                updateSecondSetValue("commentUpdate", comment.content);
                               }}
                               style={{fontFamily: 'SEBANG_Gothic_Bold, sans-serif'}}
                             >
@@ -466,7 +493,24 @@ function BoardArticlesPost() {
                       </div>
                     </div>
                     <div className="Comment-content">
-                      <p>{comment.content === null ? <span style={{color:'red'}}>삭제된 댓글입니다!</span> : comment.content}</p>
+                      {!isCommentUpdateForm.updateFormVisible ? <p>{comment.content === null ? <span style={{color:'red'}}>삭제된 댓글입니다!</span> : comment.content}</p> : 
+                      <CommentUpdateForm onSubmit={updateSecondHandleSubmit(commentUpdateHandler)}>
+                        <TextField
+                          fullWidth
+                          sx={{ m: 1 }}
+                          label="댓글 수정"
+                          multiline
+                          rows={2}
+                          {...updateSecondRegister('commentUpdate', { required: true })}
+                          />
+                          <div>
+                            <Button type="button" color="error" onClick={()=>setIsCommentUpdateForm((prev) => ({
+                                  ...prev,
+                                  updateFormVisible: !prev.updateFormVisible,
+                                }))}>취소</Button>
+                            <Button color="primary" type="submit">확인</Button>
+                          </div>
+                        </CommentUpdateForm>}
                     </div>
                     <div className="Comment-reply">
                       <Accordion className="CommentReplyAccordion">
