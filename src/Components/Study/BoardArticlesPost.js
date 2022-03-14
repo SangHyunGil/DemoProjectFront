@@ -24,6 +24,7 @@ import {
   AccordionDetails,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { MemberLink } from "../Style/MemberLink";
 
 const ArticleWrapper = styled.div`
   display: flex;
@@ -68,7 +69,7 @@ const ArticleWrapper = styled.div`
         }
       }
       .ArticleSubInfo {
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
       }
     }
@@ -428,7 +429,7 @@ function BoardArticlesPost() {
             )}
           </div>
           <div className="ArticleSubInfo">
-            <p>{article?.creator?.nickname}</p>
+            <MemberLink to={`/userinfo/${article?.creator?.memberId}`}>{article?.creator?.nickname}</MemberLink>
           </div>
         </header>
         <main>
@@ -460,7 +461,7 @@ function BoardArticlesPost() {
                           alt={comment?.creator?.nickname}
                           src={comment.creator?.profileImgUrl}
                         />
-                        <span>{comment?.creator?.nickname}</span>
+                        <MemberLink to={`/userinfo/${comment?.creator?.memberId}`}>{comment?.creator?.nickname}</MemberLink>
                       </div>
                       <div className="CommentAction" >
                         {(comment?.creator?.nickname === nickname && comment?.content !== null) && (
@@ -534,7 +535,7 @@ function BoardArticlesPost() {
                                         alt={child?.creator?.nickname}
                                         src={child?.creator?.profileImgUrl}
                                       />
-                                      <p>{child?.creator?.nickname}</p>
+                                      <MemberLink to={`/userinfo/${child?.creator?.memberId}`}>{child?.creator?.nickname}</MemberLink>
                                     </div>
                                     <div className="CommentReplyContentMain">
                                       <p>{child.content}</p>

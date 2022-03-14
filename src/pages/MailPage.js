@@ -70,9 +70,6 @@ function MailPage() {
     () => getMailMember(getCookie("accessToken")),
     {
       select: (data) => data.data.data,
-      onSuccess: (data) => {
-        console.log(data);
-      },
       retry: false,
     }
   );
@@ -83,27 +80,36 @@ function MailPage() {
     }
   }, [queryClient, data]);
 
-  useEffect(() => {
-    if (myinfo) {
-      console.log(myinfo);
-    }
-  }, [myinfo]);
-
   return (
     <MailWrapper>
       <div className="messageBox">
         <h2>쪽지함</h2>
-        {MessageMember?.length > 0 ? <>
-          {MessageMember.map((item, index) => (
-            <NavLink className={({isActive})=>(isActive ? 'active' : '')} key={index} to={myinfo?.id === item.senderId.memberId ? `/mail/with/${item.receiverId.memberId}` : `/mail/with/${item.senderId.memberId}`}>
-              <h3>{item.senderId.memberId === myinfo?.id ? item.receiverId.nickname : item.senderId.nickname}</h3>
-              <div className="messageInfo">
-                <p>{item.content}</p>
-                <p>{item.unReadCount > 0 && `+${item.unReadCount}`}</p>
-              </div>
-            </NavLink>        
-          ))}
-        </> : (
+        {MessageMember?.length > 0 ? (
+          <>
+            {MessageMember.map((item, index) => (
+              <NavLink
+                className={({ isActive }) => (isActive ? "active" : "")}
+                style={{ background: item.unReadCount > 0 && "#ffaeae"}}
+                key={index}
+                to={
+                  myinfo?.id === item.senderId.memberId
+                    ? `/mail/with/${item.receiverId.memberId}`
+                    : `/mail/with/${item.senderId.memberId}`
+                }
+              >
+                <h3>
+                  {item.senderId.memberId === myinfo?.id
+                    ? item.receiverId.nickname
+                    : item.senderId.nickname}
+                </h3>
+                <div className="messageInfo">
+                  <p>{item.content}</p>
+                  <p>{item.unReadCount > 0 && `+${item.unReadCount}`}</p>
+                </div>
+              </NavLink>
+            ))}
+          </>
+        ) : (
           <div>아직 대화상대가 없습니다..!</div>
         )}
       </div>

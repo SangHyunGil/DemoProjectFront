@@ -46,7 +46,7 @@ function StudyBoard() {
   const [IsGranted, setIsGranted] = useState(false);
   const { studyId } = useParams();
   const [DrawerState, setDrawerState] = useState(false);
-  const [currentBoard, setCurrentBoard] = useState('');
+  const [currentBoard, setCurrentBoard] = useState(sessionStorage.getItem('currentBoard'));
 
   const myinfos = queryClient.getQueryData(["loadMyInfo"]);
 
@@ -74,9 +74,6 @@ function StudyBoard() {
     () => getBoardCategory(studyId, getCookie("accessToken")),
     {
       select: (cat) => cat.data.data,
-      onSuccess: (data) => {
-        setCurrentBoard(data[0].title);
-      },
       retry: false,
       staleTime: Infinity,
     }
@@ -98,6 +95,11 @@ function StudyBoard() {
       }
     }
   }, [myinfos, studyInfos]);
+
+  const handleCurrentBoard = (title) => {
+    setCurrentBoard(title);
+    sessionStorage.setItem('currentBoard', title);
+  };
 
   return (
     <>
@@ -127,22 +129,22 @@ function StudyBoard() {
                 activeclassname="active"
                 to={`/study/${studyId}/board/${cat.id}/articles`}
                 key={cat.id}
-                onClick={()=>setCurrentBoard(cat.title)}
+                onClick={()=>handleCurrentBoard(cat.title)}
               >
                 {cat.title}
               </Category>
             ))}
-            <Category activeclassname="active" to={`/study/${studyId}/board/calendar`} onClick={()=>setCurrentBoard('캘린더')}>
+            <Category activeclassname="active" to={`/study/${studyId}/board/calendar`} onClick={()=>handleCurrentBoard('캘린더')}>
               스터디 캘린더
             </Category>
-            <Category activeclassname="active" to={`/study/${studyId}/board/rooms`}>
+            <Category activeclassname="active" to={`/study/${studyId}/board/rooms`} onClick={() => handleCurrentBoard('화상채팅')} >
               스터디 화상채팅
             </Category>
             <Category activeclassname="active" to={`/study/${studyId}`}>
               게시판 정보
             </Category>
             {IsGranted && (
-              <Category activeclassname="active" to={`/study/${studyId}/board/manage`} onClick={()=>setCurrentBoard('게시판 관리')}>
+              <Category activeclassname="active" to={`/study/${studyId}/board/manage`} onClick={()=>handleCurrentBoard('게시판 관리')}>
                 게시판 관리
               </Category>
             )}

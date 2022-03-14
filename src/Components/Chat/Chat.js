@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { loadSenderMessage, writeMessage, getUserProfileInfo } from "../../Api/Api";
@@ -51,6 +51,9 @@ function Chat() {
     () => loadSenderMessage(userId, getCookie("accessToken")),
     {
       select: (data) => data.data.data,
+      onSuccess: () => {
+        queryClient.invalidateQueries(["getMessageMember", myinfo?.data?.data?.id]);
+      },
       refetchInterval: 1000,
     }
   );

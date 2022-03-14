@@ -10,7 +10,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import MailIcon from '@mui/icons-material/Mail';
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { unreadMessage, getNotification, getUnreadNotification } from '../../Api/Api';
 import { getCookie } from "../../utils/cookie";
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -162,6 +162,7 @@ function Categories(props) {
   const notificationOpen = Boolean(anchorEl);
   const isLogin = useSelector((state) => state.users.isLogin);
   const location = useLocation();
+  const queryClient = useQueryClient();
   const [IsSelected, setIsSelected] = useState(
     location.pathname !== "/" ? location.pathname.split("/")[1] : "all"
   );
@@ -201,6 +202,9 @@ function Categories(props) {
   const { data:notifications, refetch, isLoading } = useQuery(['notifications'],()=>getNotification(getCookie('accessToken')),{
     enabled: false,
     select: (data) => data.data.data,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['unreadNotification']);
+    }
   });
 
   const { data:unreadNotificationData, refetch:unreadRefetch } = useQuery(['unreadNotification'], () => getUnreadNotification(getCookie('accessToken')), {
@@ -208,17 +212,17 @@ function Categories(props) {
     onSuccess: (data) => {
       if (data > 0) {
         setNotificationColor('red');
-      } else {
+      }
+      else {
         setNotificationColor('black');
-      } 
+      }
     }
   });
 
   const handleClick = (event) => {
     refetch();
-    unreadRefetch();
-    setNotificationColor('black');
     setAnchorEl(event.currentTarget);
+    //unreadRefetch();
   };
 
   const handleClose = () => {
