@@ -65,6 +65,9 @@ const ArticleWrapper = styled.div`
             border-radius: 5px;
             padding: 0.3rem 0.6rem;
             color: white;
+            &:hover {
+              cursor: pointer;
+            }
           }
         }
       }
@@ -368,7 +371,9 @@ function BoardArticlesPost() {
   );
 
   const deleteArticlePostHandler = () => {
-    deleteArticlePostMutation.mutate();
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      deleteArticlePostMutation.mutate();
+    }
   };
 
   const replyHandler = (data) => {

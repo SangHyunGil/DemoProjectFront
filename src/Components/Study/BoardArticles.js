@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { findAllBoardArticles, createBoardArticle } from "../../Api/Api";
 import useInput from "../../hooks/useInput";
@@ -9,17 +9,13 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getCookie } from "../../utils/cookie";
 import Pagination from "react-js-pagination";
 import styled from "styled-components";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { FormControl } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
-import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
-import { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Editor from "../Editor/Editor";
-import ImageResize from "quill-image-resize";
-Quill.register("modules/ImageResize", ImageResize);
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const PaginationWrapper = styled.div`
   display: flex;
@@ -62,7 +58,7 @@ const ArticleLink = styled(Link)`
   }
 `;
 
-const AddArticleButton = styled(AddCircleOutlineIcon)`
+const AddArticleButton = styled(AddCircleIcon)`
   position: fixed;
   bottom: 1rem;
   right: 1rem;
@@ -187,26 +183,6 @@ const ArticleEmpty = () => {
   );
 };
 
-const modules = {
-  toolbar: [
-    //[{ 'font': [] }],
-    [{ header: [1, 2, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["link", "image"],
-    [{ align: [] }, { color: [] }, { background: [] }], // dropdown with defaults from theme
-    ["clean"],
-  ],
-  ImageResize: {
-    parchment: Quill.import("parchment"),
-  },
-};
-
 function BoardArticles() {
   const { studyId, boardId } = useParams();
   const queryClient = useQueryClient();
@@ -215,8 +191,7 @@ function BoardArticles() {
   const [IsModalUp, setIsModalUp] = useState(false);
   const { id, accessToken, nickname } = useSelector((state) => state.users);
   const [articleTitle, onChangeArticleTitle, setArticleTitle] = useInput("");
-  const [articleContent, onChangeArticleContent, setArticleContent] =
-    useInput("");
+  const [articleContent, setArticleContent] = useState("");
   const [HasArticle, setHasArticle] = useState(false);
 
   const [page, setPage] = useState(0);
@@ -308,13 +283,6 @@ function BoardArticles() {
                         <header>
                           <h3>{article.title}</h3>
                         </header>
-                        <main>
-                          <p
-                            dangerouslySetInnerHTML={{
-                              __html: article.content,
-                            }}
-                          />
-                        </main>
                         <footer>
                           <p>{article.memberName}</p>
                         </footer>
@@ -357,7 +325,9 @@ function BoardArticles() {
         />
       </PaginationWrapper>
       {IsModalUp && (
-        <MuiDialog open={IsModalUp} onClose={() => setIsModalUp(false)}
+        <MuiDialog
+          open={IsModalUp}
+          onClose={() => setIsModalUp(false)}
           fullWidth
           maxWidth="lg"
         >
@@ -374,10 +344,10 @@ function BoardArticles() {
             </FormControl>
             <FormControl sx={{ m: 1, width: "60%" }}>
               <Editor
-                theme="snow"
                 value={articleContent}
                 onChange={setArticleContent}
-                modules={modules}
+                studyId={studyId}
+                boardId={boardId}
               />
             </FormControl>
             <button type="submit">만들기</button>
@@ -385,6 +355,7 @@ function BoardArticles() {
         </MuiDialog>
       )}
       <AddArticleButton
+        color="primary"
         sx={{ fontSize: 60 }}
         onClick={createArticleModalHandler}
       >

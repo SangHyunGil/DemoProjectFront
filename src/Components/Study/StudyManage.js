@@ -61,6 +61,13 @@ const StudyMemberContainer = styled.div`
   .StudyMemberWrapper {
     display: flex;
     justify-content: space-between;
+    select {
+      padding: 0.4rem .7rem;
+      border-radius: 5px;
+      background-color: #dbeafe;
+      border: 0;
+      font-size: 0.8rem;
+    }
     span {
       &:first-child {
         font-size: 1.2rem;
@@ -426,17 +433,13 @@ function StudyManage() {
                       <div className="StudyMemberWrapper">
                         <MemberLink to={`/userinfo/${Member?.member?.memberId}`}>{Member?.member?.nickname}</MemberLink>
                         {isCreator ? <span>{studyRole}</span> : isUserCreator ? <FormControl>
-                          <InputLabel id="authority-select-label">권한</InputLabel>
-                          <Select
-                            labelId = "authority-select-label"
-                            id = "authority-select"
-                            value = {Member.studyRole}
-                            onChange = {(e)=>handleAuthorityChange(Member?.member?.memberId,e)}
+                          <select
+                            value={Member?.studyRole}
+                            onChange = {(event)=>handleAuthorityChange(Member?.member?.memberId,event)}
                           >
-                            <MenuItem value = "ADMIN">ADMIN</MenuItem>
-                            <MenuItem value = "MEMBER">MEMBER</MenuItem>
-                            
-                          </Select>
+                            <option value="ADMIN">관리자</option>
+                            <option value="MEMBER">스터디원</option>
+                          </select>
                         </FormControl> : <span>{studyRole}</span>}       
                       </div>
                     </StudyMemberContainer>
