@@ -61,6 +61,11 @@ const StudyMemberContainer = styled.div`
   .StudyMemberWrapper {
     display: flex;
     justify-content: space-between;
+    .controlPanel  {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
     select {
       padding: 0.4rem .7rem;
       border-radius: 5px;
@@ -68,17 +73,11 @@ const StudyMemberContainer = styled.div`
       border: 0;
       font-size: 0.8rem;
     }
-    span {
-      &:first-child {
-        font-size: 1.2rem;
-        align-self: flex-end;
-      }
-      &:last-child {
-        font-size: 0.8rem;
-        background: #dbeafe;
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-      }
+    .ordinaryBox {
+      font-size: 0.8rem;
+      background: #dbeafe;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
     }
   }
 `;
@@ -415,6 +414,12 @@ function StudyManage() {
     }
   };
 
+  const kickUserHandler = (id) => {
+    if (window.confirm("정말로 유저를 추방하시겠습니까?")) {
+      rejectUserMutation.mutate(id);
+    }
+  };
+
   return (
     <>
       <StudyManageContainer>
@@ -432,7 +437,9 @@ function StudyManage() {
                     <StudyMemberContainer key={Member?.member?.memberId}>
                       <div className="StudyMemberWrapper">
                         <MemberLink to={`/userinfo/${Member?.member?.memberId}`}>{Member?.member?.nickname}</MemberLink>
-                        {isCreator ? <span>{studyRole}</span> : isUserCreator ? <FormControl>
+                        {isCreator ? <span className="ordinaryBox">{studyRole}</span> : isUserCreator ? (
+                        <div className="controlPanel">
+                        <FormControl>
                           <select
                             value={Member?.studyRole}
                             onChange = {(event)=>handleAuthorityChange(Member?.member?.memberId,event)}
@@ -440,7 +447,13 @@ function StudyManage() {
                             <option value="ADMIN">관리자</option>
                             <option value="MEMBER">스터디원</option>
                           </select>
-                        </FormControl> : <span>{studyRole}</span>}       
+                        </FormControl>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => kickUserHandler(Member?.member?.memberId)}
+                        >추방</Button>
+                        </div>) : <span className="ordinaryBox">{studyRole}</span>}       
                       </div>
                     </StudyMemberContainer>
                   );
