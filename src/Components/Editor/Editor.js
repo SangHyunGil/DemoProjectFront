@@ -28,7 +28,7 @@ function Editor(props) {
       ],
       ImageUploader: {
         upload: (file) => {
-          console.log(file);
+          //console.log(file);
           return new Promise((resolve, reject) => {
             const formData = new FormData();
             formData.append("multipartFiles", file);
@@ -44,11 +44,11 @@ function Editor(props) {
                 }
               )
               .then((res) => {
-                console.log(res);
+                //console.log(res);
                 resolve(res.data.data[0].imageUrl);
               })
               .catch((err) => {
-                console.log(err);
+                //console.log(err);
                 reject(err);
               });
           });

@@ -133,7 +133,7 @@ function* changeUserInfo(action) {
     try {
         const result = yield call(changeUserInfoAPI, action.payload);
         const body = result.data.data;
-        console.log(body);
+        //console.log(body);
         yield put(changeUserInfoSuccess({...body}))
     } catch(e) {
         yield put(changeUserInfoFailure({msg: e.response.data.msg}));

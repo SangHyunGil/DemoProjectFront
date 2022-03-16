@@ -64,7 +64,7 @@ function UpdateStudy() {
     const {data:BoardData} = useQuery(['findBoard', params.studyId], () => findBoard(params.studyId),{
         select: (data) => data.data.data,
         onSuccess: async (x) => {
-            console.log(x)
+            //console.log(x)
             setValue('title', x.title);
             setValue('content', x.description);
             setValue('headCount', x.headCount);
@@ -114,7 +114,7 @@ function UpdateStudy() {
 
     const handleUpload = (e) => {
         const { files } = e.target;
-        console.log(files);
+        //console.log(files);
         if (files && files[0]) {
             const reader = new FileReader();
             reader.onload = (e) => {

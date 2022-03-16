@@ -163,7 +163,7 @@ function AllDepartmentStudy() {
             return {studyId:data[data.length-1].id,department,size:8};
         },
         onSuccess: (data)=>{
-            console.log(data);
+            //console.log(data);
         },
     });
     
@@ -173,7 +173,7 @@ function AllDepartmentStudy() {
         }
     },[inView, hasNextPage, fetchNextPage]);
 
-    console.log(StudyData?.pages[0].data?.data?.numberOfElements === 0);
+    //console.log(StudyData?.pages[0].data?.data?.numberOfElements === 0);
     return (
         <>
             {StudyData?.pages[0].data?.data?.numberOfElements === 0 && (

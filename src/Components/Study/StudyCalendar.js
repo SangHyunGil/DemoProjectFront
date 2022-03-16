@@ -210,7 +210,7 @@ function StudyCalendar() {
 
   const moveEvent = ({ event, start, end }) => {
     //console.log(event);
-    console.log('dragged')
+    //console.log('dragged')
     const MovedEvent = events.find((e) => e.id === event.id);
     updateScheduleMutation.mutate({
       data: {
@@ -225,7 +225,7 @@ function StudyCalendar() {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    //console.log(data);
     /*
     setEvents((e) => [
       ...e,
@@ -277,7 +277,7 @@ function StudyCalendar() {
   };
 
   const onEventClickHanlder = (event) => {
-    console.log(event);
+    //console.log(event);
     const { title, id } = event;
     setIsNewContent(false);
     ChangeSetValue("defaultEvent", title);

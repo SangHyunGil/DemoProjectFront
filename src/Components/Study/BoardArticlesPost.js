@@ -288,9 +288,6 @@ function BoardArticlesPost() {
     () => getAllComments(studyId, boardId, articleId, getCookie("accessToken")),
     {
       select: (x) => x.data.data,
-      onSuccess: (x) => {
-        console.log(x);
-      },
     }
   );
 
@@ -381,7 +378,7 @@ function BoardArticlesPost() {
   };
 
   const commentReplyHandler = (data) => {
-    console.log(data.commentReply);
+    //console.log(data.commentReply);
     replyComments.variant === "reply"
       ? CommentMutation.mutate(data.commentReply)
       : UpdateCommentMutation.mutate({

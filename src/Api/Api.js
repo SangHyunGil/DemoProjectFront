@@ -353,7 +353,7 @@ export const deleteComment = async (studyId, boardId, articleId, commentId, acce
 };
 
 export const updateComment = async (studyId, boardId, articleId, commentId, content, accessToken) => {
-  console.log(content);
+  //console.log(content);
   return await axios.put(
     `/api/studies/${studyId}/boards/${boardId}/articles/${articleId}/comments/${commentId}`,
     {

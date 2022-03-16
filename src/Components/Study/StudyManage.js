@@ -383,7 +383,7 @@ function StudyManage() {
   };
 
   const BoardAddHandler = (data) => {
-    console.log(data);
+    //console.log(data);
     let { BoardTitle } = data;
     AddBoardMutation.mutate(BoardTitle);
     reset({ BoardTitle: "" });

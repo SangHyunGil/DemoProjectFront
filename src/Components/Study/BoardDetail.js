@@ -297,9 +297,6 @@ function BoardDetail({ boardId }) {
     () => findBoard(params.boardId),
     {
       select: (x) => x.data.data,
-      onSuccess: (data) => {
-        console.log(data);
-      },
       retry: false,
     }
   );

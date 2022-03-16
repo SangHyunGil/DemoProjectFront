@@ -77,7 +77,7 @@ function Chat() {
   );
 
   const messageSendHandler = (data) => {
-    console.log(data);
+    //console.log(data);
     writeMessageMutation.mutate({
       content: data.message,
       receiverId: userId,

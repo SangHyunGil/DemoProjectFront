@@ -209,9 +209,6 @@ function BoardArticles() {
       findAllBoardArticles(studyId, boardId, page, 4, getCookie("accessToken")),
     {
       select: (article) => article.data.data,
-      onSuccess: (x) => {
-        console.log(x);
-      },
       keepPreviousData: true,
     }
   );

@@ -181,7 +181,7 @@ function Categories(props) {
         }
       });
       source.onmessage = e => {
-        console.log(e);
+        //console.log(e);
         if (e.type === 'message' && e.data.startsWith('{')) {
           setNotification(prev => [...prev, JSON.parse(e.data)]);
           setAlertOpen(true);
@@ -193,9 +193,6 @@ function Categories(props) {
 
   const { data: unreadMessageData } = useQuery(['unreadMessage'], () => unreadMessage(getCookie('accessToken')), {
     select: (data) => data.data.data,
-    onSuccess: (data) => {
-      console.log(data);
-    },
     enabled: isLogin,
   });
 
@@ -338,7 +335,7 @@ function Categories(props) {
             showLabels={true}
             value={IsSelected}
             onChange={(event,newValue) => {
-              console.log(newValue);
+              //console.log(newValue);
               setIsSelected(newValue);
             }}
           >

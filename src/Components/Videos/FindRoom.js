@@ -63,9 +63,6 @@ const FindRoom = () => {
 
     const {data:rooms, refetch} = useQuery(['loadRooms', studyId],()=>findVideoRooms(studyId,getCookie('accessToken')), {
       select: (data) => data.data.data,
-      onSuccess: (data) => {
-        console.log(data);
-      }
     });
 
     useEffect(()=>{

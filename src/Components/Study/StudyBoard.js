@@ -81,7 +81,7 @@ function StudyBoard() {
 
   useEffect(() => {
     if (!!myinfos?.data?.data?.nickname && !!studyInfos) {
-      console.log(myinfos);
+      //console.log(myinfos);
       const {
         data: {
           data: { id },

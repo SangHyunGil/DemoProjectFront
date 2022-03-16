@@ -269,7 +269,7 @@ const reducer = (state = initialState, action) =>
                 break;
 
             case LOGIN_SUCCESS:
-                console.log(action.payload);
+                //console.log(action.payload);
                 draft.id = action.payload.id;
                 draft.email = action.payload.email;
                 draft.nickname = action.payload.nickname;
@@ -317,9 +317,9 @@ const reducer = (state = initialState, action) =>
                 draft.department = action.payload.department;
                 draft.accessToken = action.payload.accessToken;
                 //study list
-                console.log(action.payload.studyIds); 
+                //console.log(action.payload.studyIds); 
                 draft.studyIds = action.payload.studyIds;
-                console.log(draft.studyIds);
+                //console.log(draft.studyIds);
                 draft.tokenDone = true;
                 draft.tokenError = "";
                 draft.isLogin = true;

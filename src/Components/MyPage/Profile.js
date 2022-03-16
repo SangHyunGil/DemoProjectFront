@@ -232,7 +232,7 @@ const Profile = () => {
   }, [isLogin, isChecked]);
 
   useEffect(() => {
-    console.log(changeUserInfoDone);
+    //console.log(changeUserInfoDone);
     if (!changeUserInfoDone) {
       return;
     }
