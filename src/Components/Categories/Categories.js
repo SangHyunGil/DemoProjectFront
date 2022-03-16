@@ -175,7 +175,7 @@ function Categories(props) {
 
   useEffect(() => {
     if (isLogin) {
-      const source = new EventSourcePolyfill('http://localhost:8080/api/subscribe',{
+      const source = new EventSourcePolyfill('https://koner.kr/api/subscribe',{
         headers: {
           "X-AUTH-TOKEN": getCookie('accessToken'),
         }
