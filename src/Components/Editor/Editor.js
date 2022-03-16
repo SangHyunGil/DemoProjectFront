@@ -34,7 +34,7 @@ function Editor(props) {
             formData.append("multipartFiles", file);
             axios
               .post(
-                `/study/${props.studyId}/board/${props.boardId}/article/image`,
+                `/api/studies/${props.studyId}/boards/${props.boardId}/articles/images`,
                 formData,
                 {
                   headers: {

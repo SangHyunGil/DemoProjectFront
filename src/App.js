@@ -44,7 +44,6 @@ import AboutUsPage from './pages/AboutUsPage';
 import MailPage from './pages/MailPage';
 import UserInfoPage from './pages/UserInfoPage';
 import Chat from './Components/Chat/Chat';
-import { EventSourcePolyfill } from 'event-source-polyfill';
 
 const App = () => {
   //let navigate = useNavigate();
