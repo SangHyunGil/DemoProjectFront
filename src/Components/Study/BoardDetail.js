@@ -268,6 +268,7 @@ function BoardDetail({ boardId }) {
   const [isApplyModalUp, setisApplyModalUp] = useState(false);
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
+  const myinfoData = queryClient.getQueryData('MyInfo');
 
   const { data: board } = useQuery(
     ["board", params.boardId],
@@ -464,8 +465,10 @@ function BoardDetail({ boardId }) {
       <ButtonWrapper>
         {isLogin ? (
           isClosed ? (
-            <h3>마감되었습니다!</h3>
-          ) : IsAlreadyJoined ? (
+            myinfoData?.data.data.authority === 'ROLE_ADMIN' ? (<DirectButton name="Direct" onClick={BoardDetailHandler}>
+            바로가기
+          </DirectButton>) :  <h3>마감되었습니다!</h3>
+          ) : IsAlreadyJoined || myinfoData?.data.data.authority === 'ROLE_ADMIN' ? (
             <DirectButton name="Direct" onClick={BoardDetailHandler}>
               바로가기
             </DirectButton>

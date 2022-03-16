@@ -9,7 +9,7 @@ import {
   createComment,
   deleteComment,
   updateComment,
-  getStudyMembers
+  getStudyMembers,
 } from "../../Api/Api";
 import { getCookie } from "../../utils/cookie";
 import TextField from "@mui/material/TextField";
@@ -259,11 +259,12 @@ function BoardArticlesPost() {
   } = useForm();
   const queryClient = useQueryClient();
   const { id, nickname } = useSelector((state) => state.users);
+
   //console.log(id);
   const {data:studyMembers} = useQuery(['getStudyMembers',studyId,boardId,articleId],()=>getStudyMembers(studyId),{
     select: (data) => data.data.data,
     onSuccess: (data) => {
-      setMyInfo(data.find((member) => member.nickname === nickname));
+      setMyInfo(data.find((m) => m?.member?.nickname === nickname));
     }
   });
   //const myInfo = studyMembers.find((member) => member.nickname === nickname);
@@ -279,9 +280,6 @@ function BoardArticlesPost() {
     () => findUserBoard(getCookie("accessToken")),
     {
       select: (x) => x.data.data,
-      onSuccess: (x) => {
-        console.log(x);
-      },
     }
   );
 
@@ -422,9 +420,8 @@ function BoardArticlesPost() {
         <header>
           <div className="ArticleTitle">
             <h1>{article?.title}</h1>
-            {(myInfo?.studyRole === "ADMIN" ||
-              myInfo?.studyRole === "CREATOR" ||
-              userInfo?.member?.nickname === article?.memberName) && (
+            {(myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === 'CREATOR' ||
+              userInfo?.nickname === article?.creator?.nickname) && (
               <div className="ArticleAction">
                 <Link to="edit">수정</Link>
                 <button onClick={deleteArticlePostHandler} type="button">

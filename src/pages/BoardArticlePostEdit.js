@@ -21,6 +21,7 @@ const EditFormStyle = styled.form`
           font-weight: bolder;
       }
       input {
+          padding: .3rem .5rem;
           box-sizing: border-box;
           width: 100%;
           border-radius: 5px;
@@ -36,6 +37,13 @@ const EditFormStyle = styled.form`
         cursor: pointer;
         background-color: #ffc107;
     }
+  }
+  .ql-editor{
+    min-height: 300px !important;
+    max-height: 800px;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: scroll;
   }
 `;
 

@@ -143,7 +143,7 @@ function StudyBoard() {
             <Category activeclassname="active" to={`/study/${studyId}`}>
               게시판 정보
             </Category>
-            {IsGranted && (
+            {(IsGranted || myinfos?.data.data.authority === 'ROLE_ADMIN') && (
               <Category activeclassname="active" to={`/study/${studyId}/board/manage`} onClick={()=>handleCurrentBoard('게시판 관리')}>
                 게시판 관리
               </Category>

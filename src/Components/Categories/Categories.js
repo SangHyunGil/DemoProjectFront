@@ -204,7 +204,7 @@ function Categories(props) {
     select: (data) => data.data.data,
     onSuccess: () => {
       queryClient.invalidateQueries(['unreadNotification']);
-    }
+    },
   });
 
   const { data:unreadNotificationData, refetch:unreadRefetch } = useQuery(['unreadNotification'], () => getUnreadNotification(getCookie('accessToken')), {
@@ -216,7 +216,8 @@ function Categories(props) {
       else {
         setNotificationColor('black');
       }
-    }
+    },
+    enabled: isLogin
   });
 
   const handleClick = (event) => {

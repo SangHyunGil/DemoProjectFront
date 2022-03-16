@@ -66,7 +66,7 @@ function UpdateStudy() {
         onSuccess: async (x) => {
             console.log(x)
             setValue('title', x.title);
-            setValue('content', x.content);
+            setValue('content', x.description);
             setValue('headCount', x.headCount);
             setValue('schedule', x.schedule);
             Tags.length === 0 && x.tags.forEach((tag) => {
@@ -87,7 +87,7 @@ function UpdateStudy() {
     const { register, handleSubmit, formState: {errors}, setValue } = useForm();
     const UpdateBoard = useMutation(['updateBoard', params.studyId], (data) => updateBoard(data,params.studyId,getCookie('accessToken')),{
         onSuccess: () => {
-            navigate('/study/depart/cse');
+            navigate('/study/depart/CSE');
         },
         onError: (err) => {
             console.log(err);
@@ -96,7 +96,7 @@ function UpdateStudy() {
 
     const UpdateSubmitHandler = (data) => {
         const formData = new FormData();
-        formData.append('content', data.content);
+        formData.append('description', data.content);
         formData.append('headCount', data.headCount);
         if (thumbnail) {
             formData.append("profileImg", thumbnail);
@@ -231,21 +231,21 @@ function UpdateStudy() {
                 </FormControl>
                 <FormControl sx={{ width: "100%", m: 1 }}>
                     <select  {...register('department')}>
-                        <option value="cse">컴퓨터공학부</option>
-                        <option value="me">기계공학부</option>
-                        <option value="eca">전기전자통신공학부</option>
-                        <option value="dea">디자인,건축공학부</option>
-                        <option value="mce">메카트로닉스공학부</option>
-                        <option value="im">산업경영학부</option>
-                        <option value="emce">에너지신소재화학공학부</option>
-                        <option value="esp">고용서비스정책학부</option>
-                        <option value="other">기타</option>
+                        <option value="CSE">컴퓨터공학부</option>
+                        <option value="ME">기계공학부</option>
+                        <option value="ECE">전기전자통신공학부</option>
+                        <option value="DEA">디자인,건축공학부</option>
+                        <option value="MCE">메카트로닉스공학부</option>
+                        <option value="IM">산업경영학부</option>
+                        <option value="EMCE">에너지신소재화학공학부</option>
+                        <option value="ESP">고용서비스정책학부</option>
+                        <option value="ETC">기타</option>
                     </select>
                 </FormControl>
                 <label htmlFor="studyState" className="als">스터디 상태</label>
                 <select {...register('studyState')} style={{width: '100%'}}>
                     {study.map((x) => (
-                        <option key={x.id} value={x.val}>{x.val}</option>
+                        <option key={x.id} value={x.val}>{x.text}</option>
                     ))}
                 </select>
                 <label htmlFor="recruitState" className="als">모집 상태</label>

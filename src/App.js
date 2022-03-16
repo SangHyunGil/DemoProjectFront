@@ -57,6 +57,7 @@ const App = () => {
   const _ = useQuery(['loadMyInfo'],()=>findUserBoard(getCookie('accessToken')),{
     enabled: isLogin,
     onSuccess: (data) => {
+      //console.log(data);
       queryClient.setQueryData('MyInfo', data);
     } 
   });

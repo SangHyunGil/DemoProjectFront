@@ -28,6 +28,7 @@ import { destroyVideoRoom } from "../../Api/Api";
 import styled from "styled-components";
 import { getCookie } from "../../utils/cookie";
 import Filestore  from "./FileStore";
+import { useQueryClient } from 'react-query';
 
 let storePlugin = null;
 let username = null;
@@ -185,6 +186,7 @@ const VideoComponent = () => {
   let { roomId, studyId } = useParams();
   username = params.get("username");
   roomId = Number(roomId);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     let janus = null;
@@ -334,7 +336,6 @@ const VideoComponent = () => {
                   } else if (event === "destroyed") {
                     // 방 삭제
                     Janus.warn("The room has been destroyed!");
-                    navigate('/study/'+studyId+'/board/rooms');
                   } else if (event === "event") {
                     // 새로운 Publisher 접속시
                     if (msg["publishers"]) {
@@ -794,7 +795,10 @@ const VideoComponent = () => {
 
   const destroyRoomHandler = () => {
     destroyVideoRoom(studyId,roomId,getCookie('accessToken'))
-      .then((response) => Janus.log("destroyed Room!"))
+      .then(() => {
+        Janus.log("destroyed Room!")
+        navigate('/study/'+studyId+'/board/rooms');
+      })
       .catch((error) => Janus.log(error));
   };
 

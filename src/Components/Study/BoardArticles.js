@@ -75,10 +75,12 @@ const CreateArticleForm = styled.form`
   flex-direction: column;
   align-items: center;
   padding-bottom: 2rem;
-  .quill {
-    display: flex;
-    flex-direction: column;
-    height: 50vh;
+  .ql-editor{
+    min-height: 300px !important;
+    max-height: 800px;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: scroll;
   }
   button {
     background-color: #0049af;

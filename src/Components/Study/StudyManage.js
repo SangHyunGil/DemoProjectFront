@@ -437,7 +437,7 @@ function StudyManage() {
                     <StudyMemberContainer key={Member?.member?.memberId}>
                       <div className="StudyMemberWrapper">
                         <MemberLink to={`/userinfo/${Member?.member?.memberId}`}>{Member?.member?.nickname}</MemberLink>
-                        {isCreator ? <span className="ordinaryBox">{studyRole}</span> : isUserCreator ? (
+                        {isCreator ? <span className="ordinaryBox">스터디장</span> : isUserCreator || myinfo?.data.data.authority === 'ROLE_ADMIN' ? (
                         <div className="controlPanel">
                         <FormControl>
                           <select

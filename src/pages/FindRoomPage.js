@@ -1,9 +1,9 @@
 import FindRoom from '../Components/Videos/FindRoom'
 import { useParams,useNavigate } from 'react-router-dom';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import styled from 'styled-components';
 
-const AddVideoButton = styled(AddCircleOutlineIcon)`
+const AddVideoButton = styled(AddCircleIcon)`
     position: fixed;
     bottom: 1rem;
     right: 1rem;
@@ -26,7 +26,7 @@ const FindRoomPage = () => {
     return (
         <>
             <FindRoom />
-            <AddVideoButton sx={{ fontSize: 60 }} onClick={addVideoRoomHandler} />
+            <AddVideoButton color='primary' sx={{ fontSize: 60 }} onClick={addVideoRoomHandler} />
         </>
     )
 }
