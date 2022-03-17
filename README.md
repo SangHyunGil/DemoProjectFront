@@ -20,7 +20,7 @@ React, react-query, redux 등...
 |                         스터디 생성                          |                       스터디 사용 방법                       |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | <img src = "https://github.com/SangHyunGil/KonerBackEnd/blob/prod/img/%EC%8A%A4%ED%84%B0%EB%94%94%20%EC%83%9D%EC%84%B1.gif?raw=true" width=100%> | <img src = "https://github.com/SangHyunGil/KonerBackEnd/blob/prod/img/%EC%8A%A4%ED%84%B0%EB%94%94%20%EC%82%AC%EC%9A%A9%EB%B0%A9%EB%B2%95.gif?raw=true"> |
-|                  **스터디 승인 수정, 삭제**                  |                       **스터디 승인**                        |
+|                  **스터디 수정, 삭제**                  |                       **스터디 승인**                        |
 | <img src = "https://github.com/SangHyunGil/KonerBackEnd/blob/prod/img/%EC%8A%A4%ED%84%B0%EB%94%94%20%EC%88%98%EC%A0%95%2C%EC%82%AD%EC%A0%9C.gif?raw=true"> | <img src="https://github.com/SangHyunGil/KonerBackEnd/blob/prod/img/%EC%8A%A4%ED%84%B0%EB%94%94%20%EC%8A%B9%EC%9D%B8.gif?raw=true"> |
 |                       **스터디 거절**                        |                        **권한 변경**                         |
 | <img src="https://github.com/SangHyunGil/KonerBackEnd/blob/prod/img/%EC%8A%A4%ED%84%B0%EB%94%94%20%EA%B1%B0%EC%A0%88.gif?raw=true"> | <img src="https://github.com/SangHyunGil/KonerBackEnd/blob/prod/img/%EA%B6%8C%ED%95%9C%20%EB%B3%80%EA%B2%BD.gif?raw=true"> |
