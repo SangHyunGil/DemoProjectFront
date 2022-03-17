@@ -22,7 +22,7 @@ function* register(action) {
 }
 
 function emailAuthAPI(data) {
-    return axios.post("/sign/verify", data);
+    return axios.post("/api/sign/verify", data);
 }
 
 function* emailAuth(action) {

@@ -60,13 +60,6 @@ const App = () => {
       queryClient.setQueryData('MyInfo', data);
     } 
   });
-  /*
-  const source = new EventSourcePolyfill('http://localhost:8080/subscribe',{
-      headers: {
-        "X-AUTH-TOKEN": getCookie('accessToken'),
-      }
-  });
-  source.onmessage = e => console.log(e.data);*/
   
   useEffect(() => {
     if (!isChecked) {
