@@ -7,12 +7,13 @@ const initialState = {
     creator: "",
     useAudio: true,
     useVideo: true,
-    onoffVideo: true,
-    onoffAudio: true,
-    onoffScreenSharing: false,
+    isVideoOff: false,
+    isAudioOff: false,
+    isScreenSharingOff: true,
     publishFeed: {},
     subscribeFeeds: [],
     chatData: [],
+    fileData: [],
     mainFeed: {stream: null, display: null}
 }
 
@@ -27,6 +28,7 @@ export const USE_VIDEO_AUDIO = "USE_VIDEO_AUDIO";
 export const TOGGLE_VIDEO = "TOGGLE_VIDEO";
 export const TOGGLE_AUDIO = "TOGGLE_AUDIO";
 export const SEND_CHAT = "SEND_CHAT";
+export const SEND_FILE = "SEND_FILE";
 export const RECEIVE_CHAT = "RECEIVE_CHAT";
 export const TOGGLE_SCREEN_SHARING = "TOGGLE_SCREEN_SHARING";
 export const CHANGE_MAIN_FEED = "CHANGE_MAIN_FEED";
@@ -82,6 +84,11 @@ export const sendChat = (payload) => ({
     type: SEND_CHAT,
     payload
 });
+
+export const sendFile = (payload) => ({
+    type: SEND_FILE,
+    payload
+})
 
 export const receiveChat = (payload) => ({
     type: RECEIVE_CHAT,
@@ -147,16 +154,21 @@ const roomReducer = (state = initialState, action) =>
                 break;
 
             case TOGGLE_VIDEO:
-                draft.onoffVideo = !draft.onoffVideo;
+                draft.isVideoOff = !draft.isVideoOff;
                 break;
 
             case TOGGLE_AUDIO:
-                draft.onoffAudio = !draft.onoffAudio;
+                draft.isAudioOff = !draft.isAudioOff;
                 break;
 
             case SEND_CHAT:
                 draft.chatData.push({ text: action.payload.text, display: action.payload.display,
                                       time: action.payload.time, isPrivateMessage: action.payload.isPrivateMessage });
+                break;
+
+            case SEND_FILE:
+                draft.fileData.push({ file: action.payload.file, filename: action.payload.filename,
+                                      display: action.payload.display, time: action.payload.time });
                 break;
 
             case RECEIVE_CHAT:
@@ -170,13 +182,13 @@ const roomReducer = (state = initialState, action) =>
                 break;
 
             case TOGGLE_SCREEN_SHARING:
-                draft.onoffScreenSharing = !draft.onoffScreenSharing
+                draft.isScreenSharingOff = !draft.isScreenSharingOff
                 break;
 
             case EXIT_ROOM:
-                draft.onoffVideo = true;
-                draft.onoffAudio = true;
-                draft.onoffScreenSharing = false;
+                draft.isVideoOff = false;
+                draft.isAudioOff = false;
+                draft.isScreenSharingOff = true;
                 draft.publishFeed = {};
                 draft.subscribeFeeds = [];
                 draft.chatData = [];
@@ -184,7 +196,7 @@ const roomReducer = (state = initialState, action) =>
                 break;
 
             default:
-                draft.onoffScreenSharing = !draft.onoffScreenSharing;
+                draft.isScreenSharingOff = draft.isScreenSharingOff;
                 break;
         }
     }

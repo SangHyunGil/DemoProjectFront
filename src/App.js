@@ -5,7 +5,7 @@ import {BrowserRouter as Router,
         Route} from 'react-router-dom';
 import Temp from './Components/Temp';
 //import { useNavigate } from 'react-router';
-import { findUserBoard } from './Api/Api';
+import { findUserBoard, subscribe } from './Api/Api';
 import { checkAccessToken } from './utils/jwt'
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
@@ -33,13 +33,17 @@ import BoardArticlePostEdit from './pages/BoardArticlePostEdit';
 import { getCookie } from './utils/cookie';
 import StudyDepartmentComp from './Components/Study/StudyDepartmentComp';
 import AllDepartmentStudy from './pages/AllDepartmentStudy';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import StudyCalendar from './Components/Study/StudyCalendar';
 import PasswordChangeCompletePage from './pages/PasswordChangeCompletePage';
 import ProfileEditPage from './pages/ProfileEditPage';
 import FindRoomPage  from './pages/FindRoomPage';
 import CreateRoomPage from './pages/CreateRoomPage';
 import VideoPage from './pages/VideoPage';
+import AboutUsPage from './pages/AboutUsPage';
+import MailPage from './pages/MailPage';
+import UserInfoPage from './pages/UserInfoPage';
+import Chat from './Components/Chat/Chat';
 
 const App = () => {
   //let navigate = useNavigate();
@@ -47,18 +51,23 @@ const App = () => {
   const { isLogin, isChecked } = useSelector(
     (state) => state.users
   );
+  const queryClient = useQueryClient();
 
-  const result = useQuery(['loadMyInfo'],()=>findUserBoard(getCookie('accessToken')),{
+  const _ = useQuery(['loadMyInfo'],()=>findUserBoard(getCookie('accessToken')),{
     enabled: isLogin,
+    onSuccess: (data) => {
+      //console.log(data);
+      queryClient.setQueryData('MyInfo', data);
+    } 
   });
-
+  
   useEffect(() => {
     if (!isChecked) {
       if(getCookie('accessToken')){
         checkAccessToken(dispatch);
       }
       //console.log("refresh Page");
-      console.log(isLogin);
+      //console.log(isLogin);
     }
   });
 
@@ -79,6 +88,7 @@ const App = () => {
                 <Route path="mystudy" element={<PrivateRoute><MyStudy /></PrivateRoute>} />
                 <Route path="edit" element={<ProfileEditPage />} />
               </Route>
+              <Route path='userinfo/:id' element={<UserInfoPage />} />
               <Route path="/temp" element={<PrivateRoute><Temp /></PrivateRoute>} />
               <Route path="/callvan" element={<PrivateRoute><CallVan /></PrivateRoute>} />
               <Route path="/signup/complete" element={<SignUpCompletePage />} />
@@ -101,6 +111,10 @@ const App = () => {
                 <Route path="rooms" element={<FindRoomPage />} />
                 <Route path="rooms/:roomId" element={<VideoPage />} />
               </Route>
+              <Route path='/aboutus' element={<AboutUsPage />} />
+              <Route path='/mail' element={<MailPage />} >
+                <Route path="with/:userId" element={<Chat />} />
+              </Route> 
               <Route path="*" element={<div>Not Found</div>} />
             </Routes>
           </div>

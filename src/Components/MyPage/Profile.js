@@ -58,7 +58,19 @@ const ProfileFormStyle = styled.form`
   flex-direction: column;
   align-items: center;
   button {
-    
+    margin-top: 1rem;
+    width: 30%;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #0049AF;
+    transition: all .3s linear;
+    &:hover {
+      background-color: #FFC107;
+      transition: all .3s linear;
+      cursor: pointer;
+    }
   }
 `;
 
@@ -85,8 +97,9 @@ const ProfileFormHeader = styled.header`
       a {
         text-decoration: none;
         color: #1976d2;
+        padding: 3px 7px;
         &:hover {
-          font-weight: bolder;
+          background: rgba(116, 185, 255,.4);
         }
       }
     }
@@ -219,7 +232,7 @@ const Profile = () => {
   }, [isLogin, isChecked]);
 
   useEffect(() => {
-    console.log(changeUserInfoDone);
+    //console.log(changeUserInfoDone);
     if (!changeUserInfoDone) {
       return;
     }

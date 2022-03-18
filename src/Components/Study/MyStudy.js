@@ -77,9 +77,6 @@ function MyStudy() {
     () => getMyStudyInfo(getCookie("accessToken")),
     {
       select: (data) => data.data.data,
-      onSuccess: (data) => {
-        console.log(data);
-      },
       retry: false,
     }
   );

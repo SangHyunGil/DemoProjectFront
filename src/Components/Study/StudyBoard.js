@@ -46,7 +46,7 @@ function StudyBoard() {
   const [IsGranted, setIsGranted] = useState(false);
   const { studyId } = useParams();
   const [DrawerState, setDrawerState] = useState(false);
-  const [currentBoard, setCurrentBoard] = useState('');
+  const [currentBoard, setCurrentBoard] = useState(sessionStorage.getItem('currentBoard'));
 
   const myinfos = queryClient.getQueryData(["loadMyInfo"]);
 
@@ -57,7 +57,11 @@ function StudyBoard() {
       select: (data) => data.data.data,
       onSuccess: (data) => {
         const myInfo = data.find(
+<<<<<<< HEAD
           (info) => info.member.nickname === myinfos?.data?.data?.nickname
+=======
+          (info) => info.member?.memberId === myinfos?.data?.data?.id
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
         );
         if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
           setIsGranted(true);
@@ -74,9 +78,6 @@ function StudyBoard() {
     () => getBoardCategory(studyId, getCookie("accessToken")),
     {
       select: (cat) => cat.data.data,
-      onSuccess: (data) => {
-        setCurrentBoard(data[0].title);
-      },
       retry: false,
       staleTime: Infinity,
     }
@@ -84,12 +85,17 @@ function StudyBoard() {
 
   useEffect(() => {
     if (!!myinfos?.data?.data?.nickname && !!studyInfos) {
+      //console.log(myinfos);
       const {
         data: {
-          data: { nickname },
+          data: { id },
         },
       } = myinfos;
+<<<<<<< HEAD
       const myInfo = studyInfos?.find((info) => info.member.nickname === nickname);
+=======
+      const myInfo = studyInfos?.find((info) => info.member?.memberId === id);
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
       if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
         setIsGranted(true);
       } else {
@@ -97,6 +103,11 @@ function StudyBoard() {
       }
     }
   }, [myinfos, studyInfos]);
+
+  const handleCurrentBoard = (title) => {
+    setCurrentBoard(title);
+    sessionStorage.setItem('currentBoard', title);
+  };
 
   return (
     <>
@@ -126,25 +137,25 @@ function StudyBoard() {
                 activeclassname="active"
                 to={`/study/${studyId}/board/${cat.id}/articles`}
                 key={cat.id}
-                onClick={()=>setCurrentBoard(cat.title)}
+                onClick={()=>handleCurrentBoard(cat.title)}
               >
                 {cat.title}
               </Category>
             ))}
-            {IsGranted && (
-              <Category to={`/study/${studyId}/board/manage`} onClick={()=>setCurrentBoard('게시판 관리')}>
+            <Category activeclassname="active" to={`/study/${studyId}/board/calendar`} onClick={()=>handleCurrentBoard('캘린더')}>
+              스터디 캘린더
+            </Category>
+            <Category activeclassname="active" to={`/study/${studyId}/board/rooms`} onClick={() => handleCurrentBoard('화상채팅')} >
+              스터디 화상채팅
+            </Category>
+            <Category activeclassname="active" to={`/study/${studyId}`}>
+              게시판 정보
+            </Category>
+            {(IsGranted || myinfos?.data.data.authority === 'ROLE_ADMIN') && (
+              <Category activeclassname="active" to={`/study/${studyId}/board/manage`} onClick={()=>handleCurrentBoard('게시판 관리')}>
                 게시판 관리
               </Category>
             )}
-            <Category to={`/study/${studyId}`} style={{ color: "black" }}>
-              게시판 정보
-            </Category>
-            <Category to={`/study/${studyId}/board/calendar`} onClick={()=>setCurrentBoard('캘린더')}>
-              스터디 캘린더
-            </Category>
-            <Category to={`/study/${studyId}/board/rooms`}>
-              스터디 화상채팅
-            </Category>
           </DrawerWrapper>
         </SwipeableDrawer>
       </CategoryWrapper>

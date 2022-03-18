@@ -3,7 +3,7 @@ import { findBoard, join, getBoardCategory, getStudyMembers } from "../../Api/Ap
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { getCookie } from "../../utils/cookie";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
@@ -13,6 +13,7 @@ import { Box } from "@mui/system";
 import { TextareaAutosize } from "@mui/base";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
+import { MemberLink } from "../Style/MemberLink";
 
 const defaultProfileImgUrl =
   "https://koner-bucket.s3.ap-northeast-2.amazonaws.com/profileImg/koryong1.jpg";
@@ -105,7 +106,7 @@ const DetailCard = styled(Card)`
 const AvatarWrapper = styled.div`
   margin-top: 1rem;
   display: inline-flex;
-  span {
+  a {
     display: flex;
     align-items: center;
   }
@@ -252,6 +253,8 @@ const ApplyForm = styled.form`
   }
 `;
 
+
+
 function BoardDetail({ boardId }) {
   const navigate = useNavigate();
   const params = useParams();
@@ -265,6 +268,8 @@ function BoardDetail({ boardId }) {
   const [isApplyModalUp, setisApplyModalUp] = useState(false);
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
+  const myinfoData = queryClient.getQueryData('MyInfo');
+
   const { data: board } = useQuery(
     ["board", params.boardId],
     () => getBoardCategory(params.boardId, getCookie("accessToken")),
@@ -292,9 +297,6 @@ function BoardDetail({ boardId }) {
     () => findBoard(params.boardId),
     {
       select: (x) => x.data.data,
-      onSuccess: (data) => {
-        console.log(data);
-      },
       retry: false,
     }
   );
@@ -307,9 +309,14 @@ function BoardDetail({ boardId }) {
     if (BoardContent && BoardMember) {
       let a = BoardMember.length;
       BoardMember?.forEach((member) => {
+<<<<<<< HEAD
         const { nickname: Nick } = member.member;
         const { studyRole } = member;
         if (nickname === Nick) {
+=======
+        const { member:{nickname: Nick, memberId}, studyRole } = member;
+        if (id === memberId) {
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
           if (studyRole === "APPLY") {
             a -= 1;
             setIsApply(true);
@@ -382,7 +389,7 @@ function BoardDetail({ boardId }) {
                 />
               </li>
               <li style={{ paddingTop: "10px" }}>
-                {BoardContent?.creator?.nickname}
+                <MemberLink to={`/userinfo/${BoardContent?.creator?.memberId}`}>{BoardContent?.creator?.nickname}</MemberLink>
               </li>
             </ul>
             <StudyStatusWrapper>
@@ -430,21 +437,25 @@ function BoardDetail({ boardId }) {
           <CardContent>
             <h3>스터디 원들</h3>
             {BoardMember?.map((m) => {
+<<<<<<< HEAD
               const { nickname: Nick, profileImgUrl: profileUrlImg } = m.member;
               const { studyRole } = m;
               console.log(studyRole, nickname);
+=======
+              const { member: { nickname: Nick,profileImgUrl,memberId},studyRole } = m;
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
               if (studyRole === "APPLY") {
                 return null;
               }
               return (
-                <AvatarWrapper key={Nick}>
+                <AvatarWrapper key={memberId}>
                   <Avatar
                     alt={Nick}
                     src={
-                      profileUrlImg
+                      profileImgUrl
                     }
                   />
-                  <span>{Nick}</span>
+                  <MemberLink to={`/userinfo/${memberId}`}>{Nick}</MemberLink>
                 </AvatarWrapper>
               );
             })}
@@ -463,8 +474,10 @@ function BoardDetail({ boardId }) {
       <ButtonWrapper>
         {isLogin ? (
           isClosed ? (
-            <h3>마감되었습니다!</h3>
-          ) : IsAlreadyJoined ? (
+            myinfoData?.data.data.authority === 'ROLE_ADMIN' ? (<DirectButton name="Direct" onClick={BoardDetailHandler}>
+            바로가기
+          </DirectButton>) :  <h3>마감되었습니다!</h3>
+          ) : IsAlreadyJoined || myinfoData?.data.data.authority === 'ROLE_ADMIN' ? (
             <DirectButton name="Direct" onClick={BoardDetailHandler}>
               바로가기
             </DirectButton>

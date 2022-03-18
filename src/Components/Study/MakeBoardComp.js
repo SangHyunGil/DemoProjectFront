@@ -34,6 +34,7 @@ export const MakeBoardContainer = styled.section`
         width: 80%;
         box-shadow: none;
     }
+    
 `;
 
 const MakeBoardForm = styled.form`
@@ -72,7 +73,7 @@ const MakeRoomComp = () => {
     const createBoardMutation = useMutation(['createBoard',id],
     (data)=>createBoard(data,getCookie('accessToken')),{
         onSuccess: () => {
-            navigate('/study/depart/cse');
+            navigate('/study/depart/CSE');
         }
     });
 
@@ -243,7 +244,7 @@ const MakeRoomComp = () => {
                 <label htmlFor="studyState">스터디 상태</label>
                 <select {...register('studyState')} style={{width: '100%'}}>
                     {study.map((x) => (
-                        <option key={x.id} value={x.val}>{x.val}</option>
+                        <option key={x.id} value={x.val}>{x.text}</option>
                     ))}
                 </select>
                 <label htmlFor="recruitState">모집 상태</label>

@@ -3,15 +3,27 @@ import styled from "styled-components";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion/dist/framer-motion";
-import Paper from '@mui/material/Paper';
+import { Paper, Badge, Menu, MenuItem, Snackbar, CircularProgress } from '@mui/material';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import MailIcon from '@mui/icons-material/Mail';
+import { useQuery, useQueryClient } from "react-query";
+import { unreadMessage, getNotification, getUnreadNotification } from '../../Api/Api';
+import { getCookie } from "../../utils/cookie";
+import { EventSourcePolyfill } from 'event-source-polyfill';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import MuiAlert from '@mui/material/Alert';
 
 const category = [
   { name: "all", title: "메인" },
+<<<<<<< HEAD
   { name: "callvan", title: "사용법" },
+=======
+  { name: 'aboutus', title: '소개'},
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
   { name: "study/depart/CSE", title: "스터디" },
 ];
 
@@ -53,7 +65,6 @@ export const Category = styled(NavLink)`
   text-decoration: none;
   position: relative;
   font-size: 1.6rem;
-  font-family: "OTWelcomeBA", sans-serif;
   &:hover {
     color: #ffc107;
   }
@@ -143,9 +154,19 @@ const LineVariants = {
   },
 };
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 function Categories(props) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [notification, setNotification] = useState([]);
+  const [notificationColor, setNotificationColor] = useState('red');
+  const [alertOpen, setAlertOpen] = useState(false);
+  const notificationOpen = Boolean(anchorEl);
   const isLogin = useSelector((state) => state.users.isLogin);
   const location = useLocation();
+  const queryClient = useQueryClient();
   const [IsSelected, setIsSelected] = useState(
     location.pathname !== "/" ? location.pathname.split("/")[1] : "all"
   );
@@ -155,6 +176,69 @@ function Categories(props) {
     );
   }, [location]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogin) {
+      const source = new EventSourcePolyfill('https://koner.kr/api/subscribe',{
+        headers: {
+          "X-AUTH-TOKEN": getCookie('accessToken'),
+        }
+      });
+      source.onmessage = e => {
+        //console.log(e);
+        if (e.type === 'message' && e.data.startsWith('{')) {
+          setNotification(prev => [...prev, JSON.parse(e.data)]);
+          setAlertOpen(true);
+          unreadRefetch();
+        }
+      }
+    }
+  },[isLogin])
+
+  const { data: unreadMessageData } = useQuery(['unreadMessage'], () => unreadMessage(getCookie('accessToken')), {
+    select: (data) => data.data.data,
+    enabled: isLogin,
+  });
+
+  const { data:notifications, refetch, isLoading } = useQuery(['notifications'],()=>getNotification(getCookie('accessToken')),{
+    enabled: false,
+    select: (data) => data.data.data,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['unreadNotification']);
+    },
+  });
+
+  const { data:unreadNotificationData, refetch:unreadRefetch } = useQuery(['unreadNotification'], () => getUnreadNotification(getCookie('accessToken')), {
+    select: (data) => data.data.data,
+    onSuccess: (data) => {
+      if (data > 0) {
+        setNotificationColor('red');
+      }
+      else {
+        setNotificationColor('black');
+      }
+    },
+    enabled: isLogin
+  });
+
+  const handleClick = (event) => {
+    refetch();
+    setAnchorEl(event.currentTarget);
+    //unreadRefetch();
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleAlertClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setAlertOpen(false);
+  };
+
   return (
     <>
       <CategoryWrapper>
@@ -183,7 +267,7 @@ function Categories(props) {
             </Category>
           ))}
         </CategoryMiddleWrapper>
-        <CategoryMiddleWrapper>
+        <CategoryMiddleWrapper style={{display:'flex', alignItems:'center'}}>
           {isLogin ? (
             <>
               <Category to="/logout" >
@@ -200,6 +284,42 @@ function Categories(props) {
                   />
                 ) : null}
               </Category>
+              <Category to='/mail'>
+                <Badge badgeContent={unreadMessageData} color="secondary">
+                  <MailIcon color="action" style={{fontSize:'2.5rem'}} />
+                </Badge>
+              </Category>
+              <Badge badgeContent={unreadNotificationData} color="primary">
+                <NotificationsIcon 
+                  id = 'notification'
+                  aria-controls={notificationOpen ? 'basic-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={notificationOpen ? 'true' : undefined}
+                  onClick={handleClick}
+                  style={{color:notificationColor, fontSize:'2.5rem',cursor:'pointer'}}
+                />
+              </Badge>
+              <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={notificationOpen}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'notification',
+                  }}
+                  PaperProps = {{
+                    style: {
+                      maxHeight: '20rem'
+                    }
+                  }}
+                >
+                  {isLoading ? <CircularProgress /> : 
+                  (notifications?.map((n) => (
+                    <MenuItem key={n.notificationId} onClick={() => {navigate(n.url)}}>
+                      {n.content}
+                    </MenuItem>
+                  )))}
+              </Menu>
             </>
           ) : (
             <>
@@ -214,19 +334,25 @@ function Categories(props) {
         </CategoryMiddleWrapper>
       </CategoryWrapper>
       {props.children}
-      <BottomNavBar elevation={2}>
+      <BottomNavBar elevation={3}>
           <BottomNavigation
             showLabels={true}
             value={IsSelected}
-            onChange={(newValue) => {
-              newValue = newValue === 0 ? 'all' : 'study';
+            onChange={(event,newValue) => {
+              //console.log(newValue);
               setIsSelected(newValue);
             }}
           >
             <BottomNavBarAction label="메인" value='all' onClick={()=>navigate('/')} icon={<HomeIcon />} />
-            <BottomNavBarAction label="스터디" value='study' onClick={()=>navigate('/study/depart/cse')} icon={<BorderColorIcon />} />
+            <BottomNavBarAction label="소개" value='aboutus' onClick={()=>navigate('/aboutus')} icon={<InfoIcon />} />
+            <BottomNavBarAction label="스터디" value='study' onClick={()=>navigate('/study/depart/CSE')} icon={<BorderColorIcon />} />
           </BottomNavigation>
       </BottomNavBar>
+      <Snackbar open={alertOpen} autoHideDuration={6000} anchorOrigin={{vertical:'top',horizontal:'right'}} onClose={handleAlertClose}>
+        <Alert onClose={handleAlertClose} severity="success">
+          {notification[notification.length - 1]?.content}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

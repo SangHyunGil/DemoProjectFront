@@ -16,7 +16,7 @@ const MainVideo = () => {
             <Video
               stream={mainFeed.stream}
               username={mainFeed.display}
-              muted={false}
+              muted={true}
               isMain={true}
             />
           )}

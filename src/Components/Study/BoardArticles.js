@@ -9,11 +9,13 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getCookie } from "../../utils/cookie";
 import Pagination from "react-js-pagination";
 import styled from "styled-components";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { FormControl } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
-import TextField from '@mui/material/TextField';
+import Avatar from "@mui/material/Avatar";
+import "react-quill/dist/quill.snow.css";
+import Editor from "../Editor/Editor";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const PaginationWrapper = styled.div`
   display: flex;
@@ -38,8 +40,8 @@ const PaginationWrapper = styled.div`
       border-radius: 0.25rem;
       padding: 0.5rem;
       a {
-          text-decoration: none;
-          color: #fff;
+        text-decoration: none;
+        color: #fff;
       }
     }
   }
@@ -50,9 +52,13 @@ const ArticleLink = styled(Link)`
   display: flex;
   justify-content: center;
   color: black;
+  .nameWrapper {
+    display: flex;
+    align-items: center;
+  }
 `;
 
-const AddArticleButton = styled(AddCircleOutlineIcon)`
+const AddArticleButton = styled(AddCircleIcon)`
   position: fixed;
   bottom: 1rem;
   right: 1rem;
@@ -69,18 +75,24 @@ const CreateArticleForm = styled.form`
   flex-direction: column;
   align-items: center;
   padding-bottom: 2rem;
+  .ql-editor{
+    min-height: 300px !important;
+    max-height: 800px;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: scroll;
+  }
   button {
-    background-color: #0049AF;
+    background-color: #0049af;
     transition: all 0.3s linear;
     border: 0;
     border-radius: 5px;
     padding: 0.5rem 1rem;
     color: white;
     &:hover {
-      background-color: #FFC107;
+      background-color: #ffc107;
       transition: all 0.3s linear;
       cursor: pointer;
-
     }
   }
 `;
@@ -103,11 +115,15 @@ const ArticleList = styled.ul`
       background-color: #c7ecee;
     }
     a {
-      .ArticleWrapper{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      .ArticleWrapper {
         display: flex;
         justify-content: space-between;
         width: 100%;
-      } 
+      }
     }
   }
   @media (max-width: 640px) {
@@ -129,6 +145,10 @@ const ArticleCard = styled.div`
 `;
 
 const ViewBoxBlock = styled.div`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
   .viewBox {
     width: 80px;
     height: 80px;
@@ -151,7 +171,7 @@ const AritcleEmptyBlock = styled.div`
   h2 {
     margin: 6rem 0;
     text-align: center;
-    font-family: "OTWelcomeBA",sans-serif;
+    font-family: "OTWelcomeBA", sans-serif;
     font-size: 2.8rem;
   }
 `;
@@ -173,8 +193,7 @@ function BoardArticles() {
   const [IsModalUp, setIsModalUp] = useState(false);
   const { id, accessToken, nickname } = useSelector((state) => state.users);
   const [articleTitle, onChangeArticleTitle, setArticleTitle] = useInput("");
-  const [articleContent, onChangeArticleContent, setArticleContent] =
-    useInput("");
+  const [articleContent, setArticleContent] = useState("");
   const [HasArticle, setHasArticle] = useState(false);
 
   const [page, setPage] = useState(0);
@@ -187,12 +206,9 @@ function BoardArticles() {
   } = useQuery(
     ["boardArticles", boardId, page],
     () =>
-      findAllBoardArticles(studyId, boardId, page, 4 , getCookie("accessToken")),
+      findAllBoardArticles(studyId, boardId, page, 4, getCookie("accessToken")),
     {
       select: (article) => article.data.data,
-      onSuccess: (x) => {
-        console.log(x);
-      },
       keepPreviousData: true,
     }
   );
@@ -266,25 +282,32 @@ function BoardArticles() {
                         <header>
                           <h3>{article.title}</h3>
                         </header>
-                        <main>
-                          <p>{article.content}</p>
-                        </main>
                         <footer>
                           <p>{article.memberName}</p>
                         </footer>
                       </div>
                     </ArticleCard>
-                    <ViewBoxBlock>
-                        <div className="viewBox">
-                          <p>{article.views}<br />조회</p>
-                        </div>
-                    </ViewBoxBlock>
                   </div>
+                  <div className="nameWrapper">
+                    <Avatar
+                      alt={article?.creator?.nickname}
+                      src={article?.creator?.profileImgUrl}
+                    />
+                    <p>{article?.creator?.nickname}</p>
+                  </div>
+                  <ViewBoxBlock>
+                    <div className="viewBox">
+                      <p>
+                        {article.views}
+                        <br />
+                        조회
+                      </p>
+                    </div>
+                  </ViewBoxBlock>
                 </ArticleLink>
               </li>
             ))}
           </ArticleList>
-          
         )
       ) : (
         <ArticleEmpty />
@@ -303,11 +326,13 @@ function BoardArticles() {
       {IsModalUp && (
         <MuiDialog
           open={IsModalUp}
-          onClose={()=>setIsModalUp(false)} 
+          onClose={() => setIsModalUp(false)}
+          fullWidth
+          maxWidth="lg"
         >
-          <h2 style={{textAlign:'center'}}>게시글 작성</h2>
+          <h2 style={{ textAlign: "center" }}>게시글 작성</h2>
           <CreateArticleForm onSubmit={createArticleHandler}>
-            <FormControl sx={{m:1, width:'60%'}} >
+            <FormControl sx={{ m: 1, width: "60%" }}>
               <InputLabel htmlFor="article-title">제목</InputLabel>
               <OutlinedInput
                 id="article-title"
@@ -316,22 +341,23 @@ function BoardArticles() {
                 label="제목"
               />
             </FormControl>
-            <FormControl sx={{m:1, width: '60%'}}>
-              <TextField
-                id="article-content"
-                label="내용"
-                multiline
-                rows={10}
-                variant="outlined"
+            <FormControl sx={{ m: 1, width: "60%" }}>
+              <Editor
                 value={articleContent}
-                onChange={onChangeArticleContent}
+                onChange={setArticleContent}
+                studyId={studyId}
+                boardId={boardId}
               />
             </FormControl>
             <button type="submit">만들기</button>
           </CreateArticleForm>
         </MuiDialog>
       )}
-      <AddArticleButton sx={{fontSize:60}} onClick={createArticleModalHandler}>
+      <AddArticleButton
+        color="primary"
+        sx={{ fontSize: 60 }}
+        onClick={createArticleModalHandler}
+      >
         게시글 추가
       </AddArticleButton>
     </div>

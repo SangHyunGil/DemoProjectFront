@@ -9,7 +9,7 @@ import {
     } from "../reducers/users";
 
 async function registerAPI(data) {
-    return await axios.post("/sign/register", data, {"Content-Type": "multipart/form-data"}) && await axios.post("/sign/email", {email : data.get('email'), redisKey : "VERIFY"});
+    return await axios.post("/api/sign/register", data, {"Content-Type": "multipart/form-data"}) && await axios.post("/api/sign/email", {email : data.get('email'), redisKey : "VERIFY"});
 }
 
 function* register(action) {
@@ -22,7 +22,7 @@ function* register(action) {
 }
 
 function emailAuthAPI(data) {
-    return axios.post("/sign/verify", data);
+    return axios.post("/api/sign/verify", data);
 }
 
 function* emailAuth(action) {
@@ -35,7 +35,7 @@ function* emailAuth(action) {
 }
 
 function loginAPI(data) {
-    return axios.post("/sign/login", data);
+    return axios.post("/api/sign/login", data);
 }
 
 function* login(action) {
@@ -45,6 +45,7 @@ function* login(action) {
         
         const result = yield call(loginAPI, action.payload);
         const body = result.data.data;
+        body.password = action.payload.password;
         setCookie('accessToken', body.accessToken, {path: "/", expires: JWT_EXPIRE_TIME});
         setCookie('refreshToken', body.refreshToken, {path: "/", expires: RFT_EXPIRE_TIME});
         yield put(loginSuccess({...body}));
@@ -54,7 +55,7 @@ function* login(action) {
 }
 
 function tokenAPI(data) {
-    return axios.post("/sign/reissue", data)
+    return axios.post("/api/sign/reissue", data)
 }
 
 function* token(action) {
@@ -74,7 +75,7 @@ function* token(action) {
 }
 
 export function infoAPI(data) {
-    return axios.post("/users/info",{},
+    return axios.post("/api/users/info",{},
     {
         headers: {
             "X-AUTH-TOKEN": data.accessToken
@@ -93,7 +94,7 @@ function* info(action) {
 }
 
 function findPasswordAPI(data) {
-    return axios.post("/sign/email", {email : data.email, redisKey : "PASSWORD"})
+    return axios.post("/api/sign/email", {email : data.email, redisKey : "PASSWORD"})
 }
 
 function* findPassword(action) {
@@ -106,7 +107,7 @@ function* findPassword(action) {
 }
 
 function changePasswordAPI(data) {
-    return axios.post("/sign/password", {email : data.email, password : data.password});
+    return axios.post("/api/users/password", {email : data.email, password : data.password});
 }
 
 function* changePassword(action) {
@@ -121,7 +122,7 @@ function* changePassword(action) {
 function changeUserInfoAPI(data) {
     const {id, accessToken, ...temp} = data
 
-    return axios.put("/users/"+id, temp, {
+    return axios.put("/api/users/"+id, temp, {
         headers: {
             "X-AUTH-TOKEN": accessToken
         }
@@ -132,7 +133,7 @@ function* changeUserInfo(action) {
     try {
         const result = yield call(changeUserInfoAPI, action.payload);
         const body = result.data.data;
-        console.log(body);
+        //console.log(body);
         yield put(changeUserInfoSuccess({...body}))
     } catch(e) {
         yield put(changeUserInfoFailure({msg: e.response.data.msg}));

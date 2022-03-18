@@ -4,11 +4,11 @@ import styled from "styled-components";
 
 const Footer = styled.footer`
   height: 10vh;
-  background: rgb(48, 55, 64);
+  background: white;
   display: flex;
   align-items: center;
   padding: 0 5rem;
-  color: white;
+  color: black;
   a {  
     flex: 1;
     display: flex;

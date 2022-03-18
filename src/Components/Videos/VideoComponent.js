@@ -14,6 +14,7 @@ import {
   toggleScreenSharing,
   exitRoom,
   changeMainFeed,
+  sendFile
 } from "../../reducers/roomReducer";
 import PublishVideo from "./PublishVideo";
 import SubscribeVideo from "./SubscribeVideo";
@@ -26,10 +27,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { destroyVideoRoom } from "../../Api/Api";
 import styled from "styled-components";
 import { getCookie } from "../../utils/cookie";
+import Filestore  from "./FileStore";
+import { useQueryClient } from 'react-query';
 
 let storePlugin = null;
 let username = null;
 let myserver = server;
+let receivedFileChunk = {};
 
 const MainWrapper = styled.div`
   display: flex;
@@ -74,10 +78,17 @@ const MainWrapper = styled.div`
             transition: all 0.3s linear;
           }
         }
-        &:last-child { 
+        &:nth-child(2) { 
           background: #ffc107;
           &:hover {
             background: #0049af ;
+            transition: all 0.3s linear;
+          }
+        }
+        &:nth-child(3) { 
+          background: #3Eb489;
+          &:hover {
+            background: #8BC34A ;
             transition: all 0.3s linear;
           }
         }
@@ -164,9 +175,9 @@ const VideoComponent = () => {
   const {
     publishFeed,
     subscribeFeeds,
-    onoffVideo,
-    onoffAudio,
-    onoffScreenSharing,
+    isVideoOff,
+    isAudioOff,
+    isScreenSharingOff,
     chatData,
     creator,
   } = useSelector((state) => state.roomReducer);
@@ -175,6 +186,7 @@ const VideoComponent = () => {
   let { roomId, studyId } = useParams();
   username = params.get("username");
   roomId = Number(roomId);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     let janus = null;
@@ -324,7 +336,6 @@ const VideoComponent = () => {
                   } else if (event === "destroyed") {
                     // 방 삭제
                     Janus.warn("The room has been destroyed!");
-                    navigate(`/study/${studyId}/board/create`);
                   } else if (event === "event") {
                     // 새로운 Publisher 접속시
                     if (msg["publishers"]) {
@@ -664,25 +675,28 @@ const VideoComponent = () => {
               );
             }
           } else if (what === "file") {
-            // let from = json["display"];
-            // let filename = json["text"]["filename"];
-            // let chunk = json["text"]["message"];
-            // let last = json["text"]["last"];
-            // if (!receivedFileChunk[from]) receivedFileChunk[from] = {};
-            // if (!receivedFileChunk[from][filename]) {
-            //   receivedFileChunk[from][filename] = [];
-            // }
-            // receivedFileChunk[from][filename].push(chunk);
-            // if (last) {
-            //   setReceiveFile(() => {
-            //     return {
-            //       data: receivedFileChunk[from][filename].join(""),
-            //       filename: filename,
-            //       from: from,
-            //     };
-            //   });
-            //   delete receivedFileChunk[from][filename];
-            // }
+              let from = json["display"];
+              let filename = json["file"]["filename"];
+              let chunk = json["file"]["message"];
+              let last = json["file"]["last"];
+              if (!receivedFileChunk[from]) {
+                receivedFileChunk[from] = {};
+              }
+              if (!receivedFileChunk[from][filename]) {
+                receivedFileChunk[from][filename] = [];
+              }
+              receivedFileChunk[from][filename].push(chunk);
+              if (last) {
+                dispatch(
+                  sendFile({
+                      filename: filename,
+                      file: receivedFileChunk[from][filename].join(""),
+                      display: from,
+                      time: moment().format("HH:mm")
+                  })
+                );
+                delete receivedFileChunk[from][filename];
+              }
           }
         },
       });
@@ -708,27 +722,23 @@ const VideoComponent = () => {
   useEffect(() => {}, [subscribeFeeds, chatData]);
 
   const toggleAudioHandler = () => {
-    if (!onoffAudio) storePlugin.unmuteAudio();
+    if (isAudioOff) storePlugin.unmuteAudio();
     else storePlugin.muteAudio();
     dispatch(
-      toggleAudio({
-        onoffAudio: !onoffAudio,
-      })
+      toggleAudio()
     );
   };
 
   const toggleVideoHandler = () => {
-    if (!onoffVideo) storePlugin.unmuteVideo();
+    if (isVideoOff) storePlugin.unmuteVideo();
     else storePlugin.muteVideo();
     dispatch(
-      toggleVideo({
-        onoffVideo: !onoffVideo,
-      })
+      toggleVideo()
     );
   };
 
   const toggleScreenSharingHandler = () => {
-    if (onoffScreenSharing) {
+    if (isScreenSharingOff) {
       storePlugin.createOffer({
         media: {
           video: "screen",
@@ -736,12 +746,14 @@ const VideoComponent = () => {
         },
         success: function (jsep) {
           dispatch(
-            toggleScreenSharing({
-              onoffScreenSharing: onoffScreenSharing,
-            })
+            toggleScreenSharing()
           );
           storePlugin.send({
-            message: { audio: onoffAudio, video: true },
+            message: { 
+              request: "configure",
+              audio: isAudioOff, 
+              video: true 
+            },
             jsep: jsep,
           });
         },
@@ -763,12 +775,14 @@ const VideoComponent = () => {
         },
         success: function (jsep) {
           dispatch(
-            toggleScreenSharing({
-              onoffScreenSharing: onoffScreenSharing,
-            })
+            toggleScreenSharing()
           );
           storePlugin.send({
-            message: { audio: onoffAudio, video: true },
+            message: { 
+              request: "configure",
+              audio: isAudioOff, 
+              video: true 
+            },
             jsep: jsep,
           });
         },
@@ -781,7 +795,10 @@ const VideoComponent = () => {
 
   const destroyRoomHandler = () => {
     destroyVideoRoom(studyId,roomId,getCookie('accessToken'))
-      .then((response) => Janus.log("destroyed Room!"))
+      .then(() => {
+        Janus.log("destroyed Room!")
+        navigate('/study/'+studyId+'/board/rooms');
+      })
       .catch((error) => Janus.log(error));
   };
 
@@ -799,27 +816,32 @@ const VideoComponent = () => {
             <div className="control-panel">
               <button name="chat" onClick={changeControlHandler} >채팅</button>
               <button name="participant" onClick={changeControlHandler} >참가자</button>
+              <button name="file" onClick={changeControlHandler} >파일</button>
             </div>
             {ChooseControl === 'chat' ? 
             <Chatting
               plugin={storePlugin}
               roomId={roomId}
               username={username}
-            /> : <Participant
+            /> : ( ChooseControl === 'participant' ? <Participant
             publishFeed={publishFeed}
             subscribeFeeds={subscribeFeeds}
-          />}
+          /> : <Filestore
+                plugin={storePlugin}
+                roomId={roomId}
+                username={username}
+          />)}
           </div>
         </MainWrapper>
         <ActionButtonWrapper>
           <button onClick={toggleAudioHandler}>
-            {onoffAudio ? "소리 끄기" : "소리 켜기"}
+            {isAudioOff ? "소리 켜기" : "소리 끄기"}
           </button>
           <button onClick={toggleVideoHandler}>
-            {onoffVideo ? "비디오 끄기" : "비디오 켜기"}
+            {isVideoOff ? "비디오 켜기" : "비디오 끄기"}
           </button>
           <button onClick={toggleScreenSharingHandler}>
-            {onoffScreenSharing ? "화면공유 켜기" : "화면공유 끄기"}
+            {isScreenSharingOff ? "화면공유 켜기" : "화면공유 끄기"}
           </button>
           {creator === username ? (
             <button onClick={destroyRoomHandler}>방 종료</button>

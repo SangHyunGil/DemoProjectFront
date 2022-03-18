@@ -37,12 +37,6 @@ const GlobalStyle = createGlobalStyle`
         font-weight: normal;
         font-style: normal;
       }
-      @font-face {
-        font-family: 'Galmuri9';
-        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/Galmuri9.woff') format('woff');
-        font-weight: normal;
-        font-style: normal;
-      }
   ${normalize}
   body,html {
     padding:0;
@@ -78,7 +72,7 @@ const queryClient = new QueryClient({
   },
 });
 
-axios.defaults.baseURL = "http://koner.kr:8080";
+axios.defaults.baseURL = "https://koner.kr";
 axios.defaults.withCredentials = true;
 
 ReactDOM.render(

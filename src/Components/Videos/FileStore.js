@@ -81,7 +81,7 @@ const Filestore = ({ plugin, roomId, username }) => {
           data.filename = file.name; // data의 이름 설정 (=> 파일 이름)
           if (event) {
             text = event.target.result; // 처음 실행시
-            console.log(text);
+            //console.log(text);
             dispatch(
                 sendFile({
                     filename:file.name,
