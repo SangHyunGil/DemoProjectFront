@@ -56,11 +56,9 @@ local에서 돌리기 위해서는 spring 백엔드 코드가 필요합니다.
 질문사항이 있으시거나 궁금한점이 있으시다면 syu9710@gmail.com 으로 연락주시기 바랍니다! 
 
 ## Authors
-
-|                            길상현                            |                            유승범                            |
+|           [길상현](https://github.com/SangHyunGil)           |             [유승범](https://github.com/syoo970)             |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://cdn-icons-png.flaticon.com/512/427/427544.png" alt="돌고래  무료 아이콘" style="zoom: 10%;" /> | <img src="https://i.pinimg.com/originals/f3/25/58/f325581f9612cdc77538f205e66a3d3f.jpg" alt="img" style="zoom:10%;" /> |
-|                         백엔드 담당                          |                       프론트엔드 담당                        |
-
+| <img src="https://cdn-icons-png.flaticon.com/512/427/427544.png" alt="돌고래  무료 아이콘" style="zoom: 25%;" /> | <img src="https://i.pinimg.com/originals/f3/25/58/f325581f9612cdc77538f205e66a3d3f.jpg" alt="img" style="zoom:25%;" /> |
+|                         백엔드 담당✨                         |                       프론트엔드 담당🎢                       |
 
 
