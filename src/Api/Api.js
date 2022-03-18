@@ -3,19 +3,19 @@ import { getCookie } from "../utils/cookie";
 import { spring_server } from "../utils/config";
 
 export const findAllRooms = async () => {
-  return await axios.get("/room");
+  return await axios.get("/api/rooms");
 };
 
 export const findBoard = async (boardId) => {
-  return await axios.get(`/study/${boardId}`);
+  return await axios.get(`/api/studies/${boardId}`);
 };
 
 export const findAllBoardsTotal = async (pageParam) => {
-  return await axios.get(`/study?studyId=${pageParam?.studyId}&department=${pageParam?.department}&size=${pageParam?.size}`);
+  return await axios.get(`/api/studies?studyId=${pageParam?.studyId}&department=${pageParam?.department}&size=${pageParam?.size}`);
 };
 
 export const findAllBoardsPreview = async (studyId,department,size) => {
-  return await axios.get("/study",{
+  return await axios.get("/api/studies",{
     params: {
       studyId: studyId,
       department: department,
@@ -29,7 +29,7 @@ export const findUserBoard = async (accessToken) => {
     accessToken = getCookie("accessToken");
   }
   return await axios.post(
-    `/users/info`,
+    `/api/users/info`,
     {},
     {
       headers: {
@@ -44,7 +44,7 @@ export const updateBoard = async (data,studyId,accessToken) => {
     accessToken = getCookie("accessToken");
   }
   return await axios.put(
-    `/study/${studyId}`,
+    `/api/studies/${studyId}`,
     data,
     {
       headers: {
@@ -60,7 +60,7 @@ export const deleteBoard = async (studyId,accessToken) => {
     accessToken = getCookie("accessToken");
   }
   return await axios.delete(
-    `/study/${studyId}`,
+    `/api/studies/${studyId}`,
     {
       headers: {
         "X-AUTH-TOKEN": accessToken,
@@ -73,7 +73,7 @@ export const getUserProfileInfo = async (memeberId, accessToken) => {
   if (!accessToken) {
     accessToken = getCookie("accessToken");
   }
-  return await axios.get(`/users/${memeberId}`, {
+  return await axios.get(`/api/users/${memeberId}`, {
     headers: {
       "X-AUTH-TOKEN": accessToken,
     },
@@ -82,7 +82,7 @@ export const getUserProfileInfo = async (memeberId, accessToken) => {
 
 export const join = async (boardId, memberId, applyContent, accessToken) => {
   return await axios.post(
-    `/study/${boardId}/join/${memberId}`,{
+    `/api/studies/${boardId}/joins/${memberId}`,{
         applyContent
     },
     {
@@ -95,7 +95,7 @@ export const join = async (boardId, memberId, applyContent, accessToken) => {
 
 export const createRoom = async (roomName, memberId, accessToken) => {
   return await axios.post(
-    "/room",
+    "/api/rooms",
     {
       roomName: roomName,
       memberId: memberId,
@@ -112,7 +112,7 @@ export const createBoard = async (
   data,accessToken
 ) => {
   return await axios.post(
-    "/study",
+    "/api/studies",
     data,
     {
       headers: {
@@ -124,7 +124,7 @@ export const createBoard = async (
 };
 
 export const findAllChats = async (roomId, accessToken) => {
-  return await axios.get("/room/" + roomId, {
+  return await axios.get("/api/rooms/" + roomId, {
     headers: {
       "X-AUTH-TOKEN": accessToken,
     },
@@ -136,7 +136,7 @@ export const getBoardCategory = async (studyId, accessToken) => {
   if (!accessToken) {
     return;
   }
-  return await axios.get(`/study/${studyId}/board`, {
+  return await axios.get(`/api/studies/${studyId}/boards`, {
     headers: {
       "X-AUTH-TOKEN": accessToken,
     },
@@ -145,7 +145,7 @@ export const getBoardCategory = async (studyId, accessToken) => {
 
 export const createBoardCategory = async (studyId, title, accessToken) => {
   return await axios.post(
-    `/study/${studyId}/board`,
+    `/api/studies/${studyId}/boards`,
     { title: title },
     {
       headers: {
@@ -156,7 +156,7 @@ export const createBoardCategory = async (studyId, title, accessToken) => {
 };
 
 export const getStudyInfo = async (studyId) => {
-  return await axios.get(`/study/${studyId}`);
+  return await axios.get(`/api/studies/${studyId}`);
 };
 
 export const createBoardArticle = async (
@@ -165,9 +165,9 @@ export const createBoardArticle = async (
   ContentObj,
   accessToken
 ) => {
-  console.log(ContentObj);
+  //console.log(ContentObj);
   return await axios.post(
-    `/study/${studyId}/board/${boardId}/article`,
+    `/api/studies/${studyId}/boards/${boardId}/articles`,
     {
       title: ContentObj.title,
       content: ContentObj.content,
@@ -182,7 +182,7 @@ export const createBoardArticle = async (
 };
 
 export const findAllBoardArticles = async (studyId, boardId,page,size,accessToken) => {
-  return await axios.get(`/study/${studyId}/board/${boardId}/article`, {
+  return await axios.get(`/api/studies/${studyId}/boards/${boardId}/articles`, {
     params: {
       page: page,
       size: size
@@ -200,7 +200,7 @@ export const deleteBoardArticle = async (
   accessToken
 ) => {
   return await axios.delete(
-    `/study/${studyId}/board/${boardId}/article/${articleId}`,
+    `/api/studies/${studyId}/boards/${boardId}/articles/${articleId}`,
     {
       headers: {
         "X-AUTH-TOKEN": accessToken,
@@ -218,7 +218,7 @@ export const updateBoardArticle = async (
   accessToken
 ) => {
   return await axios.put(
-    `/study/${studyId}/board/${boardId}/article/${articleId}`,
+    `/api/studies/${studyId}/boards/${boardId}/articles/${articleId}`,
     {
       content: content,
       title: title,
@@ -241,7 +241,7 @@ export const getArticlePost = async (
     accessToken = getCookie("accessToken");
   }
   return await axios.get(
-    `/study/${studyId}/board/${boardId}/article/${articleId}`,
+    `/api/studies/${studyId}/boards/${boardId}/articles/${articleId}`,
     {
       headers: {
         "X-AUTH-TOKEN": accessToken,
@@ -261,7 +261,7 @@ export const updateArticlePost = async (
     accessToken = getCookie("accessToken");
   }
   return await axios.put(
-    `/study/${studyId}/board/${boardId}/article/${articleId}`,
+    `/api/studies/${studyId}/boards/${boardId}/articles/${articleId}`,
     {
       content: data.content,
       title: data.name,
@@ -275,7 +275,7 @@ export const updateArticlePost = async (
 };
 
 export const getStudyMembers = async (studyId, accessToken) => {
-  return await axios.get(`/study/${studyId}/member`, {
+  return await axios.get(`/api/studies/${studyId}/members`, {
     headers: {
       "X-AUTH-TOKEN": accessToken,
     },
@@ -284,7 +284,7 @@ export const getStudyMembers = async (studyId, accessToken) => {
 
 export const grantStudyMember = async (studyId, memberId, accessToken) => {
   return await axios.put(
-    `/study/${studyId}/join/${memberId}`,{
+    `/api/studies/${studyId}/joins/${memberId}`,{
 
     },
     {
@@ -297,7 +297,7 @@ export const grantStudyMember = async (studyId, memberId, accessToken) => {
 
 export const rejectStudyMember = async (studyId, memberId, accessToken) => {
     return await axios.delete(
-        `/study/${studyId}/join/${memberId}`,
+        `/api/studies/${studyId}/joins/${memberId}`,
         {
         headers: {
             "X-AUTH-TOKEN": accessToken,
@@ -308,7 +308,7 @@ export const rejectStudyMember = async (studyId, memberId, accessToken) => {
 
 export const updateProfileInfo = async (data,memberId,accessToken) => {
   return await axios.put(
-    `/users/${memberId}`,
+    `/api/users/${memberId}`,
     data,
     {
       headers: {
@@ -321,7 +321,7 @@ export const updateProfileInfo = async (data,memberId,accessToken) => {
 };
 
 export const getAllComments = async (studyId, boardId, articleId, accessToken) => {
-  return await axios.get(`/study/${studyId}/board/${boardId}/article/${articleId}/comment`, {
+  return await axios.get(`/api/studies/${studyId}/boards/${boardId}/articles/${articleId}/comments`, {
     headers: {
       "X-AUTH-TOKEN": accessToken,
     },
@@ -330,7 +330,7 @@ export const getAllComments = async (studyId, boardId, articleId, accessToken) =
 
 export const createComment = async (studyId, boardId, articleId, data, accessToken) => {
   return await axios.post(
-    `/study/${studyId}/board/${boardId}/article/${articleId}/comment`,
+    `/api/studies/${studyId}/boards/${boardId}/articles/${articleId}/comments`,
     {
       content: data.content,
       memberId: data.memberId,
@@ -345,7 +345,7 @@ export const createComment = async (studyId, boardId, articleId, data, accessTok
 };
 
 export const deleteComment = async (studyId, boardId, articleId, commentId, accessToken) => {
-  return await axios.delete(`/study/${studyId}/board/${boardId}/article/${articleId}/comment/${commentId}`,{
+  return await axios.delete(`/api/studies/${studyId}/boards/${boardId}/articles/${articleId}/comments/${commentId}`,{
     headers: {
       "X-AUTH-TOKEN": accessToken,
     }
@@ -353,9 +353,9 @@ export const deleteComment = async (studyId, boardId, articleId, commentId, acce
 };
 
 export const updateComment = async (studyId, boardId, articleId, commentId, content, accessToken) => {
-  console.log(content);
+  //console.log(content);
   return await axios.put(
-    `/study/${studyId}/board/${boardId}/article/${articleId}/comment/${commentId}`,
+    `/api/studies/${studyId}/boards/${boardId}/articles/${articleId}/comments/${commentId}`,
     {
       content : content
     },
@@ -368,7 +368,7 @@ export const updateComment = async (studyId, boardId, articleId, commentId, cont
 };
 
 export const getMyStudyInfo = async (accessToken) => {
-  return await axios.get(`/study/join`,{
+  return await axios.get(`/api/studies/joins`,{
     headers: {
       "X-AUTH-TOKEN": accessToken,
     },
@@ -377,7 +377,7 @@ export const getMyStudyInfo = async (accessToken) => {
 
 export const updateBoardCategory = async (studyId, boardId,title,accessToken) => {
   return await axios.put(
-    `/study/${studyId}/board/${boardId}`,
+    `/api/studies/${studyId}/boards/${boardId}`,
     {
       title
     },
@@ -390,7 +390,7 @@ export const updateBoardCategory = async (studyId, boardId,title,accessToken) =>
 };
 
 export const deleteBoardCategory = async (studyId, boardId,accessToken) => {
-  return await axios.delete(`/study/${studyId}/board/${boardId}`,{
+  return await axios.delete(`/api/studies/${studyId}/boards/${boardId}`,{
     headers: {
       "X-AUTH-TOKEN": accessToken,
     }
@@ -398,7 +398,7 @@ export const deleteBoardCategory = async (studyId, boardId,accessToken) => {
 };
 
 export const changepassword = async (data,accessToken) => {
-  return await axios.post(`/sign/password`,data,{
+  return await axios.post(`/api/users/password`,data,{
     headers: {
       "X-AUTH-TOKEN": accessToken,
     }
@@ -407,7 +407,7 @@ export const changepassword = async (data,accessToken) => {
 
 export const createStudySchedule = async (studyId, data, accessToken) => {
   return await axios.post(
-    `/study/${studyId}/schedule`,
+    `/api/studies/${studyId}/schedules`,
     data,
     {
       headers: {
@@ -418,7 +418,7 @@ export const createStudySchedule = async (studyId, data, accessToken) => {
 };
 
 export const getStudySchedule = async (studyId, accessToken) => {
-  return await axios.get(`/study/${studyId}/schedule`, {
+  return await axios.get(`/api/studies/${studyId}/schedules`, {
     headers: {
       "X-AUTH-TOKEN": accessToken,
     },
@@ -427,7 +427,7 @@ export const getStudySchedule = async (studyId, accessToken) => {
 
 export const updateStudySchedule = async (studyId, scheduleId, data, accessToken) => {
   return await axios.put(
-    `/study/${studyId}/schedule/${scheduleId}`,
+    `/api/studies/${studyId}/schedules/${scheduleId}`,
     data, {
       headers: {
         "X-AUTH-TOKEN": accessToken,
@@ -437,7 +437,7 @@ export const updateStudySchedule = async (studyId, scheduleId, data, accessToken
 };
 
 export const deleteStudySchedule = async (studyId, scheduleId, accessToken) => {
-  return await axios.delete(`/study/${studyId}/schedule/${scheduleId}`, {
+  return await axios.delete(`/api/studies/${studyId}/schedules/${scheduleId}`, {
     headers: {
       "X-AUTH-TOKEN": accessToken,
     }
@@ -445,7 +445,7 @@ export const deleteStudySchedule = async (studyId, scheduleId, accessToken) => {
 };
 
 export const createVideoRoom = async (studyId, request,accessToken) => {
-  return await axios.post(`${spring_server}/study/${studyId}/videoroom`, 
+  return await axios.post(`/api/studies/${studyId}/videorooms`, 
       request,{
         headers: {
           "X-AUTH-TOKEN": accessToken,
@@ -455,7 +455,7 @@ export const createVideoRoom = async (studyId, request,accessToken) => {
 };
 
 export const findVideoRooms = async (studyId,accessToken) => {
-  return await axios.get(`${spring_server}/study/${studyId}/videoroom`,{
+  return await axios.get(`/api/studies/${studyId}/videorooms`,{
     headers: {
       "X-AUTH-TOKEN": accessToken,
     }
@@ -463,9 +463,79 @@ export const findVideoRooms = async (studyId,accessToken) => {
 };
 
 export const destroyVideoRoom = async (studyId,roomId,accessToken) => {
-  return await axios.delete(`${spring_server}/study/${studyId}/videoroom/${roomId}`,{
+  return await axios.delete(`/api/studies/${studyId}/videorooms/${roomId}`,{
     headers: {
       "X-AUTH-TOKEN": accessToken,
     }
   });
+};
+
+export const getMailMember = async (accessToken) => {
+  return await axios.get(`/api/messages`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const loadSenderMessage = async (userId,accessToken) => {
+  return await axios.get(`/api/messages/sender?senderId=${userId}`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const writeMessage = async (data,accessToken) => {
+  return await axios.post(`/api/messages`,data,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const unreadMessage = async (accessToken) => {
+  return await axios.get(`/api/messages/count`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const subscribe = async (accessToken) => {
+  return await axios.get(`/api/subscribe`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const getNotification = async (accessToken) => {
+  return await axios.get(`/api/notifications`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const getUnreadNotification = async (accessToken) => {
+  return await axios.get(`/api/notifications/count`,{
+    headers: {
+      "X-AUTH-TOKEN": accessToken,
+    }
+  });
+};
+
+export const updateStudyMemberAuthority = async (studyId, memberId, authority, accessToken) => {
+  return await axios.put(
+    `/api/studies/${studyId}/authorities/${memberId}`,
+    {
+      studyRole: authority
+    },
+    {
+      headers: {
+        "X-AUTH-TOKEN": accessToken,
+      },
+    }
+  );
 };

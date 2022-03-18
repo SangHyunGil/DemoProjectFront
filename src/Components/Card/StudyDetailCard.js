@@ -20,7 +20,7 @@ const StudyDetailCardHeader = styled(CardHeader)`
 `;
 
 function StudyDetailCard({id,StudyData}) {
-    console.log(StudyData);
+    //console.log(StudyData);
     const [StudyDetailData, setStudyDetailData] = useState(
         StudyData ? StudyData.find(item=> item.studyId === id) : null
     );

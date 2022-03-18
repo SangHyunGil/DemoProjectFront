@@ -88,7 +88,7 @@ const CreateRoom = () => {
 
     createVideoRoom(studyId,request,getCookie('accessToken'))
       .then((response) => {
-        console.log(response);
+        //console.log(response);
         navigate(`/study/${studyId}/board/rooms`);
       })
       .catch((error) => setServerErrorMsg(error.error));

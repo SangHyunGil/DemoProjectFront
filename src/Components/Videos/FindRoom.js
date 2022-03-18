@@ -12,6 +12,8 @@ import { getRoomInfo } from "../../reducers/roomReducer";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from 'react-query';
 import { getCookie } from "../../utils/cookie";
+import { Avatar } from '@mui/material';
+import { useQuery } from "react-query";
 
 const CardWrapper = styled(motion.div)`
   width: 90vw;
@@ -19,7 +21,7 @@ const CardWrapper = styled(motion.div)`
   grid-template-columns: repeat(auto-fill, minmax(200px, auto));
   grid-gap: 10px;
   justify-items: center;
-  margin: 0 auto;
+  margin: 2rem auto;
   & > div {
     tex-decoration: none;
     width: 100%;
@@ -34,12 +36,20 @@ const RoomCard = styled(Card)`
   &:hover {
     background-color: rgb(203 227 251);
   }
+  .nameWrapper {
+    display: flex;
+    align-items: center;
+  }
+  hr {
+    border: 0;
+    border-top: 1px solid #e0e0e0;
+  }
 `;
 
 const FindRoom = () => {
     const dispatch = useDispatch();
     const [username, setUsername] = useState("");
-    const [rooms, setRooms] = useState([]);
+    //const [rooms, setRooms] = useState([]);
     const [pin, setPin] = useState("");
     const [joinRoom, setJoinRoom] = useState(false);
     const navigate = useNavigate();
@@ -51,6 +61,15 @@ const FindRoom = () => {
     //     <p key={index}> {room.room} : {room.description}</p>
     // ));
 
+    const {data:rooms, refetch} = useQuery(['loadRooms', studyId],()=>findVideoRooms(studyId,getCookie('accessToken')), {
+      select: (data) => data.data.data,
+    });
+
+    useEffect(()=>{
+      refetch();
+    },[refetch,rooms]);
+
+    /*
     useEffect(() => {
       findVideoRooms(studyId,getCookie('accessToken'))
         .then(response => {
@@ -59,7 +78,7 @@ const FindRoom = () => {
                 setRooms((prev) => [...prev, room]))
             )})
         .catch(error => console.log(error));
-    }, [])
+    }, [])*/
 
     useEffect(() => {
       if (myInfoData) {
@@ -105,12 +124,16 @@ const FindRoom = () => {
             return (
               <div
                 key={room.roomId}
-                onClick={room.hasPin ? () => openModal(room) : () => joinRoomHandler(room)}
+                onClick={room.pin ? () => openModal(room) : () => joinRoomHandler(room)}
               >
                 <RoomCard>
                   <CardContent>
                     <h2>{room.title}</h2>
-                    <p>{room.creator.nickname}</p>
+                    <hr />
+                    <div className="nameWrapper">
+                      <Avatar alt={room?.creator?.nickname} src={room?.creator?.profileImgUrl} />
+                      <p>{room?.creator?.nickname}</p>
+                    </div>
                   </CardContent>
                 </RoomCard>
               </div>

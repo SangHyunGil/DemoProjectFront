@@ -12,6 +12,9 @@ const FindPasswordWrapper = styled.div`
   border-radius: 5px;
   width: 30vw;
   max-width: 40vw;
+  & > h2 {
+    text-align: center;
+  }
   form {
     display: flex;
     flex-direction: column;
@@ -39,6 +42,7 @@ const FindPasswordWrapper = styled.div`
 const FindPasswordPage = () => {
   return (
     <FindPasswordWrapper>
+      <h2>비밀번호 찾기</h2>
       <FindPassword />
     </FindPasswordWrapper>
   );

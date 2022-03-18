@@ -85,7 +85,7 @@ function SignUp() {
     useSelector((state) => state.users);
 
   useEffect(() => {
-    console.log(id, email, registerDone);
+    //console.log(id, email, registerDone);
     if (!registerDone) return;
     navigate("/signup/complete", { replace: false });
     dispatch(clearRegisterState());

@@ -25,7 +25,7 @@ const PublishVideo = () => {
             <Video
               stream={publishFeed.stream}
               username={publishFeed.display}
-              muted={false}
+              muted={true}
               onClick={changeMainFeedHandler}
             />
           )}

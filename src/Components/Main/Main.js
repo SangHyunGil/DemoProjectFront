@@ -418,7 +418,7 @@ const MainComp = () => {
           <div className="text-wrapper">
             <h2>우리 스터디할래?</h2>
             <p>현재 사람들이 올려놓은 스터디들을 보러가보실까요? 쉽게 참여하고 쉽게 공부하면서 같이 성장해가요.</p>
-            <button className="study-button" onClick={()=>navigate("/study/depart/cse")}>스터디 보러가기</button>
+            <button className="study-button" onClick={()=>navigate("/study/depart/CSE")}>스터디 보러가기</button>
           </div>
           <div className="img-wrapper">
             <motion.img src="/StudyImg/monitor.png" alt="monitor" />

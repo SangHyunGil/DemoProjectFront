@@ -65,7 +65,7 @@ const ChatWrapper = styled.div`
 const Chatting = ({ plugin, roomId, username }) => {
   const dispatch = useDispatch();
   const [inputChat, setInputChat] = useState("");
-  const [privateTo, setPrivateTo] = useState("false");
+  const [privateTo, setPrivateTo] = useState("false");  
   const { chatData, subscribeFeeds } = useSelector(
     (state) => state.roomReducer
   );

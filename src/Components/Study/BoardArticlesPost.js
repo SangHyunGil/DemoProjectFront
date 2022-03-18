@@ -9,7 +9,7 @@ import {
   createComment,
   deleteComment,
   updateComment,
-  getStudyMembers
+  getStudyMembers,
 } from "../../Api/Api";
 import { getCookie } from "../../utils/cookie";
 import TextField from "@mui/material/TextField";
@@ -24,6 +24,7 @@ import {
   AccordionDetails,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { MemberLink } from "../Style/MemberLink";
 
 const ArticleWrapper = styled.div`
   display: flex;
@@ -64,11 +65,14 @@ const ArticleWrapper = styled.div`
             border-radius: 5px;
             padding: 0.3rem 0.6rem;
             color: white;
+            &:hover {
+              cursor: pointer;
+            }
           }
         }
       }
       .ArticleSubInfo {
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
       }
     }
@@ -215,11 +219,24 @@ const CommentsReplyContentStyle = styled.div`
   }
 `;
 
+const CommentUpdateForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  div {
+    display: flex;
+    justify-content: flex-end;
+  }
+`;
+
 function BoardArticlesPost() {
   const [replyComments, setreplyComments] = useState({
     id: "",
     replyFormVisible: false,
     variant: "reply",
+  });
+  const [isCommentUpdateForm,setIsCommentUpdateForm] = useState({
+    id: 0,
+    updateFormVisible: false,
   });
   const [myInfo, setMyInfo] = useState(null);
   const { studyId, boardId, articleId } = useParams();
@@ -235,13 +252,23 @@ function BoardArticlesPost() {
     handleSubmit: updateHandleSubmit,
     setValue: updateSetValue,
   } = useForm();
+  const {
+    register: updateSecondRegister,
+    handleSubmit: updateSecondHandleSubmit,
+    setValue: updateSecondSetValue,
+  } = useForm();
   const queryClient = useQueryClient();
   const { id, nickname } = useSelector((state) => state.users);
+
   //console.log(id);
   const {data:studyMembers} = useQuery(['getStudyMembers',studyId,boardId,articleId],()=>getStudyMembers(studyId),{
     select: (data) => data.data.data,
     onSuccess: (data) => {
+<<<<<<< HEAD
       setMyInfo(data.find((member) => member.member.nickname === nickname));
+=======
+      setMyInfo(data.find((m) => m?.member?.nickname === nickname));
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
     }
   });
   //const myInfo = studyMembers.find((member) => member.nickname === nickname);
@@ -257,9 +284,6 @@ function BoardArticlesPost() {
     () => findUserBoard(getCookie("accessToken")),
     {
       select: (x) => x.data.data,
-      onSuccess: (x) => {
-        console.log(x);
-      },
     }
   );
 
@@ -268,9 +292,6 @@ function BoardArticlesPost() {
     () => getAllComments(studyId, boardId, articleId, getCookie("accessToken")),
     {
       select: (x) => x.data.data,
-      onSuccess: (x) => {
-        console.log(x);
-      },
     }
   );
 
@@ -349,7 +370,9 @@ function BoardArticlesPost() {
   );
 
   const deleteArticlePostHandler = () => {
-    deleteArticlePostMutation.mutate();
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      deleteArticlePostMutation.mutate();
+    }
   };
 
   const replyHandler = (data) => {
@@ -359,7 +382,7 @@ function BoardArticlesPost() {
   };
 
   const commentReplyHandler = (data) => {
-    console.log(data.commentReply);
+    //console.log(data.commentReply);
     replyComments.variant === "reply"
       ? CommentMutation.mutate(data.commentReply)
       : UpdateCommentMutation.mutate({
@@ -383,15 +406,29 @@ function BoardArticlesPost() {
     DeleteCommentMutation.mutate(id);
   };
 
+  const commentUpdateHandler = (data) => {
+    UpdateCommentMutation.mutate({
+      commentId: isCommentUpdateForm.id,
+      content: data.commentUpdate,
+    });
+    updateSecondSetValue("commentUpdate", "");
+    setIsCommentUpdateForm((prev) => ({ ...prev, updateFormVisible: false }));
+  };
+
   return (
     <ArticleWrapper>
       <div className="ArticleContainer">
         <header>
           <div className="ArticleTitle">
             <h1>{article?.title}</h1>
+<<<<<<< HEAD
             {(myInfo?.studyRole === "ADMIN" ||
               myInfo?.studyRole === "CREATOR" ||
               userInfo?.member.nickname === article?.memberName) && (
+=======
+            {(myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === 'CREATOR' ||
+              userInfo?.nickname === article?.creator?.nickname) && (
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
               <div className="ArticleAction">
                 <Link to="edit">수정</Link>
                 <button onClick={deleteArticlePostHandler} type="button">
@@ -401,11 +438,11 @@ function BoardArticlesPost() {
             )}
           </div>
           <div className="ArticleSubInfo">
-            <p>{article?.memberName}</p>
+            <MemberLink to={`/userinfo/${article?.creator?.memberId}`}>{article?.creator?.nickname}</MemberLink>
           </div>
         </header>
         <main>
-          <p>{article?.content}</p>
+          <div dangerouslySetInnerHTML={{__html:article?.content}} />
         </main>
         <div className="Reply">
           <form onSubmit={handleSubmit(replyHandler)}>
@@ -425,15 +462,26 @@ function BoardArticlesPost() {
           {comments?.length === 0 && <p>댓글이 없습니다.</p>}
           {comments?.map((comment) => {
             return (
+<<<<<<< HEAD
               <div className="Comment" key={comment.id}>
+=======
+              <div className="Comment" key={comment?.id}>
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                   <React.Fragment>
                     <div className="CommentHeader">
                       <div className="CommentTitle">
                         <Avatar
+<<<<<<< HEAD
                           alt={comment.creator.nickname}
                           src={comment.creator.profileImgUrl}
                         />
                         <span>{comment.creator.nickname}</span>
+=======
+                          alt={comment?.creator?.nickname}
+                          src={comment.creator?.profileImgUrl}
+                        />
+                        <MemberLink to={`/userinfo/${comment?.creator?.memberId}`}>{comment?.creator?.nickname}</MemberLink>
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                       </div>
                       <div className="CommentAction" >
                         {(comment?.creator?.nickname === nickname && comment?.content !== null) && (
@@ -441,11 +489,18 @@ function BoardArticlesPost() {
                             <Button
                               variant="outlined"
                               onClick={() => {
+<<<<<<< HEAD
                                 setreplyComments((prev) => ({
                                   id: comment.id,
                                   replyFormVisible: !prev.replyFormVisible,
                                   variant: "update",
+=======
+                                setIsCommentUpdateForm((prev) => ({
+                                  id: comment.id,
+                                  updateFormVisible: !prev.updateFormVisible,
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                                 }));
+                                updateSecondSetValue("commentUpdate", comment.content);
                               }}
                               style={{fontFamily: 'SEBANG_Gothic_Bold, sans-serif'}}
                             >
@@ -466,7 +521,24 @@ function BoardArticlesPost() {
                       </div>
                     </div>
                     <div className="Comment-content">
-                      <p>{comment.content === null ? <span style={{color:'red'}}>삭제된 댓글입니다!</span> : comment.content}</p>
+                      {!isCommentUpdateForm.updateFormVisible ? <p>{comment.content === null ? <span style={{color:'red'}}>삭제된 댓글입니다!</span> : comment.content}</p> : 
+                      <CommentUpdateForm onSubmit={updateSecondHandleSubmit(commentUpdateHandler)}>
+                        <TextField
+                          fullWidth
+                          sx={{ m: 1 }}
+                          label="댓글 수정"
+                          multiline
+                          rows={2}
+                          {...updateSecondRegister('commentUpdate', { required: true })}
+                          />
+                          <div>
+                            <Button type="button" color="error" onClick={()=>setIsCommentUpdateForm((prev) => ({
+                                  ...prev,
+                                  updateFormVisible: !prev.updateFormVisible,
+                                }))}>취소</Button>
+                            <Button color="primary" type="submit">확인</Button>
+                          </div>
+                        </CommentUpdateForm>}
                     </div>
                     <div className="Comment-reply">
                       <Accordion className="CommentReplyAccordion">
@@ -487,10 +559,17 @@ function BoardArticlesPost() {
                                   <div className="CommentReplyContentWrapper">
                                     <div className="CommentReplyContentHeader">
                                       <Avatar
+<<<<<<< HEAD
                                         alt={child.creator.nickname}
                                         src={child.creator.profileImgUrl}
                                       />
                                       <p>{child.creator.nickname}</p>
+=======
+                                        alt={child?.creator?.nickname}
+                                        src={child?.creator?.profileImgUrl}
+                                      />
+                                      <MemberLink to={`/userinfo/${child?.creator?.memberId}`}>{child?.creator?.nickname}</MemberLink>
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                                     </div>
                                     <div className="CommentReplyContentMain">
                                       <p>{child.content}</p>

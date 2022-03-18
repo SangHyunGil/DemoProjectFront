@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
 import MuiDialog from "../Modal/MuiDialog";
@@ -13,6 +13,7 @@ import {
   deleteBoard,
   updateBoardCategory,
   deleteBoardCategory,
+  updateStudyMemberAuthority,
 } from "../../Api/Api";
 //import { useSelector } from "react-redux";
 import { getCookie } from "../../utils/cookie";
@@ -22,9 +23,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Box } from "@mui/system";
 import { StyledModal, Backdrop, Boxstyle } from "./BoardDetail";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
-import { FormControl, Paper } from "@mui/material";
+import { FormControl, Paper, Select, MenuItem } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
+import { MemberLink } from "../Style/MemberLink";
 
 const StudyManageContainer = styled.section`
   width: 80vw;
@@ -59,17 +61,23 @@ const StudyMemberContainer = styled.div`
   .StudyMemberWrapper {
     display: flex;
     justify-content: space-between;
-    span {
-      &:first-child {
-        font-size: 1.2rem;
-        align-self: flex-end;
-      }
-      &:last-child {
-        font-size: 0.8rem;
-        background: #dbeafe;
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-      }
+    .controlPanel  {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    select {
+      padding: 0.4rem .7rem;
+      border-radius: 5px;
+      background-color: #dbeafe;
+      border: 0;
+      font-size: 0.8rem;
+    }
+    .ordinaryBox {
+      font-size: 0.8rem;
+      background: #dbeafe;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
     }
   }
 `;
@@ -249,6 +257,7 @@ const CategoryChangeModal = styled.div`
 `;
 
 function StudyManage() {
+  const [isUserCreator, setIsUserCreator] = useState(false);
   const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
   const [isBoardCategoryModalUp, setIsBoardCategoryModalUp] = useState(false);
   const [boardCategoryName, setBoardCategoryName] = useState("");
@@ -256,6 +265,7 @@ function StudyManage() {
   const { studyId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const myinfo = queryClient.getQueryData(['loadMyInfo']);
   const [isApplyModalUp, setisApplyModalUp] = useState(false);
   const [ApplyInfo, setApplyInfo] = useState({
     memberId: "",
@@ -285,6 +295,12 @@ function StudyManage() {
       select: (x) => x.data.data,
     }
   );
+
+  useEffect(() => {
+    if(Members && myinfo) {
+      setIsUserCreator(Members.filter(x => x?.member?.memberId === myinfo?.data?.data?.id && x.studyRole === 'CREATOR').length > 0);
+    }
+  },[Members,myinfo]);
 
   const grantUserMutation = useMutation(
     (memberId) => grantStudyMember(studyId, memberId, getCookie("accessToken")),
@@ -355,13 +371,19 @@ function StudyManage() {
     }
   );
 
+  const updateAuthorityMutation = useMutation(({memberId,newAuthority})=>updateStudyMemberAuthority(studyId,memberId,newAuthority,getCookie('accessToken')),{
+    onSuccess:()=>{
+      queryClient.invalidateQueries(["studyMembers", studyId]);
+    }
+  });
+
   const ModalUpHandler = () => {
     //모달 핸들러
     setIsBoardModalUp(true);
   };
 
   const BoardAddHandler = (data) => {
-    console.log(data);
+    //console.log(data);
     let { BoardTitle } = data;
     AddBoardMutation.mutate(BoardTitle);
     reset({ BoardTitle: "" });
@@ -385,6 +407,19 @@ function StudyManage() {
     setIsBoardCategoryModalUp(false);
   };
 
+  const handleAuthorityChange = (id,event) => {
+    if (window.confirm("정말로 권한을 변경하시겠습니까?")) {
+      //console.log(id,event.target.value);
+      updateAuthorityMutation.mutate({memberId:id,newAuthority:event.target.value});
+    }
+  };
+
+  const kickUserHandler = (id) => {
+    if (window.confirm("정말로 유저를 추방하시겠습니까?")) {
+      rejectUserMutation.mutate(id);
+    }
+  };
+
   return (
     <>
       <StudyManageContainer>
@@ -395,12 +430,37 @@ function StudyManage() {
             <div className="MemberList">
               {Members?.map((Member) => {
                 const { studyRole } = Member;
+                const isCreator = studyRole === "CREATOR";
+                //const isUserCreator = studyRole === "CREATOR" && Member?.member?.memberId === myinfo?.data.data.id;
                 if (studyRole !== "APPLY") {
                   return (
+<<<<<<< HEAD
                     <StudyMemberContainer key={Member.member.nickname}>
                       <div className="StudyMemberWrapper">
                         <span>{Member.member.nickname}</span>
                         <span>{Member.studyRole}</span>
+=======
+                    <StudyMemberContainer key={Member?.member?.memberId}>
+                      <div className="StudyMemberWrapper">
+                        <MemberLink to={`/userinfo/${Member?.member?.memberId}`}>{Member?.member?.nickname}</MemberLink>
+                        {isCreator ? <span className="ordinaryBox">스터디장</span> : isUserCreator || myinfo?.data.data.authority === 'ROLE_ADMIN' ? (
+                        <div className="controlPanel">
+                        <FormControl>
+                          <select
+                            value={Member?.studyRole}
+                            onChange = {(event)=>handleAuthorityChange(Member?.member?.memberId,event)}
+                          >
+                            <option value="ADMIN">관리자</option>
+                            <option value="MEMBER">스터디원</option>
+                          </select>
+                        </FormControl>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => kickUserHandler(Member?.member?.memberId)}
+                        >추방</Button>
+                        </div>) : <span className="ordinaryBox">{studyRole}</span>}       
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                       </div>
                     </StudyMemberContainer>
                   );
@@ -416,18 +476,30 @@ function StudyManage() {
                 const { studyRole } = Member;
                 if (studyRole === "APPLY") {
                   return (
+<<<<<<< HEAD
                     <React.Fragment key={Member.member.nickname}>
+=======
+                    <React.Fragment key={Member?.member?.memberId}>
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                       <div>
                         <ApplicantStyle
                           onClick={() => {
                             setisApplyModalUp(true);
                             setApplyInfo({
+<<<<<<< HEAD
                               memberId: Member.member.memberId,
+=======
+                              memberId: Member?.member?.memberId,
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                               applyContent: Member.applyContent,
                             });
                           }}
                         >
+<<<<<<< HEAD
                           <div>{Member.member.nickname}</div>
+=======
+                          <div>{Member?.member?.nickname}</div>
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                         </ApplicantStyle>
                       </div>
                     </React.Fragment>

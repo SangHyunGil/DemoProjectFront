@@ -33,11 +33,15 @@ const UpdateFormStyle = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
     .TagsWrapper {
         display: flex;
         gap: 10px;
         margin-top: 10px;
         flex-wrap: wrap;
+    }
+    .als {
+        align-self: flex-start;
     }
 `;
 
@@ -60,9 +64,9 @@ function UpdateStudy() {
     const {data:BoardData} = useQuery(['findBoard', params.studyId], () => findBoard(params.studyId),{
         select: (data) => data.data.data,
         onSuccess: async (x) => {
-            console.log(x)
+            //console.log(x)
             setValue('title', x.title);
-            setValue('content', x.content);
+            setValue('content', x.description);
             setValue('headCount', x.headCount);
             setValue('schedule', x.schedule);
             Tags.length === 0 && x.tags.forEach((tag) => {
@@ -83,7 +87,7 @@ function UpdateStudy() {
     const { register, handleSubmit, formState: {errors}, setValue } = useForm();
     const UpdateBoard = useMutation(['updateBoard', params.studyId], (data) => updateBoard(data,params.studyId,getCookie('accessToken')),{
         onSuccess: () => {
-            navigate('/study/depart/cse');
+            navigate('/study/depart/CSE');
         },
         onError: (err) => {
             console.log(err);
@@ -110,7 +114,7 @@ function UpdateStudy() {
 
     const handleUpload = (e) => {
         const { files } = e.target;
-        console.log(files);
+        //console.log(files);
         if (files && files[0]) {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -229,7 +233,11 @@ function UpdateStudy() {
                     <select  {...register('department')}>
                         <option value="CSE">컴퓨터공학부</option>
                         <option value="ME">기계공학부</option>
+<<<<<<< HEAD
                         <option value="ECA">전기전자통신공학부</option>
+=======
+                        <option value="ECE">전기전자통신공학부</option>
+>>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                         <option value="DEA">디자인,건축공학부</option>
                         <option value="MCE">메카트로닉스공학부</option>
                         <option value="IM">산업경영학부</option>
@@ -238,14 +246,14 @@ function UpdateStudy() {
                         <option value="ETC">기타</option>
                     </select>
                 </FormControl>
-                <label htmlFor="studyState">스터디 상태</label>
+                <label htmlFor="studyState" className="als">스터디 상태</label>
                 <select {...register('studyState')} style={{width: '100%'}}>
                     {study.map((x) => (
-                        <option key={x.id} value={x.val}>{x.val}</option>
+                        <option key={x.id} value={x.val}>{x.text}</option>
                     ))}
                 </select>
-                <label htmlFor="recruitState">모집 상태</label>
-                <div>
+                <label htmlFor="recruitState" className="als">모집 상태</label>
+                <div className='als'>
                     {recruit.map((x) =>
                     <React.Fragment key={x.id}>
                         <input
