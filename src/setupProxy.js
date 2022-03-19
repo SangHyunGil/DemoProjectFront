@@ -3,7 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 module.exports = function(app) {
   app.use(
     createProxyMiddleware('/janus',{
-      target: 'http://konermedia.xyz',
+      target: 'https://konermedia.xyz',
       changeOrigin: true,
     })
   );

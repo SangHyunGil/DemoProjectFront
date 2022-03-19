@@ -233,11 +233,7 @@ function UpdateStudy() {
                     <select  {...register('department')}>
                         <option value="CSE">컴퓨터공학부</option>
                         <option value="ME">기계공학부</option>
-<<<<<<< HEAD
-                        <option value="ECA">전기전자통신공학부</option>
-=======
                         <option value="ECE">전기전자통신공학부</option>
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                         <option value="DEA">디자인,건축공학부</option>
                         <option value="MCE">메카트로닉스공학부</option>
                         <option value="IM">산업경영학부</option>

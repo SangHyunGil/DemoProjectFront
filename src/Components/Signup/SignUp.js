@@ -74,7 +74,7 @@ function SignUp() {
   let navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [Department, setDepartment] = useState("CSE");
+  const [Department, setDepartment] = useState("컴퓨터공학부");
   const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
   const [previewImg, setPreviewImg] = useState('');
@@ -204,7 +204,7 @@ function SignUp() {
           <RadioGroup
             row
             aria-label="학부"
-            defaultValue="CSE"
+            defaultValue="컴퓨터공학부"
             name="radio-buttons-group"
           >
             {Depart.map(x=>(

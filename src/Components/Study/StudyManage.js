@@ -256,6 +256,11 @@ const CategoryChangeModal = styled.div`
   }
 `;
 
+const studyRoleEngToKor = {
+  ADMIN: '관리자',
+  MEMBER: '스터디원',
+};
+
 function StudyManage() {
   const [isUserCreator, setIsUserCreator] = useState(false);
   const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
@@ -434,12 +439,6 @@ function StudyManage() {
                 //const isUserCreator = studyRole === "CREATOR" && Member?.member?.memberId === myinfo?.data.data.id;
                 if (studyRole !== "APPLY") {
                   return (
-<<<<<<< HEAD
-                    <StudyMemberContainer key={Member.member.nickname}>
-                      <div className="StudyMemberWrapper">
-                        <span>{Member.member.nickname}</span>
-                        <span>{Member.studyRole}</span>
-=======
                     <StudyMemberContainer key={Member?.member?.memberId}>
                       <div className="StudyMemberWrapper">
                         <MemberLink to={`/userinfo/${Member?.member?.memberId}`}>{Member?.member?.nickname}</MemberLink>
@@ -459,8 +458,7 @@ function StudyManage() {
                           color="error"
                           onClick={() => kickUserHandler(Member?.member?.memberId)}
                         >추방</Button>
-                        </div>) : <span className="ordinaryBox">{studyRole}</span>}       
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
+                        </div>) : <span className="ordinaryBox">{studyRoleEngToKor[studyRole]}</span>}       
                       </div>
                     </StudyMemberContainer>
                   );
@@ -476,30 +474,18 @@ function StudyManage() {
                 const { studyRole } = Member;
                 if (studyRole === "APPLY") {
                   return (
-<<<<<<< HEAD
-                    <React.Fragment key={Member.member.nickname}>
-=======
                     <React.Fragment key={Member?.member?.memberId}>
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                       <div>
                         <ApplicantStyle
                           onClick={() => {
                             setisApplyModalUp(true);
                             setApplyInfo({
-<<<<<<< HEAD
-                              memberId: Member.member.memberId,
-=======
                               memberId: Member?.member?.memberId,
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                               applyContent: Member.applyContent,
                             });
                           }}
                         >
-<<<<<<< HEAD
-                          <div>{Member.member.nickname}</div>
-=======
                           <div>{Member?.member?.nickname}</div>
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                         </ApplicantStyle>
                       </div>
                     </React.Fragment>

@@ -264,11 +264,7 @@ function BoardArticlesPost() {
   const {data:studyMembers} = useQuery(['getStudyMembers',studyId,boardId,articleId],()=>getStudyMembers(studyId),{
     select: (data) => data.data.data,
     onSuccess: (data) => {
-<<<<<<< HEAD
-      setMyInfo(data.find((member) => member.member.nickname === nickname));
-=======
       setMyInfo(data.find((m) => m?.member?.nickname === nickname));
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
     }
   });
   //const myInfo = studyMembers.find((member) => member.nickname === nickname);
@@ -311,7 +307,7 @@ function BoardArticlesPost() {
         studyId,
         boardId,
         articleId,
-        { content, memberId: id, parentid: replyComments.id },
+        { content, memberId: id, parentCommentId: replyComments.id },
         getCookie("accessToken")
       ),
     {
@@ -327,12 +323,12 @@ function BoardArticlesPost() {
   );
 
   const DeleteCommentMutation = useMutation(
-    (id) =>
+    (commentId) =>
       deleteComment(
         studyId,
         boardId,
         articleId,
-        id,
+        commentId,
         getCookie("accessToken")
       ),
     {
@@ -348,12 +344,12 @@ function BoardArticlesPost() {
   );
 
   const UpdateCommentMutation = useMutation(
-    ({ id, content }) =>
+    ({ commentId, content }) =>
       updateComment(
         studyId,
         boardId,
         articleId,
-        id,
+        commentId,
         content,
         getCookie("accessToken")
       ),
@@ -386,7 +382,7 @@ function BoardArticlesPost() {
     replyComments.variant === "reply"
       ? CommentMutation.mutate(data.commentReply)
       : UpdateCommentMutation.mutate({
-          id: replyComments.id,
+          commentId: replyComments.id,
           content: data.commentReply,
         });
     secondSetValue("commentReply", "");
@@ -395,15 +391,15 @@ function BoardArticlesPost() {
 
   const commentReplyUpdateHandler = (data) => {
     UpdateCommentMutation.mutate({
-      id: replyComments.id,
+      commentId: replyComments.id,
       content: data.commentReplyUpdate,
     });
     updateSetValue("commentReplyUpdate", "");
     setreplyComments((prev) => ({ ...prev, replyFormVisible: false }));
   };
 
-  const deleteCommentHandler = (id) => {
-    DeleteCommentMutation.mutate(id);
+  const deleteCommentHandler = (commentId) => {
+    DeleteCommentMutation.mutate(commentId);
   };
 
   const commentUpdateHandler = (data) => {
@@ -421,14 +417,8 @@ function BoardArticlesPost() {
         <header>
           <div className="ArticleTitle">
             <h1>{article?.title}</h1>
-<<<<<<< HEAD
-            {(myInfo?.studyRole === "ADMIN" ||
-              myInfo?.studyRole === "CREATOR" ||
-              userInfo?.member.nickname === article?.memberName) && (
-=======
             {(myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === 'CREATOR' ||
               userInfo?.nickname === article?.creator?.nickname) && (
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
               <div className="ArticleAction">
                 <Link to="edit">수정</Link>
                 <button onClick={deleteArticlePostHandler} type="button">
@@ -462,26 +452,15 @@ function BoardArticlesPost() {
           {comments?.length === 0 && <p>댓글이 없습니다.</p>}
           {comments?.map((comment) => {
             return (
-<<<<<<< HEAD
-              <div className="Comment" key={comment.id}>
-=======
               <div className="Comment" key={comment?.id}>
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                   <React.Fragment>
                     <div className="CommentHeader">
                       <div className="CommentTitle">
                         <Avatar
-<<<<<<< HEAD
-                          alt={comment.creator.nickname}
-                          src={comment.creator.profileImgUrl}
-                        />
-                        <span>{comment.creator.nickname}</span>
-=======
                           alt={comment?.creator?.nickname}
                           src={comment.creator?.profileImgUrl}
                         />
                         <MemberLink to={`/userinfo/${comment?.creator?.memberId}`}>{comment?.creator?.nickname}</MemberLink>
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                       </div>
                       <div className="CommentAction" >
                         {(comment?.creator?.nickname === nickname && comment?.content !== null) && (
@@ -489,16 +468,9 @@ function BoardArticlesPost() {
                             <Button
                               variant="outlined"
                               onClick={() => {
-<<<<<<< HEAD
-                                setreplyComments((prev) => ({
-                                  id: comment.id,
-                                  replyFormVisible: !prev.replyFormVisible,
-                                  variant: "update",
-=======
                                 setIsCommentUpdateForm((prev) => ({
                                   id: comment.id,
                                   updateFormVisible: !prev.updateFormVisible,
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                                 }));
                                 updateSecondSetValue("commentUpdate", comment.content);
                               }}
@@ -559,17 +531,10 @@ function BoardArticlesPost() {
                                   <div className="CommentReplyContentWrapper">
                                     <div className="CommentReplyContentHeader">
                                       <Avatar
-<<<<<<< HEAD
-                                        alt={child.creator.nickname}
-                                        src={child.creator.profileImgUrl}
-                                      />
-                                      <p>{child.creator.nickname}</p>
-=======
                                         alt={child?.creator?.nickname}
                                         src={child?.creator?.profileImgUrl}
                                       />
                                       <MemberLink to={`/userinfo/${child?.creator?.memberId}`}>{child?.creator?.nickname}</MemberLink>
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
                                     </div>
                                     <div className="CommentReplyContentMain">
                                       <p>{child.content}</p>

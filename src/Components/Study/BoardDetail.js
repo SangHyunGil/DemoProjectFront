@@ -309,14 +309,8 @@ function BoardDetail({ boardId }) {
     if (BoardContent && BoardMember) {
       let a = BoardMember.length;
       BoardMember?.forEach((member) => {
-<<<<<<< HEAD
-        const { nickname: Nick } = member.member;
-        const { studyRole } = member;
-        if (nickname === Nick) {
-=======
         const { member:{nickname: Nick, memberId}, studyRole } = member;
         if (id === memberId) {
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
           if (studyRole === "APPLY") {
             a -= 1;
             setIsApply(true);
@@ -437,13 +431,7 @@ function BoardDetail({ boardId }) {
           <CardContent>
             <h3>스터디 원들</h3>
             {BoardMember?.map((m) => {
-<<<<<<< HEAD
-              const { nickname: Nick, profileImgUrl: profileUrlImg } = m.member;
-              const { studyRole } = m;
-              console.log(studyRole, nickname);
-=======
               const { member: { nickname: Nick,profileImgUrl,memberId},studyRole } = m;
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
               if (studyRole === "APPLY") {
                 return null;
               }

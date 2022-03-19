@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, useParams } from "react-router-dom";
-import { getBoardCategory, findBoard, getStudyMembers } from "../../Api/Api";
+import { Outlet, useParams, Link } from "react-router-dom";
+import { getBoardCategory, getStudyMembers } from "../../Api/Api";
 import { useQuery, useQueryClient } from "react-query";
 import { getCookie } from "../../utils/cookie";
 import { Category } from "../Categories/Categories";
@@ -41,12 +41,22 @@ const DrawerWrapper = styled(Box)`
   }
 `;
 
+const InfoCat = styled(Link)`
+  text-decoration: none;
+  color: black;
+  font-size: 1.6rem;
+  &:hover {
+    cursor: pointer;
+    color: #FFC107;
+  }
+`
+
 function StudyBoard() {
   const queryClient = useQueryClient();
   const [IsGranted, setIsGranted] = useState(false);
   const { studyId } = useParams();
   const [DrawerState, setDrawerState] = useState(false);
-  const [currentBoard, setCurrentBoard] = useState(sessionStorage.getItem('currentBoard'));
+  const [currentBoard, setCurrentBoard] = useState(sessionStorage.getItem('currentBoard')||'공지사항');
 
   const myinfos = queryClient.getQueryData(["loadMyInfo"]);
 
@@ -57,11 +67,7 @@ function StudyBoard() {
       select: (data) => data.data.data,
       onSuccess: (data) => {
         const myInfo = data.find(
-<<<<<<< HEAD
-          (info) => info.member.nickname === myinfos?.data?.data?.nickname
-=======
           (info) => info.member?.memberId === myinfos?.data?.data?.id
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
         );
         if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
           setIsGranted(true);
@@ -91,11 +97,7 @@ function StudyBoard() {
           data: { id },
         },
       } = myinfos;
-<<<<<<< HEAD
-      const myInfo = studyInfos?.find((info) => info.member.nickname === nickname);
-=======
       const myInfo = studyInfos?.find((info) => info.member?.memberId === id);
->>>>>>> 94dd6bffdb72a6643949e5c25dfa31d373e795c5
       if (myInfo?.studyRole === "ADMIN" || myInfo?.studyRole === "CREATOR") {
         setIsGranted(true);
       } else {
@@ -148,9 +150,9 @@ function StudyBoard() {
             <Category activeclassname="active" to={`/study/${studyId}/board/rooms`} onClick={() => handleCurrentBoard('화상채팅')} >
               스터디 화상채팅
             </Category>
-            <Category activeclassname="active" to={`/study/${studyId}`}>
+            <InfoCat to={`/study/${studyId}`}>
               게시판 정보
-            </Category>
+            </InfoCat>
             {(IsGranted || myinfos?.data.data.authority === 'ROLE_ADMIN') && (
               <Category activeclassname="active" to={`/study/${studyId}/board/manage`} onClick={()=>handleCurrentBoard('게시판 관리')}>
                 게시판 관리

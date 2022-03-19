@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getCookie } from "../utils/cookie";
-import { spring_server } from "../utils/config";
 
 export const findAllRooms = async () => {
   return await axios.get("/api/rooms");
@@ -505,6 +504,7 @@ export const unreadMessage = async (accessToken) => {
 export const subscribe = async (accessToken) => {
   return await axios.get(`/api/subscribe`,{
     headers: {
+      'Access-Control-Allow-Origin' : '*',
       "X-AUTH-TOKEN": accessToken,
     }
   });

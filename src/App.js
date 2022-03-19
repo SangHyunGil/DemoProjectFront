@@ -44,6 +44,7 @@ import AboutUsPage from './pages/AboutUsPage';
 import MailPage from './pages/MailPage';
 import UserInfoPage from './pages/UserInfoPage';
 import Chat from './Components/Chat/Chat';
+import { createBrowserHistory } from "history";
 
 const App = () => {
   //let navigate = useNavigate();
@@ -52,6 +53,7 @@ const App = () => {
     (state) => state.users
   );
   const queryClient = useQueryClient();
+  const history = createBrowserHistory();
 
   const _ = useQuery(['loadMyInfo'],()=>findUserBoard(getCookie('accessToken')),{
     enabled: isLogin,
@@ -76,7 +78,7 @@ const App = () => {
       <Router>
         <Categories>
           <div id="main-content">
-            <Routes>
+            <Routes history={history}>
               <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
