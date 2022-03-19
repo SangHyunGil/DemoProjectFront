@@ -106,12 +106,18 @@ Janus.UseDefaultDependencies = function (deps) {
 			var fetchOptions = {
 				method: options.verb,
 				headers: {
-					'Accept': 'application/json, text/plain, */*'
+					'Accept': 'application/json, text/plain, */*',
+					'Access-Control-Allow-Origin': 'https://konermedia.xyz',
+					'Access-Control-Allow-Headers' : 'X-PINGOTHER'
 				},
-				cache: 'no-cache'
+				cache: 'no-cache',
 			};
+			//fetchOptions.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+			//fetchOptions.headers['Access-Control-Allow-Origin'] = 'https://konermedia.xyz';
 			if(options.verb === "POST") {
 				fetchOptions.headers['Content-Type'] = 'application/json';
+				//fetchOptions.headers['Access-Control-Allow-Origin'] = 'https://konermedia.xyz';
+				//fetchOptions.headers['Access-Control-Allow-Credentials'] = true;
 			}
 			if(options.withCredentials !== undefined) {
 				fetchOptions.credentials = options.withCredentials === true ? 'include' : (options.withCredentials ? options.withCredentials : 'omit');

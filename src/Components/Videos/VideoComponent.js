@@ -14,7 +14,8 @@ import {
   toggleScreenSharing,
   exitRoom,
   changeMainFeed,
-  sendFile
+  sendFile,
+  roomCompletelyExit
 } from "../../reducers/roomReducer";
 import PublishVideo from "./PublishVideo";
 import SubscribeVideo from "./SubscribeVideo";
@@ -28,7 +29,7 @@ import { destroyVideoRoom } from "../../Api/Api";
 import styled from "styled-components";
 import { getCookie } from "../../utils/cookie";
 import Filestore  from "./FileStore";
-import { useQueryClient } from 'react-query';
+import { createBrowserHistory } from "history";
 
 let storePlugin = null;
 let username = null;
@@ -57,6 +58,7 @@ const MainWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    flex: 1;
     .control-panel {
       display: flex;
       gap: 1rem;
@@ -182,11 +184,22 @@ const VideoComponent = () => {
     creator,
   } = useSelector((state) => state.roomReducer);
   const params = new URLSearchParams(window.location.search);
+  const history = createBrowserHistory();
   let pin = params.get("pin");
   let { roomId, studyId } = useParams();
   username = params.get("username");
   roomId = Number(roomId);
-  const queryClient = useQueryClient();
+  /*
+  useEffect(() => {
+    const block = history.block((locatoin,action) => {
+      if (action === 'POP' || action === "PUSH") {
+        return window.confirm('정말로 이 페이지에서 나가고 싶으세요?');
+      }
+      return true;
+    });
+
+    return ()=>block();
+  },[history]);*/
 
   useEffect(() => {
     let janus = null;
@@ -256,6 +269,11 @@ const VideoComponent = () => {
               iceState: function (state) {
                 // ICE 상태 변화시
                 Janus.log("ICE state changed to " + state);
+                if (state === 'disconnected') {
+                  // ICE 연결 끊김 & dispatch
+                  console.log('ICE 연결 끊김 & dispatch');
+                  dispatch(roomCompletelyExit(true));
+                }
               },
               mediaState: function (medium, on) {
                 // Media 정보를 받기 시작하거나 중지할시
@@ -472,6 +490,7 @@ const VideoComponent = () => {
           },
           destroyed: function () {
             Janus.log("Janus Destroyed!");
+            dispatch(roomCompletelyExit(false));
           },
         });
       },
@@ -742,6 +761,7 @@ const VideoComponent = () => {
       storePlugin.createOffer({
         media: {
           video: "screen",
+          audio: !isAudioOff,
           replaceVideo: true,
         },
         success: function (jsep) {
@@ -751,7 +771,7 @@ const VideoComponent = () => {
           storePlugin.send({
             message: { 
               request: "configure",
-              audio: isAudioOff, 
+              audio: !isAudioOff, 
               video: true 
             },
             jsep: jsep,
@@ -771,6 +791,7 @@ const VideoComponent = () => {
 
       storePlugin.createOffer({
         media: {
+          audio: !isAudioOff,
           replaceVideo: true,
         },
         success: function (jsep) {
@@ -780,7 +801,7 @@ const VideoComponent = () => {
           storePlugin.send({
             message: { 
               request: "configure",
-              audio: isAudioOff, 
+              audio: !isAudioOff, 
               video: true 
             },
             jsep: jsep,

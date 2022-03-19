@@ -7,7 +7,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 //import Modal from "../Modal/Modal";
 import MuiDialog from '../Modal/MuiDialog';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getRoomInfo } from "../../reducers/roomReducer";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from 'react-query';
@@ -56,6 +56,7 @@ const FindRoom = () => {
     const { studyId } = useParams();
     const queryClient = useQueryClient();
     const myInfoData = queryClient.getQueryData(['loadMyInfo']);
+    const {isRoomEnd} = useSelector((state) => state.roomReducer);
   
     // const renderRoomData = rooms.map((room, index) => (
     //     <p key={index}> {room.room} : {room.description}</p>
@@ -124,7 +125,7 @@ const FindRoom = () => {
             return (
               <div
                 key={room.roomId}
-                onClick={room.pin ? () => openModal(room) : () => joinRoomHandler(room)}
+                onClick={isRoomEnd ? (room.pin ? () => openModal(room) : () => joinRoomHandler(room)) : window.alert('방이 완전히 종료 될 때까지 잠시만 기다려 주세요!')}
               >
                 <RoomCard>
                   <CardContent>

@@ -72,7 +72,7 @@ const queryClient = new QueryClient({
   },
 });
 
-axios.defaults.baseURL = "https://koner.kr";
+axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.withCredentials = true;
 
 ReactDOM.render(

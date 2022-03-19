@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getCookie } from "../utils/cookie";
-import { spring_server } from "../utils/config";
 
 export const findAllRooms = async () => {
   return await axios.get("/api/rooms");
@@ -445,7 +444,7 @@ export const deleteStudySchedule = async (studyId, scheduleId, accessToken) => {
 };
 
 export const createVideoRoom = async (studyId, request,accessToken) => {
-  return await axios.post(`${spring_server}/api/studies/${studyId}/videorooms`, 
+  return await axios.post(`/api/studies/${studyId}/videorooms`, 
       request,{
         headers: {
           "X-AUTH-TOKEN": accessToken,
@@ -455,7 +454,7 @@ export const createVideoRoom = async (studyId, request,accessToken) => {
 };
 
 export const findVideoRooms = async (studyId,accessToken) => {
-  return await axios.get(`${spring_server}/api/studies/${studyId}/videorooms`,{
+  return await axios.get(`/api/studies/${studyId}/videorooms`,{
     headers: {
       "X-AUTH-TOKEN": accessToken,
     }
@@ -463,7 +462,7 @@ export const findVideoRooms = async (studyId,accessToken) => {
 };
 
 export const destroyVideoRoom = async (studyId,roomId,accessToken) => {
-  return await axios.delete(`${spring_server}/api/studies/${studyId}/videorooms/${roomId}`,{
+  return await axios.delete(`/api/studies/${studyId}/videorooms/${roomId}`,{
     headers: {
       "X-AUTH-TOKEN": accessToken,
     }
@@ -505,6 +504,7 @@ export const unreadMessage = async (accessToken) => {
 export const subscribe = async (accessToken) => {
   return await axios.get(`/api/subscribe`,{
     headers: {
+      'Access-Control-Allow-Origin' : '*',
       "X-AUTH-TOKEN": accessToken,
     }
   });

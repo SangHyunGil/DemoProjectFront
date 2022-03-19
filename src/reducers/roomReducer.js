@@ -10,6 +10,7 @@ const initialState = {
     isVideoOff: false,
     isAudioOff: false,
     isScreenSharingOff: true,
+    isRoomEnd: true,
     publishFeed: {},
     subscribeFeeds: [],
     chatData: [],
@@ -33,6 +34,7 @@ export const RECEIVE_CHAT = "RECEIVE_CHAT";
 export const TOGGLE_SCREEN_SHARING = "TOGGLE_SCREEN_SHARING";
 export const CHANGE_MAIN_FEED = "CHANGE_MAIN_FEED";
 export const EXIT_ROOM = "EXIT_ROOM";
+export const ROOM_COMPLETELY_EXIT = "ROOM_COMPLETELY_EXIT";
 
 // actionCreator
 export const getRoomInfo = (payload) => ({
@@ -110,6 +112,11 @@ export const exitRoom = (payload) => ({
     payload
 });
 
+export const roomCompletelyExit = (payload) => ({
+    type: ROOM_COMPLETELY_EXIT,
+    payload
+});
+
 
 // reducer
 const roomReducer = (state = initialState, action) =>
@@ -125,6 +132,7 @@ const roomReducer = (state = initialState, action) =>
                 draft.publishFeed.id = action.payload.id;
                 draft.publishFeed.display = action.payload.display;
                 draft.publishFeed.pvtid = action.payload.pvtid;
+                //draft.isRoomEnd = false;
                 break;
 
             case SUBSCRIBE_FEED:
@@ -193,6 +201,10 @@ const roomReducer = (state = initialState, action) =>
                 draft.subscribeFeeds = [];
                 draft.chatData = [];
                 draft.mainFeed = {stream: null, display: null};
+                break;
+            
+            case ROOM_COMPLETELY_EXIT:
+                draft.isRoomEnd = action.payload;
                 break;
 
             default:

@@ -13,7 +13,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import { useQuery, useQueryClient } from "react-query";
 import { unreadMessage, getNotification, getUnreadNotification } from '../../Api/Api';
 import { getCookie } from "../../utils/cookie";
-import { EventSourcePolyfill } from 'event-source-polyfill';
+import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MuiAlert from '@mui/material/Alert';
 
@@ -172,10 +172,11 @@ function Categories(props) {
     );
   }, [location]);
   const navigate = useNavigate();
+  const EventSource =  EventSourcePolyfill || NativeEventSource;
 
   useEffect(() => {
     if (isLogin) {
-      const source = new EventSourcePolyfill('https://koner.kr/api/subscribe',{
+      const source = new EventSource('http://localhost:8080/api/subscribe',{
         headers: {
           "X-AUTH-TOKEN": getCookie('accessToken'),
         }
@@ -311,7 +312,7 @@ function Categories(props) {
                 >
                   {isLoading ? <CircularProgress /> : 
                   (notifications?.map((n) => (
-                    <MenuItem key={n.notificationId} onClick={() => {navigate(n.url)}}>
+                    <MenuItem key={n.id} onClick={() => {navigate(n.url)}}>
                       {n.content}
                     </MenuItem>
                   )))}

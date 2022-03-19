@@ -256,6 +256,11 @@ const CategoryChangeModal = styled.div`
   }
 `;
 
+const studyRoleEngToKor = {
+  ADMIN: '관리자',
+  MEMBER: '스터디원',
+};
+
 function StudyManage() {
   const [isUserCreator, setIsUserCreator] = useState(false);
   const [IsBoardModalUp, setIsBoardModalUp] = useState(false);
@@ -453,7 +458,7 @@ function StudyManage() {
                           color="error"
                           onClick={() => kickUserHandler(Member?.member?.memberId)}
                         >추방</Button>
-                        </div>) : <span className="ordinaryBox">{studyRole}</span>}       
+                        </div>) : <span className="ordinaryBox">{studyRoleEngToKor[studyRole]}</span>}       
                       </div>
                     </StudyMemberContainer>
                   );
