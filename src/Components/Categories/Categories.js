@@ -176,7 +176,7 @@ function Categories(props) {
 
   useEffect(() => {
     if (isLogin) {
-      const source = new EventSource('http://localhost:8080/api/subscribe',{
+      const source = new EventSource('https://koner.kr/api/subscribe',{
         headers: {
           "X-AUTH-TOKEN": getCookie('accessToken'),
         }
