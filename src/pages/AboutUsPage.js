@@ -362,20 +362,20 @@ const InfoBlock = (props) => {
   }
   //console.log(props.videos);
   return (
-    <>
+    <React.Fragment>
       <div className="infoBlock">
         <h2>{props.title}</h2>
         <p onClick={()=>{setModalOpen(true)}} >{props.content}</p>
       </div>
-      <DialogContainer open={ModalOpen} onClose={onClose} title={props.title} maxWidth={false} isTitleExist={true}>
+      <DialogContainer open={ModalOpen} onClose={onClose} title={props.title} maxWidth={false}>
           {props.videos.map((video) => (
-            <div className="videoBlock">
+            <div className="videoBlock" key={video.id}>
               <h2>{video.title}</h2>
-              <img key={video.id} src={video.url} alt="video" />
+              <img  src={video.url} alt="video" />
             </div>
           ))}
       </DialogContainer>
-    </>
+    </React.Fragment>
   );
 };
 
@@ -408,7 +408,7 @@ function AboutUsPage() {
         <div className="MainContentContainer">
           {InfoAry.map((info) => (
             <InfoBlock
-              key = {info.id}
+              key={info.id}
               title = {info.title}
               content = {info.content}
               videos = {info.videos}
