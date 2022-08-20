@@ -11,9 +11,14 @@ Koner(코너)
 
 package.json을 참고해 주시면 감사하겠습니다.
 
-### 기술 스택
+### 주요 기술 스택
 
-React, react-query, redux 등...
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white">
+  <img src="https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=white">
+  <img src="https://img.shields.io/badge/react query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
+  <img src="https://img.shields.io/badge/styled components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white">
+</div>
 
 ### 데모 영상
 |                         스터디 생성                          |                       스터디 사용 방법                       |
@@ -44,12 +49,18 @@ React, react-query, redux 등...
 
 ### Installing
 
-yarn install or yarn을 통해 package들을 설치하면 됩니다.
+```markdown
+npm install 혹은 yarn install
+```
 
 ### Executing program
 
 local에서 돌리기 위해서는 spring 백엔드 코드가 필요합니다. 
 백엔드 repo 주소는 다음과 같습니다 (https://github.com/SangHyunGil/KonerBackEnd.git, 현재 private)
+이후
+```
+npm run start or yarn start
+```
 
 ## Help
 
@@ -58,7 +69,7 @@ local에서 돌리기 위해서는 spring 백엔드 코드가 필요합니다.
 ## Authors
 |           [길상현](https://github.com/SangHyunGil)           |             [유승범](https://github.com/syoo970)             |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://cdn-icons-png.flaticon.com/512/427/427544.png" alt="돌고래  무료 아이콘" style="zoom: 25%;" /> | <img src="https://i.pinimg.com/originals/f3/25/58/f325581f9612cdc77538f205e66a3d3f.jpg" alt="img" style="zoom:25%;" /> |
+| <img src="https://cdn-icons-png.flaticon.com/512/427/427544.png" alt="돌고래  무료 아이콘" style="width: 200px; height: auto; object-fit: cover;" /> | <img src="https://i.pinimg.com/originals/f3/25/58/f325581f9612cdc77538f205e66a3d3f.jpg" alt="img" style="width: 200px; height: auto; object-fit: cover;" /> |
 |                         백엔드 담당✨                         |                       프론트엔드 담당🎢                       |
 
 
